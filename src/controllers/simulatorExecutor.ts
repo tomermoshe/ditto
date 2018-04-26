@@ -15,6 +15,7 @@ export class SimulatorExecutor {
                 }
             }
         });
+        console.log(`Simulator started with id ${service.id}`);
         return service.id;
     }
 
@@ -22,6 +23,8 @@ export class SimulatorExecutor {
         const s: Service = await dockerode.getService(id);
         if (s) {
             await s.remove();
+            console.log(`Simulator stopped with id ${id}`);
+
         }
     }
 }
