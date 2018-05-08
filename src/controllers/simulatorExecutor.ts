@@ -1,20 +1,25 @@
 import { SimulatorConfig } from "../models/SimulatorConfig";
-import Dockerode from "dockerode";
+import { dockerode } from "./../dockerodeConnector";
 import { Service } from "dockerode";
 
-const dockerode = new Dockerode({ host: "http://192.168.99.100", port: 2376 });
-
-
 export class SimulatorExecutor {
-    public static async execute(simulator: SimulatorConfig) {
-        const service: Service = await dockerode.createService({
+    public static async execute(simulator: SimulatorConfig, network: String) {
+
+        const serviceConfig: any = {
             Name: simulator.id.name,
             TaskTemplate: {
                 ContainerSpec: {
                     Image: `${simulator.id.name}:${simulator.id.version}`
                 }
-            }
-        });
+            },
+            Networks: [{
+                Target: network
+            }]
+        };
+        if (simulator.envs.length > 0) {
+            serviceConfig.TaskTemplate.ContainerSpec.Env = simulator.envs;
+        }
+        const service: Service = await dockerode.createService(serviceConfig);
         console.log(`Simulator started with id ${service.id}`);
         return service.id;
     }

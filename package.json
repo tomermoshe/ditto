@@ -10,10 +10,12 @@
   "license": "ISC",
   "dependencies": {
     "dockerode": "^2.5.5",
-    "mongoose": "^5.0.16"
+    "mongoose": "^5.0.16",
+    "uuid": "^3.2.1"
   },
   "devDependencies": {
     "@types/dockerode": "^2.5.4",
-    "@types/mongoose": "^5.0.10"
+    "@types/mongoose": "^5.0.10",
+    "@types/uuid": "^3.4.3"
   }
 }

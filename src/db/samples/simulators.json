@@ -1,0 +1,6 @@
+{
+    "id" :{
+        "name":"nginx",
+        "version":"latest"
+    }
+}

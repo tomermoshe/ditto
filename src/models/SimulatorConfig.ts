@@ -14,7 +14,7 @@ export interface SimulatorId {
 export interface SimulatorConfig {
     id: SimulatorId;
     envs?: string[];
-    ports?: string[];
+    // ports?: string[];
 }
 
 
@@ -32,7 +32,7 @@ const simulatorConfigSchema = new mongoose.Schema({
         unique: true
     },
     envs: [String],
-    ports: [String]
+    // 4 ports: [String]
 });
 
 export const SimulatorConfigModel = mongoose.model("SimulatorConfig", simulatorConfigSchema);
