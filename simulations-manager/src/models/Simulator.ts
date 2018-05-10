@@ -8,9 +8,15 @@ mongoose.connect("mongodb://192.168.99.100/test").then(
 
 
 export interface SimulatorId {
-    name: string;
+    imageName: string;
     version: string;
 }
+
+export interface SimulatorInstanceId  {
+    name: string;
+    id: SimulatorId;
+}
+
 export interface SimulatorConfig {
     id: SimulatorId;
     envs?: string[];
@@ -25,7 +31,7 @@ export type SimulatorConfigDocument = mongoose.Document & SimulatorConfig;
 const simulatorConfigSchema = new mongoose.Schema({
     id: {
         type: {
-            name: String,
+            imageName: String,
             version: String
         },
         required: true,

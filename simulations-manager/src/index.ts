@@ -6,7 +6,11 @@ import { ScenarioExecutor } from "./controllers/scenarioExecutor";
         name: "Test",
         simulators: [{
             name: "nginx",
-            version: "latest"
+            id: {
+                imageName: "nginx",
+                version: "latest"
+            }
+
         }]
     };
     const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
