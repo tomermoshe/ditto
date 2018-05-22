@@ -6,7 +6,7 @@ export class ServiceExecutor {
         imageName: string,
         version: string,
         networkId: string,
-        envs: string[]): Promise<string> {
+        envs?: string[]): Promise<string> {
 
         const serviceConfig: any = {
             Name: name,
@@ -19,7 +19,7 @@ export class ServiceExecutor {
                 Target: networkId
             }]
         };
-        if (envs.length > 0) {
+        if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;
         }
         const service: Service = await dockerode.createService(serviceConfig);

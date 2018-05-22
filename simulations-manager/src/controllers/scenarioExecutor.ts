@@ -19,27 +19,35 @@ export class ScenarioExecutor {
         this.executionId = uuid();
     }
     public async executeScenario() {
-        await this.createNetwork();
-        await this.createScenarioExecutor();
-        await this.executeSimulators();
-        await this.stopSimulators();
-        await this.removeNetwork();
+        try {
+            await this.createNetwork();
+            await this.executeScenarioExecutor();
+            await this.executeSimulators();
+        } catch (error) {
+            console.log(error);
+        } finally {
+            await this.stopSimulators();
+            await this.removeNetwork();
+        }
+
 
     }
-    public async createScenarioExecutor() {
-        await ServiceExecutor.execute("scenario-executor", "pavelkh/service-executor", "latest", this.executionId, []);
+    public async executeScenarioExecutor() {
+        const serviceId = await ServiceExecutor.execute(`se-${this.executionId}`,
+            "pavelkh/scenario-executor",
+            "latest",
+            this.executionId);
+        this.serviceIds.push(serviceId);
     }
     public async executeSimulators() {
         console.log("executeSimulators called");
-        try {
-            await Promise.all(this.scenario.simulators.map(async simulator => {
-                const simulatorConfig = await SimulatorConfigModel.findOne({ id: simulator.id });
-                const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig, this.executionId, simulator.name);
-                this.serviceIds.push(serviceId);
-            }));
-        } catch (e) {
-            console.log(e);
-        }
+
+        await Promise.all(this.scenario.simulators.map(async simulator => {
+            const simulatorConfig = await SimulatorConfigModel.findOne({ id: simulator.id });
+            const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig, this.executionId, simulator.name);
+            this.serviceIds.push(serviceId);
+        }));
+
 
 
     }
@@ -53,16 +61,15 @@ export class ScenarioExecutor {
 
     public async stopSimulators() {
         console.log("stopSimulators called");
-        this.serviceIds.forEach(async serviceId => {
-            console.log(`stopping serviceId ${serviceId}`);
+        await Promise.all(this.serviceIds.map(async serviceId => {
             await SimulatorExecutor.stop(serviceId);
-        });
-        await this.removeNetwork();
+        }));
     }
 
     private async removeNetwork() {
         if (this.network) {
             this.network.remove();
+            console.log("network removed");
         }
     }
 }

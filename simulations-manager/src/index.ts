@@ -11,12 +11,12 @@ import { ScenarioExecutor } from "./controllers/scenarioExecutor";
                 version: "latest"
             }
 
-        }]
+        }],
+        commands: []
     };
     const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
     try {
-        await scenarioExecutor.executeSimulators();
-        await scenarioExecutor.stopSimulators();
+        await scenarioExecutor.executeScenario();
     } catch (error) {
         console.log(error);
     }

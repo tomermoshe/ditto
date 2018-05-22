@@ -1,6 +1,6 @@
 {
     "id" :{
-        "name":"nginx",
+        "imageName":"nginx",
         "version":"latest"
     }
 }
