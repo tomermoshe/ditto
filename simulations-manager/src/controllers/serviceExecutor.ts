@@ -17,7 +17,10 @@ export class ServiceExecutor {
             },
             Networks: [{
                 Target: networkId
-            }]
+            },
+        {
+            Target: "bridge"
+        }]
         };
         if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;

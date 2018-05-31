@@ -1,19 +1,20 @@
-FROM node:carbon
+FROM node
 
 # Create app directory
-WORKDIR /usr/src/app
+WORKDIR /simulations-manager
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
-COPY package*.json ./
+COPY . . 
+
+
 
 RUN npm install
-# If you are building your code for production
-# RUN npm install --only=production
 
-COPY . .
+#COPY docker-entrypoint.sh /usr/local/bin/
 
-EXPOSE 8080
+#ENTRYPOINT ["/usr/local/bin/docker-entrypoint.sh"]
+
 
 CMD [ "npm", "start" ]

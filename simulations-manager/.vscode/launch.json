@@ -1,0 +1,42 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "node",
+            "request": "attach",
+            "name": "Attach to Docker",
+            "preLaunchTask": "tsc-watch",
+            "port": 9222,
+            "restart": true,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/simulations-manager",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ]
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "Launch in Docker",
+            "preLaunchTask": "tsc-watch",
+            "runtimeExecutable": "npm",
+            "runtimeArgs": [
+                "run",
+                "docker-debug"
+            ],
+            "port": 9222,
+            "restart": true,
+            "timeout": 60000,
+            "localRoot": "${workspaceFolder}",
+            "remoteRoot": "/simulations-manager",
+            "outFiles": [
+                "${workspaceFolder}/dist/**/*.js"
+            ],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}
