@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-mongoose.connect("mongodb://localhost/test").then(
+mongoose.connect("mongodb://mongodb/test").then(
     () => { console.log("MongoDB connected"); },
 ).catch(err => {
     console.log("MongoDB connection error. Please make sure MongoDB is running. " + err);

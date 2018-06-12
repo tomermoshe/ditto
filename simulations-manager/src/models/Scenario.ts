@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 
 
 
-export interface ScenarioCommand {
+export interface ScenarioStep {
     simulatorName: string;
     command: any;
 }
@@ -14,7 +14,7 @@ export interface ScenarioCommand {
 export interface Scenario {
     name: string;
     simulators: Array<SimulatorInstanceId>;
-    commands: Array<ScenarioCommand>;
+    steps: Array<ScenarioStep>;
 
 }
 

@@ -1,7 +1,7 @@
 FROM node
 
 # Create app directory
-WORKDIR /simulations-manager
+WORKDIR /hello-world-simulator
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied

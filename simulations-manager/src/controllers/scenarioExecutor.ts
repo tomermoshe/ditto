@@ -1,13 +1,14 @@
-import { Scenario } from "../models/Scenario";
+import { Scenario, ScenarioStep } from "../models/Scenario";
 import { SimulatorExecutor } from "../controllers/simulatorExecutor";
 import { SimulatorConfig, SimulatorConfigModel, SimulatorConfigDocument } from "../models/Simulator";
 import { v1 as uuid } from "uuid";
 import { dockerode } from "../dockerodeConnector";
-import { Network } from "dockerode";
+import { Network, Container } from "dockerode";
 import { ServiceExecutor } from "./serviceExecutor";
 
 
 export class ScenarioExecutor {
+
 
     executionId: string;
     scenario: Scenario;
@@ -21,17 +22,39 @@ export class ScenarioExecutor {
     public async executeScenario() {
         try {
             await this.createNetwork();
+            await this.attachSimulationsManagerToNetwork();
             await this.executeScenarioExecutor();
             await this.executeSimulators();
+            await this.executeCommands();
         } catch (error) {
             console.log(error);
         } finally {
+            await this.deattachSimulationsManagerFromNetwork();
             await this.stopSimulators();
             await this.removeNetwork();
         }
 
 
     }
+
+    public async executeCommands() {
+        this.scenario.commands.map(async step:ScenarioStep => )
+    }
+    public async attachSimulationsManagerToNetwork() {
+        let id = await dockerode.getContainerIdByName("simulations-manager");
+        await this.network.connect({
+            Container: id
+        });
+    }
+
+    public async deattachSimulationsManagerFromNetwork() {
+        let id = await dockerode.getContainerIdByName("simulations-manager");
+        await this.network.disconnect({
+            Container: id
+        });
+    }
+
+
     public async executeScenarioExecutor() {
         const serviceId = await ServiceExecutor.execute(`se-${this.executionId}`,
             "pavelkh/scenario-executor",
@@ -55,7 +78,9 @@ export class ScenarioExecutor {
     private async createNetwork() {
         this.network = await dockerode.createNetwork({
             Name: this.executionId,
-            Driver: "overlay"
+            Driver: "overlay",
+            Attachable: true
+
         });
     }
 

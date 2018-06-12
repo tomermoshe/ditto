@@ -1,19 +1,25 @@
 import { SimulatorExecutor } from "./controllers/simulatorExecutor";
 import { Scenario } from "./models/Scenario";
 import { ScenarioExecutor } from "./controllers/scenarioExecutor";
-setTimeout(function() {
+
+setTimeout(function () {
     (async () => {
         const scenario: Scenario = {
             name: "Test",
             simulators: [{
-                name: "nginx",
+                name: "hello-world",
                 id: {
-                    imageName: "nginx",
+                    imageName: "hello-world-simulator",
                     version: "latest"
                 }
-    
+
             }],
-            commands: []
+            steps: [{
+                simulatorName: "hello-world",
+                command: {
+                    name: "Pasha"
+                }
+            }]
         };
         const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
         try {
@@ -21,7 +27,7 @@ setTimeout(function() {
         } catch (error) {
             console.log(error);
         }
-    
+
     }
     )();
 
@@ -29,5 +35,5 @@ setTimeout(function() {
 
 
 
-}, 10000);
+}, 7000);
 

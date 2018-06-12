@@ -7,17 +7,17 @@ services:
       - ./dist:/simulations-manager/dist
     ports:
       - "9222:9222"
-    network_mode: host
     container_name: simulations-manager
     depends_on: 
       - mongodb
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
+    ports: 
+      - "27017:27017"
     environment:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
-    network_mode: host
     volumes:
       - ./../data/db:/data/db
    
