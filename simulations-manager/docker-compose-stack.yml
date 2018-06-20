@@ -1,0 +1,27 @@
+version: '3'
+services: 
+  simulations-manager:
+    image: "simulations-manager"
+    command: npm run debug
+    volumes: 
+      - ./dist:/simulations-manager/dist
+    ports:
+      - "9222:9222"
+    container_name: simulations-manager
+    depends_on: 
+      - mongodb
+    deploy:
+      replicas: 1
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports: 
+      - "27017:27017"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./../data/db:/data/db
+    deploy:
+      replicas: 1
+   
