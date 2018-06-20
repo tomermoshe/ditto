@@ -22,7 +22,7 @@ export class ServiceExecutor {
             Target: "bridge"
         }]
         };
-        if (envs && envs.length > 0) {
+        if (envs && envs.length > 0) { 
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;
         }
         const service: Service = await dockerode.createService(serviceConfig);

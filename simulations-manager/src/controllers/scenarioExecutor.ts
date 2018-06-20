@@ -5,7 +5,8 @@ import { v1 as uuid } from "uuid";
 import { dockerode } from "../dockerodeConnector";
 import { Network, Container } from "dockerode";
 import { ServiceExecutor } from "./serviceExecutor";
-
+import rp from "request-promise";
+import promiseRetry from "promise-retry";
 
 export class ScenarioExecutor {
 
@@ -21,30 +22,65 @@ export class ScenarioExecutor {
     }
     public async executeScenario() {
         try {
+
+
             await this.createNetwork();
-            await this.attachSimulationsManagerToNetwork();
-            await this.executeScenarioExecutor();
+
+
             await this.executeSimulators();
+
+            
+            await this.attachSimulationsManagerToNetwork();
+
+        
+            await this.waitForSimulators();
+
             await this.executeCommands();
         } catch (error) {
             console.log(error);
         } finally {
             await this.deattachSimulationsManagerFromNetwork();
             await this.stopSimulators();
-            await this.removeNetwork();
+            await this.removeNetwork(); 
         }
 
 
     }
 
     public async executeCommands() {
-        this.scenario.commands.map(async step:ScenarioStep => )
+
+        await (async () => {
+            for (const step of this.scenario.steps) {
+                let options: rp.Options = {
+                    method: "POST",
+                    uri: `http://${step.simulatorName}:3000/command`,
+                    json: true,
+                    body: { name: "World" }
+                };
+                await rp(options);
+            }
+        })();
+        console.log("commands executed");
     }
     public async attachSimulationsManagerToNetwork() {
         let id = await dockerode.getContainerIdByName("simulations-manager");
-        await this.network.connect({
-            Container: id
-        });
+        await promiseRetry(this.attachSimulatorToNetworkWithRetries(id))
+
+    }
+
+    private attachSimulatorToNetworkWithRetries(id: string): (retry: (error: any) => never, attempt: number) => Promise<void> {
+        return async (retry, number) => {
+            try {
+                await this.network.connect({
+                    Container: id
+                });
+                console.log("simulator manager attached to network");
+            }
+            catch (error) {
+                console.log(error + " " + "retry number " + number);
+                retry(error);
+            }
+        };
     }
 
     public async deattachSimulationsManagerFromNetwork() {
@@ -52,16 +88,12 @@ export class ScenarioExecutor {
         await this.network.disconnect({
             Container: id
         });
+        console.log("simulator manager deattached from network");
+
     }
 
 
-    public async executeScenarioExecutor() {
-        const serviceId = await ServiceExecutor.execute(`se-${this.executionId}`,
-            "pavelkh/scenario-executor",
-            "latest",
-            this.executionId);
-        this.serviceIds.push(serviceId);
-    }
+
     public async executeSimulators() {
         console.log("executeSimulators called");
 
@@ -70,8 +102,29 @@ export class ScenarioExecutor {
             const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig, this.executionId, simulator.name);
             this.serviceIds.push(serviceId);
         }));
+    }
 
+    public async waitForSimulators() {
+        console.log("waiting for simulators");
 
+        await (async () => {
+            for (const simulator of this.scenario.simulators) {
+                await promiseRetry(async (retry, number) => {
+                    try { 
+                        let options: rp.Options = {
+                            method: "POST",
+                            uri: `http://${simulator.name}:3000/ready`,
+                            json: true,
+                        };
+                        await rp(options);
+                    } catch (error) {
+                        console.log(`${simulator.name} is not ready retry number ${number}`);
+                        retry(error);
+                    }
+                });
+
+            }
+        })();
 
     }
 
@@ -82,6 +135,7 @@ export class ScenarioExecutor {
             Attachable: true
 
         });
+        console.log(`network id ${this.network.id} created`);
     }
 
     public async stopSimulators() {
