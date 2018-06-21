@@ -7,6 +7,7 @@ services:
       - ./dist:/simulations-manager/dist
     ports:
       - "9222:9222"
+      - "80:3000"
     container_name: simulations-manager
     depends_on: 
       - mongodb
