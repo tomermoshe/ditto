@@ -8,7 +8,7 @@ WORKDIR /simulations-manager
 # where available (npm@5+)
 COPY . . 
 
-
+EXPOSE 3000
 
 RUN npm install
 
