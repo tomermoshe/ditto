@@ -21,3 +21,23 @@ export interface Scenario {
 export type ScenarioDocument = Scenario & mongoose.Document;
 
 
+const scenarioSchema = new mongoose.Schema({
+    name: String,
+    simulators: [{
+        name: String,
+        id: {
+            type: {
+                imageName: String,
+                version: String
+            }
+        }
+    }],
+    steps: {
+        type: {
+            simulatorName: String,
+            command: Object
+        }
+    }
+});
+
+export const scenarioModel = mongoose.model<ScenarioDocument>("Scenario", scenarioSchema);
