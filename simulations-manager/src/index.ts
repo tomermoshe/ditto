@@ -1,47 +1,113 @@
-import { SimulatorExecutor } from "./controllers/simulatorExecutor";
-import { Scenario } from "./models/Scenario";
-import { ScenarioExecutor } from "./controllers/scenarioExecutor";
-import {MongoConnector} from "./mongoConnector"
+import express from "express";
+import { json, urlencoded } from "body-parser";
+import { ScenarioRouter } from "./routes/scenarioRouter";
+import http from "http";
+import { MongoConnector } from "./connectors/mongoConnector";
 
 
-setTimeout(function () {
-    (async () => {
 
-        var mongoConnector:MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
-        await mongoConnector.connect();
+(async () => {
+    var mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
 
-        const scenario: Scenario = {
-            name: "Test",
-            simulators: [{
-                name: "hello-world",
-                id: {
-                    imageName: "hello-world-simulator",
-                    version: "latest"
-                }
+    await mongoConnector.connect();
 
-            }],
-            steps: [{
-                simulatorName: "hello-world",
-                command: {
-                    name: "Pasha"
-                }
-            }]
-        };
-        try {
-            for (let i = 0; i < 1; i++) {
-                const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
-                await scenarioExecutor.executeScenario();
-            }
-        } catch (error) {
-            console.log(error);
-        }
+    const app = express();
 
-    }
-    )();
+    app.use(json());
+    app.use(urlencoded({
+        extended: true
+    }));
+    app.get("/", (request: express.Request, response: express.Response) => {
+
+        response.json({
+            name: "Express application"
+        })
+    });
+
+
+    app.use("/api", ScenarioRouter.routes());
+
+
+    const server: http.Server = app.listen(3000, () => {
+        console.log("App started");
+
+    });
 
 
 
 
+})();
 
-}, 7000);
+
+
+
+
+
+
+// setTimeout(function () {
+//     (async () => {
+
+
+
+
+//         var scenario : Scenario = <Scenario>(await scenarioModel.findOne({name:"Test"}));
+//         console.log(scenario);
+//         console.log(scenario.simulators[0].name);
+
+        // var scenario = new scenarioModel({
+        //     name: "Test",
+        //     simulators: [{
+        //         name: "hello-world",
+        //         id: {
+        //             imageName: "hello-world-simulator",
+        //             version: "latest"
+        //         }
+
+        //     }],
+        //     steps: [{
+        //         simulatoטמקrName: "hello-world",
+        //         command: {
+        //             name: "Pasha"
+        //         }
+        //     }]
+        // });
+
+        // scenario.save();
+
+
+
+        // const scenario: Scenario = {
+        //     name: "Test",
+        //     simulators: [{
+        //         name: "hello-world",
+        //         id: {
+        //             imageName: "hello-world-simulator",
+        //             version: "latest"
+        //         }
+
+        //     }],
+        //     steps: [{
+        //         simulatorName: "hello-world",
+        //         command: {
+        //             name: "Pasha"
+        //         }
+        //     }]
+        // };
+        // try {
+        //     for (let i = 0; i < 1; i++) {
+        //         const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
+        //         await scenarioExecutor.executeScenario();
+        //     }
+        // } catch (error) {
+        //     console.log(error);
+        // }
+
+//     }
+//     )();
+
+
+
+
+
+// }, 7000);
 
