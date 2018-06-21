@@ -1,5 +1,5 @@
 import { SimulatorConfig } from "../models/Simulator";
-import { dockerode } from "./../dockerodeConnector";
+import { dockerode } from "./../connectors/dockerodeConnector";
 import { Service } from "dockerode";
 import { ServiceExecutor } from "./serviceExecutor";
 

@@ -2,7 +2,7 @@ import { Scenario, ScenarioStep } from "../models/Scenario";
 import { SimulatorExecutor } from "../controllers/simulatorExecutor";
 import { SimulatorConfig, SimulatorConfigModel, SimulatorConfigDocument } from "../models/Simulator";
 import { v1 as uuid } from "uuid";
-import { dockerode } from "../dockerodeConnector";
+import { dockerode } from "../connectors/dockerodeConnector";
 import { Network, Container } from "dockerode";
 import { ServiceExecutor } from "./serviceExecutor";
 import rp from "request-promise";
@@ -22,19 +22,10 @@ export class ScenarioExecutor {
     }
     public async executeScenario() {
         try {
-
-
             await this.createNetwork();
-
-
-            await this.executeSimulators();
-
-            
+            await this.executeSimulators(); 
             await this.attachSimulationsManagerToNetwork();
-
-        
             await this.waitForSimulators();
-
             await this.executeCommands();
         } catch (error) {
             console.log(error);
@@ -47,7 +38,7 @@ export class ScenarioExecutor {
 
     }
 
-    public async executeCommands() {
+    private async executeCommands() {
 
         await (async () => {
             for (const step of this.scenario.steps) {
@@ -62,7 +53,7 @@ export class ScenarioExecutor {
         })();
         console.log("commands executed");
     }
-    public async attachSimulationsManagerToNetwork() {
+    private async attachSimulationsManagerToNetwork() {
         let id = await dockerode.getContainerIdByName("simulations-manager");
         await promiseRetry(this.attachSimulatorToNetworkWithRetries(id))
 
@@ -83,7 +74,7 @@ export class ScenarioExecutor {
         };
     }
 
-    public async deattachSimulationsManagerFromNetwork() {
+    private async deattachSimulationsManagerFromNetwork() {
         let id = await dockerode.getContainerIdByName("simulations-manager");
         await this.network.disconnect({
             Container: id
@@ -94,7 +85,7 @@ export class ScenarioExecutor {
 
 
 
-    public async executeSimulators() {
+    private async executeSimulators() {
         console.log("executeSimulators called");
 
         await Promise.all(this.scenario.simulators.map(async simulator => {
@@ -104,7 +95,7 @@ export class ScenarioExecutor {
         }));
     }
 
-    public async waitForSimulators() {
+    private async waitForSimulators() {
         console.log("waiting for simulators");
 
         await (async () => {
@@ -138,7 +129,7 @@ export class ScenarioExecutor {
         console.log(`network id ${this.network.id} created`);
     }
 
-    public async stopSimulators() {
+    private async stopSimulators() {
         console.log("stopSimulators called");
         await Promise.all(this.serviceIds.map(async serviceId => {
             await SimulatorExecutor.stop(serviceId);

@@ -23,4 +23,4 @@ class DockerodeExtension extends Dockerode {
     }
 }
 
-export const dockerode = new DockerodeExtension({ host: "http://176.13.92.213", port: 4243 });
+export const dockerode = new DockerodeExtension({ host: "http://109.253.112.244", port: 4243 });

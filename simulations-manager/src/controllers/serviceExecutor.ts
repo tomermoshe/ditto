@@ -1,4 +1,4 @@
-import { dockerode } from "./../dockerodeConnector";
+import { dockerode } from "./../connectors/dockerodeConnector";
 import { Service } from "dockerode";
 
 export class ServiceExecutor {
