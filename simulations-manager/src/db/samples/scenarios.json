@@ -1,9 +1,0 @@
-{
-    "name": "Test Scenario",
-    "simulators": [
-        {
-            "name": "nginx",
-            "version" : "latest"
-        }
-    ]
-}
