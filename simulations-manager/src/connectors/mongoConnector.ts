@@ -32,8 +32,7 @@ export class MongoConnector {
 
       setTimeout(() => {
         if (!mongoose.connection.readyState) {
-          ;
-          reject("Timeout when connecting to mongoDB")
+          reject("Timeout when connecting to mongoDB");
         }
       }, 30000);
 

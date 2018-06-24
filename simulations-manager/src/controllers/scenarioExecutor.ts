@@ -1,12 +1,12 @@
 import { Scenario, ScenarioStep } from "../models/Scenario";
 import { SimulatorExecutor } from "../controllers/simulatorExecutor";
 import { SimulatorConfig, SimulatorConfigModel, SimulatorConfigDocument } from "../models/Simulator";
-import { v1 as uuid } from "uuid";
 import { dockerode } from "../connectors/dockerodeConnector";
 import { Network, Container } from "dockerode";
 import { ServiceExecutor } from "./serviceExecutor";
 import rp from "request-promise";
 import promiseRetry from "promise-retry";
+import uniqid from "uniqid";
 
 export class ScenarioExecutor {
 
@@ -18,12 +18,13 @@ export class ScenarioExecutor {
     constructor(scenario: Scenario) {
         this.scenario = scenario;
         this.serviceIds = new Array();
-        this.executionId = uuid();
+        this.executionId = uniqid();
     }
     public async executeScenario() {
         try {
+            console.log(`execution ${this.executionId} started`);
             await this.createNetwork();
-            await this.executeSimulators(); 
+            await this.executeSimulators();
             await this.attachSimulationsManagerToNetwork();
             await this.waitForSimulators();
             await this.executeCommands();
@@ -32,19 +33,23 @@ export class ScenarioExecutor {
         } finally {
             await this.deattachSimulationsManagerFromNetwork();
             await this.stopSimulators();
-            await this.removeNetwork(); 
+            await this.removeNetwork();
+            console.log(`execution ${this.executionId} stopped`);
+
         }
-
-
     }
 
+    private getSimulatorExecutionName(simulatorName: string): string {
+        return `${simulatorName}-${this.executionId}`;
+    }
     private async executeCommands() {
 
         await (async () => {
             for (const step of this.scenario.steps) {
+                const simulatorExecutionName: string = this.getSimulatorExecutionName(step.simulatorName);
                 let options: rp.Options = {
                     method: "POST",
-                    uri: `http://${step.simulatorName}:3000/command`,
+                    uri: `http://${simulatorExecutionName}:3000/command`,
                     json: true,
                     body: { name: "World" }
                 };
@@ -90,7 +95,9 @@ export class ScenarioExecutor {
 
         await Promise.all(this.scenario.simulators.map(async simulator => {
             const simulatorConfig = await SimulatorConfigModel.findOne({ id: simulator.id });
-            const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig, this.executionId, simulator.name);
+            const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig,
+                this.executionId,
+                this.getSimulatorExecutionName(simulator.name));
             this.serviceIds.push(serviceId);
         }));
     }
@@ -100,16 +107,17 @@ export class ScenarioExecutor {
 
         await (async () => {
             for (const simulator of this.scenario.simulators) {
+                const simulatorExecutionName = this.getSimulatorExecutionName(simulator.name);
                 await promiseRetry(async (retry, number) => {
-                    try { 
+                    try {
                         let options: rp.Options = {
                             method: "POST",
-                            uri: `http://${simulator.name}:3000/ready`,
+                            uri: `http://${simulatorExecutionName}:3000/ready`,
                             json: true,
                         };
-                        await rp(options);
+                        await rp(options); 
                     } catch (error) {
-                        console.log(`${simulator.name} is not ready retry number ${number}`);
+                        console.log(`${this.getSimulatorExecutionName(simulator.name)} is not ready retry number ${number} ${error}`);
                         retry(error);
                     }
                 });
