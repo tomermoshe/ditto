@@ -6,10 +6,10 @@ class DockerodeExtension extends Dockerode {
     getContainerIdByName(name: string) {
 
         // filter by name
-        var opts = {
+        const opts = {
             "limit": 1,
             "filters": `{"name": ["${name}"]}`
-        }
+        };
 
         return new Promise<string>((resolve, reject) => {
             this.listContainers(opts, function (err, containers) {
@@ -18,9 +18,9 @@ class DockerodeExtension extends Dockerode {
                 } else {
                     resolve(containers && containers[0].Id);
                 }
-            }); 
-        })
+            });
+        });
     }
 }
 
-export const dockerode = new DockerodeExtension({ host: "http://109.253.112.244", port: 4243 });
+export const dockerode = new DockerodeExtension({ host: "http://172.17.0.1", port: 4243 });
