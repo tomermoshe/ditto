@@ -7,7 +7,7 @@ import { MongoConnector } from "./connectors/mongoConnector";
 
 
 (async () => {
-    var mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
+    const mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
 
     await mongoConnector.connect();
 
@@ -21,7 +21,7 @@ import { MongoConnector } from "./connectors/mongoConnector";
 
         response.json({
             name: "Express application"
-        })
+        });
     });
 
 
