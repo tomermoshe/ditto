@@ -12,8 +12,8 @@ export class MongoConnector {
       return Promise.resolve(mongoose);
     }
 
-    let connectionPromise: Promise<Mongoose> = new Promise((resolve, reject) => {
-      var options: mongoose.ConnectionOptions = {};
+    const connectionPromise: Promise<Mongoose> = new Promise((resolve, reject) => {
+      const options: mongoose.ConnectionOptions = {};
       options.server = {
         auto_reconnect: true,
         poolSize: 5,
@@ -24,10 +24,10 @@ export class MongoConnector {
 
       mongoose.connect(this.uri, options);
 
-      var db = mongoose.connection;
+      const db = mongoose.connection;
 
-      mongoose.connection.on('error', function (err) {
-        console.log('MONGODB ERROR MONGOOSE LEVEL ', err);
+      mongoose.connection.on("error", function (err) {
+        console.log("MONGODB ERROR MONGOOSE LEVEL ", err);
       });
 
       setTimeout(() => {
@@ -36,37 +36,37 @@ export class MongoConnector {
         }
       }, 30000);
 
-      db.on('connecting', function () {
-        console.info('MONGODB ' + ' connecting.');
+      db.on("connecting", function () {
+        console.info("MONGODB " + " connecting.");
       });
 
-      db.on('error', function (err) {
-        console.log('MONGODB ERROR ', err);
+      db.on("error", function (err) {
+        console.log("MONGODB ERROR ", err);
       });
 
-      db.on('close', function (err) {
-        console.log('MONGODB CLOSE ', err);
+      db.on("close", function (err) {
+        console.log("MONGODB CLOSE ", err);
       });
 
-      db.on('connected', function () {
-        console.info('MONGODB ' + ' connected successfully.');
+      db.on("connected", function () {
+        console.info("MONGODB " + " connected successfully.");
         resolve(mongoose);
       });
 
-      db.once('open', function callback() {
-        console.info('MONGODB ' + ' opened successfully.');
+      db.once("open", function callback() {
+        console.info("MONGODB " + " opened successfully.");
       });
 
-      db.on('reconnected', function () {
-        console.info('MONGODB ' + ' reconnected.');
+      db.on("reconnected", function () {
+        console.info("MONGODB " + " reconnected.");
       });
 
-      db.on('timeout', function () {
-        console.info('MONGODB ' + ' timeout.');
+      db.on("timeout", function () {
+        console.info("MONGODB " + " timeout.");
       });
 
-      db.on('disconnected', function () {
-        console.info('MONGODB ' + ' disconnected');
+      db.on("disconnected", function () {
+        console.info("MONGODB " + " disconnected");
       });
     });
 
