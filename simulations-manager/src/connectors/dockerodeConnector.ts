@@ -3,7 +3,7 @@ import Dockerode, { Container, ContainerInspectInfo, ContainerInfo } from "docke
 
 
 class DockerodeExtension extends Dockerode {
-    getContainerIdByName(name: string) {
+    async getContainerIdByName(name: string) {
 
         // filter by name
         const opts = {
@@ -20,6 +20,28 @@ class DockerodeExtension extends Dockerode {
                 }
             });
         });
+    }
+
+    async removeExitedContainers() {
+        // filter by status
+        const opts = {
+            "filters": { "status": ["exited"] }
+        };
+        const doRemoveExitedContainers = async () => {
+            await this.listContainers(opts, async (err, containers) => {
+                if (!containers || containers.length === 0) {
+                    console.log("There were no exited containers to remove");
+                    return;
+                }
+
+                await Promise.all(containers.map(async container => {
+                    await this.getContainer(container.Id).remove();
+                    console.log(`exited container ${container.Id} was removed`);
+                }));
+
+            });
+        };
+        doRemoveExitedContainers();
     }
 }
 
