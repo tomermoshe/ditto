@@ -7,10 +7,9 @@ import { ServiceExecutor } from "./serviceExecutor";
 import rp from "request-promise";
 import promiseRetry from "promise-retry";
 import uniqid from "uniqid";
+import { LocalCommandsExecutor } from "./localCommandsExecutor";
 
 export class ScenarioExecutor {
-
-
     executionId: string;
     scenario: Scenario;
     serviceIds: string[];
@@ -35,7 +34,6 @@ export class ScenarioExecutor {
             await this.stopSimulators();
             await this.removeNetwork();
             console.log(`execution ${this.executionId} stopped`);
-
         }
     }
 
@@ -43,24 +41,31 @@ export class ScenarioExecutor {
         return `${simulatorName}-${this.executionId}`;
     }
     private async executeCommands() {
-
         await (async () => {
             for (const step of this.scenario.steps) {
-                const simulatorExecutionName: string = this.getSimulatorExecutionName(step.simulatorName);
-                let options: rp.Options = {
-                    method: "POST",
-                    uri: `http://${simulatorExecutionName}:3000/command`,
-                    json: true,
-                    body: { name: "World" }
-                };
-                await rp(options);
+                await this.executeSimulatorCommand(step);
             }
         })();
         console.log("commands executed");
     }
+    private async executeSimulatorCommand(step: ScenarioStep) {
+        if (step.simulatorName === "Manager") {
+            await LocalCommandsExecutor.execute(step.command);
+        } else {
+            const simulatorExecutionName: string = this.getSimulatorExecutionName(step.simulatorName);
+            const options: rp.Options = {
+                method: "POST",
+                uri: `http://${simulatorExecutionName}:3000/command`,
+                json: true,
+                body: step.command
+            };
+            await rp(options);
+        }
+    }
+
     private async attachSimulationsManagerToNetwork() {
-        let id = await dockerode.getContainerIdByName("simulations-manager");
-        await promiseRetry(this.attachSimulatorToNetworkWithRetries(id))
+        const id = await dockerode.getContainerIdByName("simulations-manager");
+        await promiseRetry(this.attachSimulatorToNetworkWithRetries(id));
 
     }
 
@@ -80,7 +85,7 @@ export class ScenarioExecutor {
     }
 
     private async deattachSimulationsManagerFromNetwork() {
-        let id = await dockerode.getContainerIdByName("simulations-manager");
+        const id = await dockerode.getContainerIdByName("simulations-manager");
         await this.network.disconnect({
             Container: id
         });
@@ -110,12 +115,13 @@ export class ScenarioExecutor {
                 const simulatorExecutionName = this.getSimulatorExecutionName(simulator.name);
                 await promiseRetry(async (retry, number) => {
                     try {
-                        let options: rp.Options = {
+                        const options: rp.Options = {
                             method: "POST",
                             uri: `http://${simulatorExecutionName}:3000/ready`,
                             json: true,
+
                         };
-                        await rp(options); 
+                        await rp(options);
                     } catch (error) {
                         console.log(`${this.getSimulatorExecutionName(simulator.name)} is not ready retry number ${number} ${error}`);
                         retry(error);

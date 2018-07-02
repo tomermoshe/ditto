@@ -1,9 +1,10 @@
 import { SimulatorId, SimulatorInstanceId, SimulatorIdSchema, SimulatorInstanceIdSchema } from "./Simulator";
 import mongoose from "mongoose";
+import { Command, CommandSchema } from "./Command";
 
 export interface ScenarioStep {
     simulatorName: string;
-    command: any;
+    command: Command;
 }
 
 export interface Scenario {
@@ -21,7 +22,7 @@ const ScenarioStepSchema = new mongoose.Schema({
         required: true
     },
     command: {
-        type: Object,
+        type: CommandSchema,
         required: true
     }
 }, { _id: false });

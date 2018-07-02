@@ -15,7 +15,10 @@ describe("Scenario model testing", () => {
             }],
             steps: [{
                 command: {
-                    name: "Pasha"
+                    name: "SayHello",
+                    body: {
+                        name: "Pasha"
+                    }
                 },
                 simulatorName: "hello-world"
             }]

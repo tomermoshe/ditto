@@ -18,11 +18,11 @@ export class ServiceExecutor {
             Networks: [{
                 Target: networkId
             },
-        {
-            Target: "bridge"
-        }]
+            {
+                Target: "bridge"
+            }]
         };
-        if (envs && envs.length > 0) { 
+        if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;
         }
         const service: Service = await dockerode.createService(serviceConfig);

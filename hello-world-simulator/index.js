@@ -10,7 +10,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 
 
 app.post("/command", (req, res) => {
-    console.log(`Hello ${process.env.greeting} ${req.body.name}`);
+    console.log(`Hello ${process.env.greeting} ${req.body.body.name}`);
     res.status(200).send();
 });
 
