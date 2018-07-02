@@ -3,12 +3,15 @@ import { json, urlencoded } from "body-parser";
 import { ScenarioRouter } from "./routes/scenarioRouter";
 import http from "http";
 import { MongoConnector } from "./connectors/mongoConnector";
+import { dockerode } from "./connectors/dockerodeConnector";
+import { EnvironmentCleaner } from "./controllers/environmentCleaner";
 
 
 
 (async () => {
     const mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
-
+    const environmentCleaner = new EnvironmentCleaner();
+    environmentCleaner.initialize();
     await mongoConnector.connect();
 
     const app = express();
