@@ -1,11 +1,12 @@
-import { Scenario, ScenarioStep } from "../models/Scenario";
-import { SimulatorExecutor } from "../controllers/simulatorExecutor";
+import { Scenario, ScenarioStep } from "./Scenario";
+import { SimulatorExecutor } from "../simulators/simulatorExecutor";
 import { dockerode } from "../connectors/dockerodeConnector";
 import { Network } from "dockerode";
 import rp from "request-promise";
 import promiseRetry from "promise-retry";
 import uniqid from "uniqid";
-import { LocalCommandsExecutor } from "./localCommandsExecutor";
+import { LocalCommandsExecutor } from "../commands/localCommandsExecutor";
+import { RemoteCommandsExecutor } from "../commands/remoteCommandsExecutor";
 
 export class ScenarioExecutor {
     executionId: string;
@@ -51,13 +52,7 @@ export class ScenarioExecutor {
             await LocalCommandsExecutor.execute(step.command);
         } else {
             const simulatorExecutionName: string = this.getSimulatorExecutionName(step.simulatorName);
-            const options: rp.Options = {
-                method: "POST",
-                uri: `http://${simulatorExecutionName}:3000/command`,
-                json: true,
-                body: step.command
-            };
-            await rp(options);
+            await RemoteCommandsExecutor.execute(step.command, simulatorExecutionName);
         }
     }
 
