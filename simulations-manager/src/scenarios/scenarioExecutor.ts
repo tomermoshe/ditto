@@ -1,9 +1,7 @@
 import { Scenario, ScenarioStep } from "../models/Scenario";
 import { SimulatorExecutor } from "../controllers/simulatorExecutor";
-import { SimulatorConfig, SimulatorConfigModel, SimulatorConfigDocument } from "../models/Simulator";
 import { dockerode } from "../connectors/dockerodeConnector";
-import { Network, Container } from "dockerode";
-import { ServiceExecutor } from "./serviceExecutor";
+import { Network } from "dockerode";
 import rp from "request-promise";
 import promiseRetry from "promise-retry";
 import uniqid from "uniqid";
@@ -99,8 +97,7 @@ export class ScenarioExecutor {
         console.log("executeSimulators called");
 
         await Promise.all(this.scenario.simulators.map(async simulator => {
-            const simulatorConfig = await SimulatorConfigModel.findOne({ id: simulator.id });
-            const serviceId = await SimulatorExecutor.execute(<SimulatorConfig>simulatorConfig,
+            const serviceId = await SimulatorExecutor.execute(simulator,
                 this.executionId,
                 this.getSimulatorExecutionName(simulator.name));
             this.serviceIds.push(serviceId);
