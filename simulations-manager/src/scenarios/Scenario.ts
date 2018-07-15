@@ -1,6 +1,6 @@
-import { SimulatorId, SimulatorInstanceId, SimulatorIdSchema, SimulatorInstanceIdSchema } from "./Simulator";
+import { SimulatorId, SimulatorInstanceId, SimulatorIdSchema, SimulatorInstanceIdSchema } from "../simulators/Simulator";
 import mongoose from "mongoose";
-import { Command, CommandSchema } from "./Command";
+import { Command, CommandSchema } from "../commands/Command";
 
 export interface ScenarioStep {
     simulatorName: string;

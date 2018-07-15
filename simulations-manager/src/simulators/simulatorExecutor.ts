@@ -1,16 +1,16 @@
-import { SimulatorConfig, SimulatorInstanceId, SimulatorConfigModel } from "../models/Simulator";
-import { ServiceExecutor } from "./serviceExecutor";
+import { SimulatorConfig, SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
+import { ServiceExecutor } from "../controllers/serviceExecutor";
 
 export class SimulatorExecutor {
-    public static async execute(simulator: SimulatorInstanceId, network: string, simulatorInstanceName: string) {
+    public static async execute(simulatorInstanceId: SimulatorInstanceId, networkId: string, simulatorExecutionName: string) {
 
-        const simulatorConfig: SimulatorConfig = <SimulatorConfig>await SimulatorConfigModel.findOne({ id: simulator.id });
+        const simulatorConfig: SimulatorConfig = <SimulatorConfig>await SimulatorConfigModel.findOne({ id: simulatorInstanceId.id });
 
 
-        return await ServiceExecutor.execute(simulatorInstanceName,
-            simulator.id.imageName,
-            simulator.id.version,
-            network,
+        return await ServiceExecutor.execute(simulatorExecutionName,
+            simulatorInstanceId.id.imageName,
+            simulatorInstanceId.id.version,
+            networkId,
             simulatorConfig.envs);
     }
 

@@ -1,6 +1,6 @@
 import { Router, Request, Response } from "express";
-import { Scenario, ScenarioModel } from "../models/Scenario";
-import { ScenarioExecutor } from "../controllers/scenarioExecutor";
+import { Scenario, ScenarioModel } from "../scenarios/Scenario";
+import { ScenarioExecutor } from "../scenarios/scenarioExecutor";
 
 interface ScenarioPlayRequest {
     name: string;
