@@ -11,11 +11,11 @@ import { RemoteCommandsExecutor } from "../commands/remoteCommandsExecutor";
 export class ScenarioExecutor {
     executionId: string;
     scenario: Scenario;
-    serviceIds: string[];
+    simulators: SimulatorExecutor[];
     network: Network;
     constructor(scenario: Scenario) {
         this.scenario = scenario;
-        this.serviceIds = new Array();
+        this.simulators = new Array();
         this.executionId = uniqid();
     }
     public async executeScenario() {
@@ -92,10 +92,9 @@ export class ScenarioExecutor {
         console.log("executeSimulators called");
 
         await Promise.all(this.scenario.simulators.map(async simulator => {
-            const serviceId = await SimulatorExecutor.execute(simulator,
-                this.executionId,
-                this.getSimulatorExecutionName(simulator.name));
-            this.serviceIds.push(serviceId);
+            const simulatorExecutor = new SimulatorExecutor(simulator, this.executionId);
+            await simulatorExecutor.execute();
+            this.simulators.push(simulatorExecutor);
         }));
     }
 
@@ -137,8 +136,8 @@ export class ScenarioExecutor {
 
     private async stopSimulators() {
         console.log("stopSimulators called");
-        await Promise.all(this.serviceIds.map(async serviceId => {
-            await SimulatorExecutor.stop(serviceId);
+        await Promise.all(this.simulators.map(async simulator => {
+            await simulator.stop();
         }));
     }
 

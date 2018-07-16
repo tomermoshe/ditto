@@ -2,19 +2,30 @@ import { SimulatorConfig, SimulatorInstanceId, SimulatorConfigModel } from "./Si
 import { ServiceExecutor } from "../controllers/serviceExecutor";
 
 export class SimulatorExecutor {
-    public static async execute(simulatorInstanceId: SimulatorInstanceId, networkId: string, simulatorExecutionName: string) {
+    dnsName: string;
+    instanceId: SimulatorInstanceId;
+    networkId: string;
+    executionId: string;
 
-        const simulatorConfig: SimulatorConfig = <SimulatorConfig>await SimulatorConfigModel.findOne({ id: simulatorInstanceId.id });
+    constructor(instanceId: SimulatorInstanceId, networkId: string) {
+        this.networkId = networkId;
+        this.instanceId = instanceId;
+        this.dnsName = `${instanceId.name}-${this.networkId}`;
+    }
 
 
-        return await ServiceExecutor.execute(simulatorExecutionName,
-            simulatorInstanceId.id.imageName,
-            simulatorInstanceId.id.version,
-            networkId,
+    public async execute() {
+
+        const simulatorConfig: SimulatorConfig = <SimulatorConfig>await SimulatorConfigModel.findOne({ id: this.instanceId.id });
+
+        this.executionId =  await ServiceExecutor.execute(this.dnsName,
+            this.instanceId.id.imageName,
+            this.instanceId.id.version,
+            this.networkId,
             simulatorConfig.envs);
     }
 
-    public static async stop(id: string) {
-        await ServiceExecutor.stop(id);
+    public async stop() {
+        await ServiceExecutor.stop(this.executionId);
     }
 }
