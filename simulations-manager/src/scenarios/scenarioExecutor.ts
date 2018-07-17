@@ -11,11 +11,11 @@ import { RemoteCommandsExecutor } from "../commands/remoteCommandsExecutor";
 export class ScenarioExecutor {
     executionId: string;
     scenario: Scenario;
-    simulators: SimulatorExecutor[];
+    simulators: Map<String, SimulatorExecutor>;
     network: Network;
     constructor(scenario: Scenario) {
         this.scenario = scenario;
-        this.simulators = new Array();
+        this.simulators = new Map();
         this.executionId = uniqid();
     }
     public async executeScenario() {
@@ -94,7 +94,7 @@ export class ScenarioExecutor {
         await Promise.all(this.scenario.simulators.map(async simulator => {
             const simulatorExecutor = new SimulatorExecutor(simulator, this.executionId);
             await simulatorExecutor.execute();
-            this.simulators.push(simulatorExecutor);
+            this.simulators.set(simulator.name, simulatorExecutor);
         }));
     }
 
@@ -102,23 +102,8 @@ export class ScenarioExecutor {
         console.log("waiting for simulators");
 
         await (async () => {
-            for (const simulator of this.scenario.simulators) {
-                const simulatorExecutionName = this.getSimulatorExecutionName(simulator.name);
-                await promiseRetry(async (retry, number) => {
-                    try {
-                        const options: rp.Options = {
-                            method: "POST",
-                            uri: `http://${simulatorExecutionName}:3000/ready`,
-                            json: true,
-
-                        };
-                        await rp(options);
-                    } catch (error) {
-                        console.log(`${this.getSimulatorExecutionName(simulator.name)} is not ready retry number ${number} ${error}`);
-                        retry(error);
-                    }
-                });
-
+            for (const simulator of this.simulators.values()) {
+                await simulator.waitFor();
             }
         })();
 
@@ -136,7 +121,7 @@ export class ScenarioExecutor {
 
     private async stopSimulators() {
         console.log("stopSimulators called");
-        await Promise.all(this.simulators.map(async simulator => {
+        await Promise.all(Array.from(this.simulators.values()).map(async simulator => {
             await simulator.stop();
         }));
     }
