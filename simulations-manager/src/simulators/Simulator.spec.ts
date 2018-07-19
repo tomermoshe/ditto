@@ -9,8 +9,9 @@ describe("Simulator model testing", () => {
         simulatorConfig = {
             id: {
                 imageName: "imageName",
-                version: "latest"
-            }
+                version: "latest",
+            },
+            commands: []
         };
     });
 

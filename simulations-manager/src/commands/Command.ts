@@ -16,3 +16,18 @@ export const CommandSchema = new mongoose.Schema({
     }
 }, { _id: false });
 
+export interface CommandDefinition {
+    commandName: string;
+    commandSchema: any;
+
+}
+export const CommandDefinitionSchema = new mongoose.Schema({
+    commandName: {
+        type: String,
+        required: true
+    },
+    commandSchema: {
+        type: Object,
+        required: true
+    }
+}, { _id: false });

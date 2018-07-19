@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { CommandDefinition, CommandDefinitionSchema } from "../commands/Command";
 
 export interface SimulatorId {
     imageName: string;
@@ -14,6 +15,7 @@ export interface SimulatorConfig {
     id: SimulatorId;
     envs?: string[];
     // ports?: string[];
+    commands: CommandDefinition[];
 }
 
 
@@ -44,7 +46,8 @@ const SimulatorConfigSchema = new mongoose.Schema({
         unique: true
     },
     envs: [String],
+    commands: [CommandDefinitionSchema]
     // 4 ports: [String]
 });
 
-export const SimulatorConfigModel = mongoose.model("SimulatorConfig", SimulatorConfigSchema);
+export const SimulatorConfigModel = mongoose.model<SimulatorConfigDocument>("SimulatorConfig", SimulatorConfigSchema);
