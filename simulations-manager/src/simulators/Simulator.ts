@@ -1,10 +1,7 @@
+import { SimulatorId } from "./SimulatorId";
+
 import mongoose from "mongoose";
 import { CommandDefinition, CommandDefinitionSchema } from "../commands/Command";
-
-export interface SimulatorId {
-    imageName: string;
-    version: string;
-}
 
 export interface SimulatorInstanceId {
     name: string;

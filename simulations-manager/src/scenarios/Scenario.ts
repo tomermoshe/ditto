@@ -1,4 +1,5 @@
-import { SimulatorId, SimulatorInstanceId, SimulatorIdSchema, SimulatorInstanceIdSchema } from "../simulators/Simulator";
+import { SimulatorInstanceId, SimulatorIdSchema, SimulatorInstanceIdSchema } from "../simulators/Simulator";
+import { SimulatorId } from "../simulators/SimulatorId";
 import mongoose from "mongoose";
 import { Command, CommandSchema } from "../commands/Command";
 
