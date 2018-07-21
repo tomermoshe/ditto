@@ -1,11 +1,9 @@
 import { combineReducers } from "redux";
-import SimulatorsReducer from "./simulatorsReducer";
-export type SimulatorsState ={
-    readonly simulators: string[];
-};
+import {simulatorReducer} from "./simulatorsReducer";
 
-const rootReducer = combineReducers<SimulatorsState>({
-    simulators: SimulatorsReducer
+
+const rootReducer = combineReducers({
+    simulators: simulatorReducer
 });
 
 export default rootReducer;

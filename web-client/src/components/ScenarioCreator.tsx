@@ -1,45 +1,44 @@
 import * as React from "react";
 import { Component } from "react";
-import { connect } from "react-redux";
-import { fetchSimulatorNames } from "../actions";
+import { connect } from "react-redux"
+import { fetchSimulators } from "../actions";
 import { RootState } from "../types";
-
+import { SimulatorId } from "../../../simulations-manager/src/simulators/SimulatorId";
 
 export interface Props {
-    simulatorNames: string[];
-    // tslint:disable-next-line:no-any
-    fetchSimulatorNames: () => any;
+    simulators: SimulatorId[];
+    fetchSimulators: () => any;
 }
 
 class ScenarioCreator extends React.Component<Props>{
-    // tslint:disable-next-line:no-any
     renderSimulatorNames() {
-        return this.props.simulatorNames.map(name => {
-            return <option key={name} value={name}>{name}</option>;
+        return this.props.simulators.map(simulator => {
+            return <option key={simulator.imageName} value={simulator.imageName}>{simulator.imageName}</option>;
         });
     }
     componentDidMount() {
-        this.props.fetchSimulatorNames();
+        this.props.fetchSimulators();
     }
 
 
     render() {
-        const { simulatorNames } = this.props;
-        if (!simulatorNames) {
+        const { simulators } = this.props;
+        if (!simulators) {
             return <div>Loading...</div>;
         }
         return (
             <div>
-                <select>
+                <select >
                     {this.renderSimulatorNames()}
                 </select>
+             
             </div>
         );
     }
 }
 
 function mapStateToProps(state: RootState) {
-    return { simulatorNames: state.simulators }
+    return { simulators: state.simulators }
 }
 
-export default connect(mapStateToProps, { fetchSimulatorNames })(ScenarioCreator);
+export default connect(mapStateToProps, { fetchSimulators })(ScenarioCreator);

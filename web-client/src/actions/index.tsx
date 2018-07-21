@@ -1,45 +1,21 @@
 import * as constants from "../constants";
 import axios, { AxiosPromise, AxiosResponse } from "axios";
-
-// export interface IncrementEnthusiasm {
-//   type: constants.INCREMENT_ENTHUSIASM;
-// }
-
-// export interface DecrementEnthusiasm {
-//   type: constants.DECREMENT_ENTHUSIASM;
-// }
-
-// export type EnthusiasmAction = IncrementEnthusiasm | DecrementEnthusiasm;
-
-// export function incrementEnthusiasm(): IncrementEnthusiasm {
-//   return {
-//     type: constants.INCREMENT_ENTHUSIASM
-//   };
-// }
-
-// export function decrementEnthusiasm(): DecrementEnthusiasm {
-//   return {
-//     type: constants.DECREMENT_ENTHUSIASM
-//   };
-// }
+import { SimulatorId } from "../../../simulations-manager/src/simulators/SimulatorId";
 
 
-//////////////////////////////////////////////////
-
-const ROOT_URL = "http://127.0.0.1:80/api"
-
-export type SimulatorsAction = FetchSimulatorNames;
+const ROOT_URL = "https://7a240434-c481-4e9b-bf97-c0abdf97f817.mock.pstmn.io/api";
+export type SimulatorsAction = FetchSimulators;
 
 
-export interface FetchSimulatorNames {
+export interface FetchSimulators {
   type: constants.FETCH_SIMULATOR_NAMES;
-  payload: AxiosResponse<string[]>;
+  payload: AxiosResponse<SimulatorId[]>;
 }
 
-export function fetchSimulatorNames() {
-  const request = axios.get(`${ROOT_URL}/simulators/names`);
+export function fetchSimulators() {
+  const request = axios.get(`${ROOT_URL}/simulators`);
   return {
-    type: constants.FETCH_SIMULATOR_NAMES,
+    type: constants.FETCH_SIMULATORS,
     payload: request
   }
 }

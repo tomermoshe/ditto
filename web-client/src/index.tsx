@@ -2,17 +2,18 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 
 import { Provider } from "react-redux";
-import { createStore ,applyMiddleware } from "redux";
+import { createStore, applyMiddleware } from "redux";
 import ScenarioCreator from "./components/ScenarioCreator";
 import "./index.css";
-import reducers from "./reducers";
-import promise =  require("redux-promise");
+import rootReducer from "./reducers";
+import promise = require("redux-promise");
 
+console.log(promise);
 
-const createStoreWithMiddleware = applyMiddleware(promise)(createStore);
+const store = createStore(rootReducer, applyMiddleware(promise.default));
 
 ReactDOM.render(
-  <Provider store={createStoreWithMiddleware(reducers)}>
+  <Provider store={store}>
     <ScenarioCreator />
   </Provider>,
   document.getElementById("root") as HTMLElement
