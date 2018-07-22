@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Component } from "react";
+import { Component, ReactEventHandler, SyntheticEvent } from "react";
 import { connect } from "react-redux"
 import { fetchSimulators } from "../actions";
 import { RootState } from "../types";
@@ -10,11 +10,69 @@ export interface Props {
     fetchSimulators: () => any;
 }
 
-class ScenarioCreator extends React.Component<Props>{
+export interface State {
+    selectedSimulatorImage?: string;
+}
+
+class ScenarioCreator extends React.Component<Props, State>{
+    readonly state: State;
+    constructor(props: Props) {
+        super(props);
+        this.state = {};
+        this.onSimulatorNameSelect = this.onSimulatorNameSelect.bind(this);
+
+
+    }
+
+
+
+    onSimulatorNameSelect = (ev :React.FormEvent<HTMLSelectElement>) => {
+        this.setState({ selectedSimulatorImage: ev.currentTarget.value });
+    }
+
+
     renderSimulatorNames() {
-        return this.props.simulators.map(simulator => {
-            return <option key={simulator.imageName} value={simulator.imageName}>{simulator.imageName}</option>;
-        });
+        return (
+            <select onChange={this.onSimulatorNameSelect}>
+                {
+                    this.props.simulators.map(simulator => {
+                        return (
+                            <option
+                                key={simulator.imageName}
+                                value={simulator.imageName}
+                            >
+                                {simulator.imageName}
+                            </option>
+                        );
+                    })
+                }
+            </select>
+
+        );
+    }
+    renderSimualtorVersions(){
+        if(!this.state.selectedSimulatorImage){
+            return <div />;
+        }
+        return (
+            <select>
+                {
+                    this.props.simulators.filter(simulator =>{
+                        return simulator.imageName === this.state.selectedSimulatorImage; 
+                    }).map(simulator => {
+                        return (
+                            <option
+                                key={simulator.version}
+                                value={simulator.version}
+                            >
+                                {simulator.version}
+                            </option>
+                        );
+                    })
+                }
+            </select>
+
+        );
     }
     componentDidMount() {
         this.props.fetchSimulators();
@@ -28,10 +86,10 @@ class ScenarioCreator extends React.Component<Props>{
         }
         return (
             <div>
-                <select >
-                    {this.renderSimulatorNames()}
-                </select>
-             
+                {this.renderSimulatorNames()}
+                {this.renderSimualtorVersions()}
+
+
             </div>
         );
     }
