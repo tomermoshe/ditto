@@ -1,19 +1,14 @@
-import { SimulatorId } from "./SimulatorId";
+import { SimulatorId } from "./simulatorId";
 
 import mongoose from "mongoose";
 import { CommandDefinition, CommandDefinitionSchema } from "../commands/Command";
+import { SimulatorConfig } from "./simulatorConfig";
 
 export interface SimulatorInstanceId {
     name: string;
     id: SimulatorId;
 }
 
-export interface SimulatorConfig {
-    id: SimulatorId;
-    envs?: string[];
-    // ports?: string[];
-    commands: CommandDefinition[];
-}
 
 
 

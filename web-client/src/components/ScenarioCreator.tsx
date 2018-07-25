@@ -3,7 +3,9 @@ import { Component, ReactEventHandler, SyntheticEvent } from "react";
 import { connect } from "react-redux"
 import { fetchSimulators } from "../actions";
 import { RootState } from "../types";
-import { SimulatorId } from "../../../simulations-manager/src/simulators/SimulatorId";
+import Select from "react-select";
+
+import { SimulatorId } from "../../../simulations-manager/src/simulators/simulatorId";
 
 export interface Props {
     simulators: SimulatorId[];
@@ -26,51 +28,56 @@ class ScenarioCreator extends React.Component<Props, State>{
 
 
 
-    onSimulatorNameSelect = (ev :React.FormEvent<HTMLSelectElement>) => {
-        this.setState({ selectedSimulatorImage: ev.currentTarget.value });
+    onSimulatorNameSelect = (selectedSimulatorImage) => {
+        this.setState({ selectedSimulatorImage: selectedSimulatorImage.value });
     }
 
 
     renderSimulatorNames() {
         return (
-            <select onChange={this.onSimulatorNameSelect}>
-                {
-                    this.props.simulators.map(simulator => {
-                        return (
-                            <option
-                                key={simulator.imageName}
-                                value={simulator.imageName}
-                            >
-                                {simulator.imageName}
-                            </option>
-                        );
-                    })
-                }
-            </select>
+            <div>
+                <h3>Simulator Name</h3>
+                <Select
+                    options={this.props.simulators.map(simulator => {
+                        return {
+                            value: simulator.imageName,
+                            label: simulator.imageName
+                        };
+                    })}
+                    onChange={this.onSimulatorNameSelect}
+
+                />
+            </div>
 
         );
     }
-    renderSimualtorVersions(){
-        if(!this.state.selectedSimulatorImage){
+
+
+    renderSimualtorVersions() {
+
+        const selectedSimulatorImage = this.state.selectedSimulatorImage;
+        if (!selectedSimulatorImage) {
             return <div />;
         }
+
+        const options = this.props.simulators.filter((simulator => {
+            return simulator.imageName === selectedSimulatorImage;
+        })).map(simulator => {
+            return {
+                value: simulator.version,
+                label: simulator.version
+            };
+        });
+
         return (
-            <select>
-                {
-                    this.props.simulators.filter(simulator =>{
-                        return simulator.imageName === this.state.selectedSimulatorImage; 
-                    }).map(simulator => {
-                        return (
-                            <option
-                                key={simulator.version}
-                                value={simulator.version}
-                            >
-                                {simulator.version}
-                            </option>
-                        );
-                    })
-                }
-            </select>
+            <div>
+                <h3>Version</h3>
+                <Select
+                    options={options}
+                />
+            </div>
+
+
 
         );
     }
@@ -86,9 +93,9 @@ class ScenarioCreator extends React.Component<Props, State>{
         }
         return (
             <div>
+
                 {this.renderSimulatorNames()}
                 {this.renderSimualtorVersions()}
-
 
             </div>
         );

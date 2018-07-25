@@ -1,6 +1,7 @@
 import "mocha";
 import { expect } from "chai";
-import { SimulatorConfig, SimulatorConfigModel } from "./Simulator";
+import {  SimulatorConfigModel } from "./Simulator";
+import { SimulatorConfig } from "./simulatorConfig";
 
 
 describe("Simulator model testing", () => {

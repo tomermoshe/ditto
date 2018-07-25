@@ -1,7 +1,8 @@
-import { SimulatorConfig, SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
+import {  SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
 import { ServiceExecutor } from "../controllers/serviceExecutor";
 import promiseRetry from "promise-retry";
 import requestPromise from "request-promise";
+import { SimulatorConfig } from "./simulatorConfig";
 
 export class SimulatorExecutor {
     dnsName: string;
