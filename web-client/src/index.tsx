@@ -6,11 +6,12 @@ import { createStore, applyMiddleware } from "redux";
 import ScenarioCreator from "./components/ScenarioCreator";
 import "./index.css";
 import rootReducer from "./reducers";
-import promise = require("redux-promise");
+import ReduxThunk from "redux-thunk";
 
-console.log(promise);
 
-const store = createStore(rootReducer, applyMiddleware(promise.default));
+
+
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 ReactDOM.render(
   <Provider store={store}>

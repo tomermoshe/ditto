@@ -1,14 +1,14 @@
 import { SimulatorsAction } from "../actions";
-import { FETCH_SIMULATORS } from "../constants";
-import { SimulatorId } from "../../../simulations-manager/src/simulators/SimulatorId";
+import { RECIEVE_SIMULATORS } from "../constants";
+import { SimulatorConfig } from "../../../simulations-manager/src/simulators/simulatorConfig";
 
 
 
 
-export const simulatorReducer = (state: SimulatorId[] = [], action: SimulatorsAction): SimulatorId[] => {
+export const simulatorReducer = (state: SimulatorConfig[] = [], action: SimulatorsAction): SimulatorConfig[] => {
     switch (action.type) {
-        case FETCH_SIMULATORS:
-            return action.payload.data;
+        case RECIEVE_SIMULATORS:
+            return action.simulators;
         default:
             return state;
     }

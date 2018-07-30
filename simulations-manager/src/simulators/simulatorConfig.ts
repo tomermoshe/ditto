@@ -1,5 +1,5 @@
 import { SimulatorId } from "./simulatorId";
-import { CommandDefinition } from "../commands/Command";
+import { CommandDefinition } from "../commands/commandDefenition";
 
 export interface SimulatorConfig {
     id: SimulatorId;
