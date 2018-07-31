@@ -1,7 +1,7 @@
 import { SimulatorId } from "./simulatorId";
 
 import mongoose from "mongoose";
-import {  CommandDefinitionSchema } from "../commands/Command";
+import { CommandDefinitionSchema } from "../commands/Command";
 import { SimulatorConfig } from "./simulatorConfig";
 
 export interface SimulatorInstanceId {
@@ -40,6 +40,6 @@ const SimulatorConfigSchema = new mongoose.Schema({
     envs: [String],
     commands: [CommandDefinitionSchema]
     // 4 ports: [String]
-});
+}, { _id: false });
 
 export const SimulatorConfigModel = mongoose.model<SimulatorConfigDocument>("SimulatorConfig", SimulatorConfigSchema);
