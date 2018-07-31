@@ -4,7 +4,7 @@ import { SimulatorId } from "../../../simulations-manager/src/simulators/simulat
 import { SimulatorConfig } from "../../../simulations-manager/src/simulators/simulatorConfig";
 
 
-const ROOT_URL = "https://7a240434-c481-4e9b-bf97-c0abdf97f817.mock.pstmn.io/api";
+const ROOT_URL = "http://172.17.0.1/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 
@@ -15,8 +15,14 @@ export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 
 export function fetchSimulators() {
   return async dispatch => {
-    const simulators: SimulatorConfig[] = (await axios.get(`${ROOT_URL}/simulators`)).data;
-    dispatch(receiveSimulators(simulators));
+    try {
+      const simulators: SimulatorConfig[] = (await axios.get(`${ROOT_URL}/simulators`)).data;
+      dispatch(receiveSimulators(simulators));
+
+    } catch (error) {
+      console.log(error);
+      
+    }
   }
 
 }

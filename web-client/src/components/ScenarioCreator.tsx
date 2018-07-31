@@ -46,7 +46,7 @@ class ScenarioCreator extends React.Component<Props, State>{
     renderSimulatorNames() {
         return (
             <div>
-                <h3>Simulator Name</h3>
+                <h3>Image Name</h3>
                 <Select
                     options={this.props.simulators.map(simulator => {
                         return {
