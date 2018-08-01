@@ -37,6 +37,10 @@ const SimulatorConfigSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    commandSchema: {
+        type: Object,
+        required: false
+    },
     envs: [String],
     commands: [CommandDefinitionSchema]
     // 4 ports: [String]

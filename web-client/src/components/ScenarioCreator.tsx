@@ -16,34 +16,32 @@ export interface Props {
 
 export interface State {
     selectedSimulatorImage?: string;
-    selectedSimulatorVersion?: string;
-    selectedSimulatorCommand?: CommandDefinition;
+    selectedSimulator?: SimulatorConfig;
+    //  selectedSimulatorCommand?: CommandDefinition;
 
 }
 
-class ScenarioCreator extends React.Component<Props, State>{
+class SimulatorAdder extends React.Component<Props, State>{
     readonly state: State;
     constructor(props: Props) {
         super(props);
         this.state = {};
-        this.onSimulatorNameSelect = this.onSimulatorNameSelect.bind(this);
+        this.onSimulatorImageNameSelect = this.onSimulatorImageNameSelect.bind(this);
 
 
     }
 
-
-
-    onSimulatorNameSelect = (selectedSimulatorImage) => {
+    onSimulatorImageNameSelect = (selectedSimulatorImage) => {
         this.setState({ selectedSimulatorImage: selectedSimulatorImage.value });
     }
-    onSimulatorVersionSelect = (selectedSimulatorVersion) => {
-        this.setState({ ...this.state, selectedSimulatorVersion: selectedSimulatorVersion.value });
+    onSimulatorVersionSelect = (selectedSimulator) => {
+        this.setState({ ...this.state, selectedSimulator: selectedSimulator.value });
     }
-    onSimulatorCommandSelect = (selectedSimulatorCommand) => {
-        this.setState({ ...this.state, selectedSimulatorCommand: selectedSimulatorCommand.value });
-    }
+    // onSimulatorCommandSelect = (selectedSimulatorCommand) => {
+    //     this.setState({ ...this.state, selectedSimulatorCommand: selectedSimulatorCommand.value });
+    // }
 
-    renderSimulatorNames() {
+    renderSimulatorImageNames() {
         return (
             <div>
                 <h3>Image Name</h3>
@@ -54,7 +52,7 @@ class ScenarioCreator extends React.Component<Props, State>{
                             label: simulator.id.imageName
                         };
                     })}
-                    onChange={this.onSimulatorNameSelect}
+                    onChange={this.onSimulatorImageNameSelect}
 
                 />
             </div>
@@ -74,7 +72,7 @@ class ScenarioCreator extends React.Component<Props, State>{
             return simulator.id.imageName === selectedSimulatorImage;
         })).map(simulator => {
             return {
-                value: simulator.id.version,
+                value: simulator,
                 label: simulator.id.version
             };
         });
@@ -87,51 +85,71 @@ class ScenarioCreator extends React.Component<Props, State>{
                     onChange={this.onSimulatorVersionSelect}
                 />
             </div>
-
-
-
         );
     }
-
-    renderSimulatorCommands() {
-        const { selectedSimulatorVersion, selectedSimulatorImage } = this.state;
-        if (!selectedSimulatorVersion) {
+    renderSimulatorCofigForm() {
+        const { selectedSimulator, selectedSimulatorImage } = this.state;
+        if (!selectedSimulator || !selectedSimulatorImage) {
             return <div />;
         }
-
-        const options = this.props.simulators.filter((simulator => {
-            return simulator.id.imageName === selectedSimulatorImage &&
-                simulator.id.version === selectedSimulatorVersion;
-        }))[0].commands.map(command => {
-            return {
-
-                value: command,
-                label: command.commandName
-            };
-        });
-
         return (
             <div>
-                <h3>Command</h3>
-                <Select
-                    options={options}
-                    onChange={this.onSimulatorCommandSelect}
+                <h3>Configuration</h3>
+                <Form
+                    schema={selectedSimulator.configSchema}
                 />
-            </div >
+            </div>
+
+        );
+    }
+    renderSimulatorName() {
+        return (
+            <div>
+                <h3>Simulator Name</h3>
+            </div>
         );
 
     }
-    renderCommandForm() {
-        const { selectedSimulatorVersion, selectedSimulatorImage, selectedSimulatorCommand } = this.state;
-        if (!selectedSimulatorVersion || !selectedSimulatorImage || !selectedSimulatorCommand) {
-            return <div />;
-        }
-        return (
-            <Form
-                schema={selectedSimulatorCommand.commandSchema}
-            />
-        );
-    }
+
+    // renderSimulatorCommands() {
+    //     const { selectedSimulatorVersion, selectedSimulatorImage } = this.state;
+    //     if (!selectedSimulatorVersion) {
+    //         return <div />;
+    //     }
+
+    //     const options = this.props.simulators.filter((simulator => {
+    //         return simulator.id.imageName === selectedSimulatorImage &&
+    //             simulator.id.version === selectedSimulatorVersion;
+    //     }))[0].commands.map(command => {
+    //         return {
+
+    //             value: command,
+    //             label: command.commandName
+    //         };
+    //     });
+
+    //     return (
+    //         <div>
+    //             <h3>Command</h3>
+    //             <Select
+    //                 options={options}
+    //                 // onChange={this.onSimulatorCommandSelect}
+    //             />
+    //         </div >
+    //     );
+
+    // }
+    // renderCommandForm() {
+    //     const { selectedSimulatorVersion, selectedSimulatorImage, selectedSimulatorCommand } = this.state;
+    //     if (!selectedSimulatorVersion || !selectedSimulatorImage || !selectedSimulatorCommand) {
+    //         return <div />;
+    //     }
+    //     return (
+    //         <Form
+    //             schema={selectedSimulatorCommand.commandSchema}
+    //         />
+    //     );
+    // }
 
 
     componentDidMount() {
@@ -146,10 +164,14 @@ class ScenarioCreator extends React.Component<Props, State>{
         }
         return (
             <div>
-                {this.renderSimulatorNames()}
+                {this.renderSimulatorName()}
+                {this.renderSimulatorImageNames()}
                 {this.renderSimualtorVersions()}
-                {this.renderSimulatorCommands()}
-                {this.renderCommandForm()}
+                {this.renderSimulatorCofigForm()}
+
+
+                {/* {this.renderSimulatorCommands()} */}
+                {/* {this.renderCommandForm()} */}
             </div>
         );
     }
@@ -159,4 +181,4 @@ function mapStateToProps(state: RootState) {
     return { simulators: state.simulators }
 }
 
-export default connect(mapStateToProps, { fetchSimulators })(ScenarioCreator);
+export default connect(mapStateToProps, { fetchSimulators })(SimulatorAdder);
