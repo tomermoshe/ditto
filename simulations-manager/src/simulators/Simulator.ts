@@ -7,6 +7,7 @@ import { SimulatorConfig } from "./simulatorConfig";
 export interface SimulatorInstanceId {
     name: string;
     id: SimulatorId;
+    envs?: string[];
 }
 
 
@@ -28,7 +29,8 @@ export const SimulatorIdSchema = new mongoose.Schema({
 
 export const SimulatorInstanceIdSchema = new mongoose.Schema({
     name: String,
-    id: SimulatorIdSchema
+    id: SimulatorIdSchema,
+    envs: [String]
 }, { _id: false });
 
 const SimulatorConfigSchema = new mongoose.Schema({
@@ -41,7 +43,6 @@ const SimulatorConfigSchema = new mongoose.Schema({
         type: Object,
         required: false
     },
-    envs: [String],
     commands: [CommandDefinitionSchema]
     // 4 ports: [String]
 }, { _id: false });

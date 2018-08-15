@@ -24,8 +24,7 @@ export class SimulatorExecutor {
         this.executionId = await ServiceExecutor.execute(this.dnsName,
             this.instanceId.id.imageName,
             this.instanceId.id.version,
-            this.networkId,
-            simulatorConfig.envs);
+            this.networkId);
     }
 
     public async waitFor() {

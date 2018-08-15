@@ -21,7 +21,7 @@ export interface State {
 
 }
 
-class SimulatorAdder extends React.Component<Props, State>{
+class SimulatorConfigurator extends React.Component<Props, State>{
     readonly state: State;
     constructor(props: Props) {
         super(props);
@@ -106,6 +106,8 @@ class SimulatorAdder extends React.Component<Props, State>{
         return (
             <div>
                 <h3>Simulator Name</h3>
+                <input className="form-control" placeholder="" type="text" />
+          
             </div>
         );
 
@@ -181,4 +183,4 @@ function mapStateToProps(state: RootState) {
     return { simulators: state.simulators }
 }
 
-export default connect(mapStateToProps, { fetchSimulators })(SimulatorAdder);
+export default connect(mapStateToProps, { fetchSimulators })(SimulatorConfigurator);
