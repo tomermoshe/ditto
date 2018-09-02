@@ -1,4 +1,4 @@
-import { Scenario } from "../scenarios/Scenario.1";
+import { Scenario } from "../scenarios/Scenario";
 import { Environment } from "../environments/Environment";
 
 export interface Test {

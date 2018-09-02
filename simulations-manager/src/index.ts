@@ -1,6 +1,6 @@
 import express from "express";
 import { json, urlencoded } from "body-parser";
-import { ScenarioRouter } from "./routes/scenarioRouter";
+import { TestRouter } from "./routes/testRouter";
 import http from "http";
 import { MongoConnector } from "./connectors/mongoConnector";
 import { dockerode } from "./connectors/dockerodeConnector";
@@ -40,7 +40,7 @@ import { SimulatorRouter } from "./routes/simulatorsRouter";
         next();
     });
 
-    app.use("/api", ScenarioRouter.routes());
+    app.use("/api", TestRouter.routes());
 
     app.use("/api", SimulatorRouter.routes());
 

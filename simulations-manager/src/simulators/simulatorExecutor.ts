@@ -1,4 +1,4 @@
-import {  SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
+import { SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
 import { ServiceExecutor } from "../controllers/serviceExecutor";
 import promiseRetry from "promise-retry";
 import requestPromise from "request-promise";
@@ -24,7 +24,8 @@ export class SimulatorExecutor {
         this.executionId = await ServiceExecutor.execute(this.dnsName,
             this.instanceId.id.imageName,
             this.instanceId.id.version,
-            this.networkId);
+            this.networkId,
+            this.instanceId.envs);
     }
 
     public async waitFor() {

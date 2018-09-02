@@ -10,7 +10,6 @@ export interface ScenarioStep {
 
 export interface Scenario {
     name: string;
-    simulators: Array<SimulatorInstanceId>;
     steps: Array<ScenarioStep>;
 }
 
@@ -35,11 +34,6 @@ const ScenarioSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    simulators: [{
-        type: SimulatorInstanceIdSchema,
-        _id: false,
-        required: true
-    }],
     steps: [{
         type: ScenarioStepSchema,
         _id: false,
