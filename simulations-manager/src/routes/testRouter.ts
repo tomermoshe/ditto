@@ -9,7 +9,7 @@ interface ScenarioPlayRequest {
     environmentName: string;
 }
 
-export class ScenarioRouter {
+export class TestRouter {
     static routes(): Router {
         return Router()
             .post("/test/play", async (req: Request, res: Response) => {
