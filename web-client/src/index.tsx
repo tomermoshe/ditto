@@ -7,6 +7,7 @@ import SimulatorConfigurator from "./components/SimulatorConfigurator";
 import "./index.css";
 import rootReducer from "./reducers";
 import ReduxThunk from "redux-thunk";
+import SimulatorSelectorForm from "./components/SimulatorSelectorForm";
 
 
 
@@ -15,7 +16,7 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk));
 
 ReactDOM.render(
   <Provider store={store}>
-    <SimulatorConfigurator />
+    <SimulatorSelectorForm form="hello" />
   </Provider>,
   document.getElementById("root") as HTMLElement
 );
