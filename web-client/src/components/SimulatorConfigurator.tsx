@@ -8,6 +8,7 @@ import Form from "react-jsonschema-form";
 
 import { SimulatorConfig } from "../../../simulations-manager/src/simulators/simulatorConfig";
 import { CommandDefinition } from "../../../simulations-manager/src/commands/commandDefenition";
+import SimulatorSelectorForm from "./SimulatorSelectorForm";
 
 export interface Props {
     simulators: SimulatorConfig[];
@@ -168,14 +169,7 @@ class SimulatorConfigurator extends React.Component<Props, State>{
         }
         return (
             <div>
-                {this.renderSimulatorName()}
-                {this.renderSimulatorImageNames()}
-                {this.renderSimualtorVersions()}
-                {this.renderSimulatorConfigForm()}
-
-
-                {/* {this.renderSimulatorCommands()} */}
-                {/* {this.renderCommandForm()} */}
+                <SimulatorSelectorForm form="test" simulators={this.props.simulators} />
             </div>
         );
     }
