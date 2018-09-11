@@ -1,5 +1,5 @@
 import { StateType } from "typesafe-actions";
-import rootReducer from "../reducers/index"
+import rootReducer from "../reducers"
 
 
 

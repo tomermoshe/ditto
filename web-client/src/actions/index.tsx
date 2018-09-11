@@ -1,10 +1,9 @@
 import * as constants from "../constants";
 import axios, { AxiosResponse } from "axios";
-import { SimulatorId } from "../../../simulations-manager/src/simulators/simulatorId";
-import { SimulatorConfig } from "../../../simulations-manager/src/simulators/simulatorConfig";
+import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
 
 
-const ROOT_URL = "http://172.17.0.1/api";
+const ROOT_URL = "https://7a240434-c481-4e9b-bf97-c0abdf97f817.mock.pstmn.io/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 
@@ -16,7 +15,7 @@ export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 export function fetchSimulators() {
   return async dispatch => {
     try {
-      const simulators: SimulatorConfig[] = (await axios.get(`${ROOT_URL}/simulators`)).data;
+      const simulators: SimulatorDefinition[] = (await axios.get(`${ROOT_URL}/simulators`)).data;
       dispatch(receiveSimulators(simulators));
 
     } catch (error) {
@@ -27,7 +26,7 @@ export function fetchSimulators() {
 
 }
 
-export function receiveSimulators(simulators : SimulatorConfig[]){
+export function receiveSimulators(simulators : SimulatorDefinition[]){
   return{
     type: constants.RECIEVE_SIMULATORS,
     simulators
