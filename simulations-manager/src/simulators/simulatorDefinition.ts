@@ -1,7 +1,7 @@
 import { SimulatorId } from "./simulatorId";
 import { CommandDefinition } from "../commands/commandDefenition";
 
-export interface SimulatorConfig {
+export interface SimulatorDefinition {
     id: SimulatorId;
     configSchema?: any;
     // ports?: string[];

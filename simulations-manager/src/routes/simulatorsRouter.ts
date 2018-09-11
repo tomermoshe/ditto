@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { SimulatorConfigModel } from "../simulators/Simulator";
+import { SimulatorDifinitionModel } from "../simulators/Simulator";
 
 
 const simulatorsProjection = {
@@ -11,7 +11,7 @@ export class SimulatorRouter {
     static routes(): Router {
         return Router()
             .get("/simulators", async (req: Request, res: Response) => {
-                const simulators = await SimulatorConfigModel.find({}, "-_id");
+                const simulators = await SimulatorDifinitionModel.find({}, "-_id");
                 res.status(200).json(simulators);
             });
     }

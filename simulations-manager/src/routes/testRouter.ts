@@ -1,6 +1,5 @@
 import { Router, Request, Response } from "express";
 import { Scenario, ScenarioModel } from "../scenarios/Scenario";
-import { ScenarioExecutor } from "../scenarios/scenarioExecutor";
 import { Environment, EnvironmentModel } from "../environments/Environment";
 import { TestExecutor } from "../tests/testExecutor";
 
