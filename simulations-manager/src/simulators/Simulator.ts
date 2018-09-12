@@ -7,13 +7,14 @@ import { SimulatorDefinition } from "./simulatorDefinition";
 export interface SimulatorInstanceId {
     name: string;
     id: SimulatorId;
-    envs?: string[];
+    // envs?: string[];
+    configuration: object;
 }
 
 
 
 
-export type SimulatorDifinitionDocument = mongoose.Document & SimulatorDefinition;
+export type SimulatorDefinitionDocument = mongoose.Document & SimulatorDefinition;
 
 
 export const SimulatorIdSchema = new mongoose.Schema({
@@ -33,7 +34,7 @@ export const SimulatorInstanceIdSchema = new mongoose.Schema({
     envs: [String]
 }, { _id: false });
 
-const SimulatorDifinitionSchema = new mongoose.Schema({
+const SimulatorDefinitionSchema = new mongoose.Schema({
     id: {
         type: SimulatorIdSchema,
         required: true,
@@ -47,4 +48,4 @@ const SimulatorDifinitionSchema = new mongoose.Schema({
     // 4 ports: [String]
 }, { _id: false });
 
-export const SimulatorDifinitionModel = mongoose.model<SimulatorDifinitionDocument>("SimulatorDifinition", SimulatorDifinitionSchema);
+export const SimulatorDefinitionModel = mongoose.model<SimulatorDefinitionDocument>("SimulatorDefinition", SimulatorDefinitionSchema);

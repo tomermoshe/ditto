@@ -21,7 +21,7 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
     componentDidMount() {
         this.props.fetchSimulators();
     }
-    renderSimulatorInstanceIds = ({ fields, meta: { error, submitFailed } }) => (
+    renderSimulatorInstanceIds = ({ fields, meta: { error, submitFailed } }:any) => (
         <ul>
             <li>
                 <button type="button" onClick={() => fields.push({})}>
@@ -60,7 +60,7 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
                                 validate={required()}
                                 label="Name"
                                 type="text"
-                            />
+                            /> 
                    
                     <FieldArray name="simulators" component={this.renderSimulatorInstanceIds} />
                     <button className="btn btn-primary" type="submit">

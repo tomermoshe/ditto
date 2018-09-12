@@ -1,8 +1,8 @@
-import { SimulatorInstanceId, SimulatorConfigModel } from "./Simulator";
+import { SimulatorInstanceId, SimulatorDefinitionModel } from "./Simulator";
 import { ServiceExecutor } from "../controllers/serviceExecutor";
 import promiseRetry from "promise-retry";
 import requestPromise from "request-promise";
-import { SimulatorConfig } from "./simulatorConfig";
+import { SimulatorDefinition } from "./simulatorDefinition";
 
 export class SimulatorExecutor {
     dnsName: string;
@@ -16,16 +16,21 @@ export class SimulatorExecutor {
         this.dnsName = `${instanceId.name}-${this.networkId}`;
     }
 
-
+    private configurationObjectToStringArray(configuration: any): string[] {
+        const envs: string[] = [];
+        for (const key in configuration) {
+            envs.push(`${key}:${configuration[key]}`);
+        }
+        return envs;
+    }
     public async execute() {
 
-        const simulatorConfig: SimulatorConfig = <SimulatorConfig>await SimulatorConfigModel.findOne({ id: this.instanceId.id });
 
         this.executionId = await ServiceExecutor.execute(this.dnsName,
             this.instanceId.id.imageName,
             this.instanceId.id.version,
             this.networkId,
-            this.instanceId.envs);
+            this.configurationObjectToStringArray(this.instanceId.configuration));
     }
 
     public async waitFor() {
