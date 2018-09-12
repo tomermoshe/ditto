@@ -7,7 +7,6 @@ import { SimulatorDefinition } from "../../../simulations-manager/src/simulators
 
 export const simulatorReducer = (state: SimulatorDefinition[] = [],
     action: SimulatorsAction): SimulatorDefinition[] => {
-        console.log(action);
         
     switch (action.type) {
         case RECIEVE_SIMULATORS:

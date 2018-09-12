@@ -7,22 +7,16 @@ import "./index.css";
 import rootReducer from "./reducers";
 import ReduxThunk from "redux-thunk";
 import EnvironmentForm from "./components/EnvironmentForm";
-import { change, actionTypes } from 'redux-form';
-
-const removeUnregisred=  ({ dispatch }) => next => action => {
-    if (action.type === actionTypes.UNREGISTER_FIELD) {
-        dispatch(change(action.meta.form, action.payload.name, null));
-    }
-    next(action);
-};
+import nullUnregisredFields from "./middleware/nullUnregisredFields";
+import clearNullValues  from "./utils/form/clearNullValues";
 
 
 
-const store = createStore(rootReducer, applyMiddleware(ReduxThunk,removeUnregisred));
+const store = createStore(rootReducer, applyMiddleware(ReduxThunk, nullUnregisredFields));
 
 ReactDOM.render(
   <Provider store={store}>
-    <EnvironmentForm onSubmit={(values) => console.log(values)} />
+    <EnvironmentForm onSubmit={(values) => console.log(clearNullValues(values))} />
   </Provider>,
   document.getElementById("root") as HTMLElement
 );
