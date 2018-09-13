@@ -14,6 +14,9 @@ export class EnvironmentRouter {
                 } catch (e) {
                     res.status(500).send(e);
                 }
+            }).get("/environments", async (req: Request, res: Response) => {
+                const environments = await EnvironmentModel.find({}, "-_id");
+                res.status(200).json(environments);
             });
     }
 }

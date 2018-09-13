@@ -2,10 +2,12 @@ import * as constants from "../constants";
 import axios, { AxiosResponse } from "axios";
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
 
+import { Environment } from "../../../simulations-manager/src/environments/Environment";
 
 const ROOT_URL = "http://172.17.0.1/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
+export type EnvironmentsAction = ReturnType<typeof receiveEnvironments>;
 
 
 
@@ -23,7 +25,6 @@ export function fetchSimulators() {
       
     }
   }
-
 }
 
 export function receiveSimulators(simulators : SimulatorDefinition[]){
@@ -47,5 +48,27 @@ export function createEnvironment(values){
       dispatch({type: constants.ENVIRONMENT_CREATION_FAILED, error : e});
     }
     
+  }
+}
+
+
+
+export function fetchEnvironments() {
+  return async dispatch => {
+    try {
+      const environments: Environment[] = (await axios.get(`${ROOT_URL}/environments`)).data;
+      dispatch(receiveEnvironments(environments));
+
+    } catch (error) {
+      console.log(error);
+      
+    }
+  }
+}
+
+export function receiveEnvironments(environments : Environment[]){
+  return{
+    type: constants.RECIEVE_ENVIRONMENTS,
+    environments
   }
 }
