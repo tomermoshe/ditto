@@ -1,11 +1,12 @@
 import express from "express";
 import { json, urlencoded } from "body-parser";
-import { TestRouter } from "./routes/testRouter";
+import { TestRouter } from "./tests/testRouter";
 import http from "http";
 import { MongoConnector } from "./connectors/mongoConnector";
 import { dockerode } from "./connectors/dockerodeConnector";
 import { EnvironmentCleaner } from "./controllers/environmentCleaner";
-import { SimulatorRouter } from "./routes/simulatorsRouter";
+import { SimulatorRouter } from "./simulators/simulatorsRouter";
+import { EnvironmentRouter } from "./environments/environmentRouter";
 
 
 
@@ -43,6 +44,8 @@ import { SimulatorRouter } from "./routes/simulatorsRouter";
     app.use("/api", TestRouter.routes());
 
     app.use("/api", SimulatorRouter.routes());
+
+    app.use("/api", EnvironmentRouter.routes());
 
     const server: http.Server = app.listen(3000, () => {
         console.log("App started");

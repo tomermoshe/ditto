@@ -1,9 +1,12 @@
-import { change, actionTypes, untouch } from 'redux-form';
+import { change, actionTypes, untouch, formValueSelector } from 'redux-form';
 
-export default ({ dispatch }) => next => action => {
+export default ({ getState, dispatch }) => next => action => {
   if (action.type === actionTypes.UNREGISTER_FIELD) {
-    dispatch(change(action.meta.form, action.payload.name, null));
-    dispatch(untouch(action.meta.form, action.payload.name));
+    const selector = formValueSelector(action.meta.form);
+    if (selector(getState(), action.payload.name)) {
+      dispatch(change(action.meta.form, action.payload.name, null));
+      dispatch(untouch(action.meta.form, action.payload.name));
+    }
   }
   next(action);
 };

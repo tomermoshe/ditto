@@ -31,7 +31,7 @@ export const SimulatorIdSchema = new mongoose.Schema({
 export const SimulatorInstanceIdSchema = new mongoose.Schema({
     name: String,
     id: SimulatorIdSchema,
-    envs: [String]
+    configuration: Object
 }, { _id: false });
 
 const SimulatorDefinitionSchema = new mongoose.Schema({

@@ -16,7 +16,7 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk, nullUnregisre
 
 ReactDOM.render(
   <Provider store={store}>
-    <EnvironmentForm onSubmit={(values) => console.log(clearNullValues(values))} />
+    <EnvironmentForm  />
   </Provider>,
   document.getElementById("root") as HTMLElement
 );

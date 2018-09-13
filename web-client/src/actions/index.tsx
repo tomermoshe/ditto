@@ -3,7 +3,7 @@ import axios, { AxiosResponse } from "axios";
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
 
 
-const ROOT_URL = "https://7a240434-c481-4e9b-bf97-c0abdf97f817.mock.pstmn.io/api";
+const ROOT_URL = "http://172.17.0.1/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 
@@ -33,3 +33,19 @@ export function receiveSimulators(simulators : SimulatorDefinition[]){
   }
 }
 
+
+
+export function createEnvironment(values){
+  console.log(values);
+  
+  return async dispatch => {
+    dispatch({type: constants.ENVIRONMENT_CREATION_STARTED});
+    try{
+      const response = await axios.post(`${ROOT_URL}/environments`,values);
+      dispatch({type: constants.ENVIRONMENT_CREATION_SUCCEEDED, payload : response.data});
+    }catch(e){
+      dispatch({type: constants.ENVIRONMENT_CREATION_FAILED, error : e});
+    }
+    
+  }
+}
