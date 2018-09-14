@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { SimulatorDefinitionModel } from "../simulators/Simulator";
+import { SimulatorDefinitionModel } from "../simulators/SimulatorDefinitionMongo";
 
 
 const simulatorsProjection = {

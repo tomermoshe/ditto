@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
-import { Environment, EnvironmentModel } from "../environments/Environment";
+import { Environment } from "../environments/Environment";
+import { EnvironmentModel } from "./EnvironmentMongo";
 
 
 export class EnvironmentRouter {

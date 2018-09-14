@@ -1,7 +1,9 @@
 import { Router, Request, Response } from "express";
-import { Scenario, ScenarioModel } from "../scenarios/Scenario";
-import { Environment, EnvironmentModel } from "../environments/Environment";
+import { Scenario } from "../scenarios/Scenario";
+import { Environment } from "../environments/Environment";
 import { TestExecutor } from "../tests/testExecutor";
+import { EnvironmentModel } from "../environments/EnvironmentMongo";
+import { ScenarioModel } from "../scenarios/ScenarioMongo";
 
 interface ScenarioPlayRequest {
     scenarioName: string;

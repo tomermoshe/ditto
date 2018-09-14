@@ -1,11 +1,11 @@
 // import "mocha";
 // import { expect } from "chai";
-// import {  SimulatorConfigModel } from "./Simulator";
-// import { SimulatorConfig } from "./simulatorConfig";
+// import {  SimulatorDifinitionModel } from "./Simulator";
+// import { SimulatorDefinition } from "./simulatorDefinition";
 
 
 // describe("Simulator model testing", () => {
-//     let simulatorConfig: SimulatorConfig;
+//     let simulatorConfig: SimulatorDefinition;
 //     beforeEach(() => {
 //         simulatorConfig = {
 //             id: {
@@ -18,7 +18,7 @@
 
 //     it("should be invalid when name is empty", (done) => {
 
-//         const simulatorConfigDb = new SimulatorConfigModel(simulatorConfig);
+//         const simulatorConfigDb = new SimulatorDifinitionModel(simulatorConfig);
 //         console.log(JSON.stringify(simulatorConfigDb));
 //         done();
 //         // const scenario = new ScenarioModel();
