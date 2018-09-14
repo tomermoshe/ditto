@@ -1,12 +1,10 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { reduxForm, InjectedFormProps, FieldArray, Field } from 'redux-form';
+import { reduxForm, InjectedFormProps, Field } from 'redux-form';
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
 import { fetchSimulators, fetchEnvironments } from "../actions";
-import SimulatorConfiguration from "./SimulatorConfiguration";
 import { required } from "redux-form-validators";
 import { renderFieldInput, renderFieldSelect } from "../utils/form/renderFields";
-import clearNullValues from "../utils/form/clearNullValues";
 import { Environment } from "../../../simulations-manager/src/environments/Environment";
 
 
@@ -27,7 +25,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit(values) {
+    onSubmit() {
         // this.props.createEnvironment(clearNullValues(values));
     }
 
@@ -39,7 +37,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
     }
 
     render() {
-        const { handleSubmit, pristine, reset, submitting, simulatorDefinitions, environments } = this.props;
+        const { handleSubmit, simulatorDefinitions, environments } = this.props;
 
         if (!simulatorDefinitions || !environments) {
             return <div>Loading...</div>;
