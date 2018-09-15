@@ -72,3 +72,20 @@ export function receiveEnvironments(environments : Environment[]){
     environments
   }
 }
+
+
+
+export function createScenario(values){
+  console.log(values);
+  
+  return async dispatch => {
+    dispatch({type: constants.SCENARIO_CREATION_STARTED});
+    try{
+      const response = await axios.post(`${ROOT_URL}/scenarios`,values);
+      dispatch({type: constants.SCENARIO_CREATION_SUCCEEDED, payload : response.data});
+    }catch(e){
+      dispatch({type: constants.SCENARIO_CREATION_FAILED, error : e});
+    }
+    
+  }
+}

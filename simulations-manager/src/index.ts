@@ -7,6 +7,7 @@ import { dockerode } from "./connectors/dockerodeConnector";
 import { EnvironmentCleaner } from "./controllers/environmentCleaner";
 import { SimulatorRouter } from "./simulators/simulatorsRouter";
 import { EnvironmentRouter } from "./environments/environmentRouter";
+import { ScenarioRouter } from "./scenarios/scenarioRouter";
 
 
 
@@ -47,6 +48,7 @@ import { EnvironmentRouter } from "./environments/environmentRouter";
 
     app.use("/api", EnvironmentRouter.routes());
 
+    app.use("/api", ScenarioRouter.routes());
     const server: http.Server = app.listen(3000, () => {
         console.log("App started");
 

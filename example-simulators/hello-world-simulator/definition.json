@@ -1,0 +1,33 @@
+{
+    "id" : {
+        "imageName" : "hello-world-simulator",
+        "version" : "latest"
+    },
+    "configSchema": {
+      "type": "object",
+      "properties": {
+        "greeting": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "greeting"
+      ]
+    },
+    "commands" :[
+        {
+            "commandName" : "SayHello",
+            "commandSchema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "name"
+              ]
+            }
+        }
+    ]
+  }

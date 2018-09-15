@@ -5,7 +5,7 @@ import { Environment } from "../../../simulations-manager/src/environments/Envir
 
 
 
-export const simulatorReducer = (state: Environment[] = [],
+export const environmentReducer = (state: Environment[] = [],
     action: EnvironmentsAction): Environment[] => {
         console.log(action);
         
