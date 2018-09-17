@@ -8,6 +8,7 @@ import { EnvironmentCleaner } from "./controllers/environmentCleaner";
 import { SimulatorRouter } from "./simulators/simulatorsRouter";
 import { EnvironmentRouter } from "./environments/environmentRouter";
 import { ScenarioRouter } from "./scenarios/scenarioRouter";
+import fileUpload from "express-fileupload";
 
 
 
@@ -20,6 +21,7 @@ import { ScenarioRouter } from "./scenarios/scenarioRouter";
     const app = express();
 
     app.use(json());
+    app.use(fileUpload());
     app.use(urlencoded({
         extended: true
     }));

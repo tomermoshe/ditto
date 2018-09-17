@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field, FieldArray, formValueSelector } from 'redux-form';
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
-import { fetchSimulators, fetchEnvironments ,createScenario} from "../actions";
+import { fetchSimulators, fetchEnvironments, createScenario } from "../actions";
 import { required } from "redux-form-validators";
 import { renderFieldInput, renderFieldSelect } from "../utils/form/renderFields";
 import { Environment } from "../../../simulations-manager/src/environments/Environment";
@@ -30,7 +30,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
     }
 
     onSubmit(values) {
-         this.props.createScenario(clearNullValues(values));
+        this.props.createScenario(clearNullValues(values));
     }
 
     renderEnvironments() {
@@ -40,9 +40,9 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         return options;
     }
     renderScenarioSteps = ({ fields, meta: { error, submitFailed } }: any) => {
-        const { environmentName, simulatorDefinitions,environments } = this.props;
+        const { environmentName, simulatorDefinitions, environments } = this.props;
         const selectedEnvironment = environments.find((env) => env.name === environmentName);
-        
+
         return (
             <ul>
                 <li>
@@ -71,7 +71,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
     render() {
         const { handleSubmit, simulatorDefinitions, environments, environmentName } = this.props;
 
-        if (!simulatorDefinitions || !environments) {
+        if (!simulatorDefinitions || !environments || simulatorDefinitions.length === 0 || environments.length === 0) {
             return <div>Loading...</div>;
         }
         return (

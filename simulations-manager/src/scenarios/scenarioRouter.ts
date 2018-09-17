@@ -10,7 +10,7 @@ export class ScenarioRouter {
                 const scenario: Scenario = req.body;
                 try {
                     const newScenario = new ScenarioModel(scenario);
-                    newScenario.save();
+                    await newScenario.save();
                     res.status(200).send(newScenario);
                 } catch (e) {
                     res.status(500).send(e);
