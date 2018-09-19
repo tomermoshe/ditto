@@ -17,14 +17,17 @@ export class SimulatorRouter {
             }).post("/simulators/upload", async (req: Request, res: Response) => {
                 try {
                     const simulatorFile: UploadedFile = <UploadedFile>req.files.file;
-                    // if(simulatorFile.name.split(".")[1]!=="tar"){
 
-                    // }
-                    await simulatorFile.mv(`${__dirname}/uploads/${simulatorFile.name}`);
-                    res.status(200);
+                    const temp = simulatorFile.name.split(".");
+                    if (temp[temp.length - 1] !== "tar") {
+                        throw ("Please provide tar file");
+                    }
+                    const id = uniqid();
+                    await simulatorFile.mv(`${__dirname}/uploads/${id}.tar`);
+                    res.status(200).send(id);
                 }
                 catch (e) {
-                    res.status(500).json(e);
+                    res.status(500).send(e);
                 }
 
             });

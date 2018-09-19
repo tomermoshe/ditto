@@ -12,8 +12,6 @@ export interface Props {
     simulatorDefinitions: SimulatorDefinition[];
     fetchSimulators: () => any;
     createEnvironment: (values) => any;
-
-
 }
 
 
