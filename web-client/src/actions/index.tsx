@@ -89,3 +89,28 @@ export function createScenario(values){
     
   }
 }
+
+
+
+export function createSimulator(values){
+  console.log(values);
+  
+  return async dispatch => {
+    dispatch({type: constants.SIMULATOR_FILE_UPLOAD_STARTED});
+    try{
+
+      const formData = new FormData();
+      formData.append("file",values.dockerfile);
+      const response = await axios.post(`${ROOT_URL}/simulators/upload`, formData,
+      {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+      });
+      dispatch({type: constants.SIMULATOR_FILE_UPLOAD_SUCCEEDED});
+    }catch(e){
+      dispatch({type: constants.SIMULATOR_FILE_UPLOAD_FAILED, error : e});
+    }
+    
+  }
+}

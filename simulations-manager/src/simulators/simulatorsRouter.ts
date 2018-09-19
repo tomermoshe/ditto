@@ -1,11 +1,8 @@
 import { Router, Request, Response } from "express";
 import { SimulatorDefinitionModel } from "../simulators/SimulatorDefinitionMongo";
 import { UploadedFile } from "express-fileupload";
-import uniqid from "uniqid";
 
-const simulatorsProjection = {
-    _id: false
-};
+
 
 
 export class SimulatorRouter {
@@ -22,9 +19,8 @@ export class SimulatorRouter {
                     if (temp[temp.length - 1] !== "tar") {
                         throw ("Please provide tar file");
                     }
-                    const id = uniqid();
-                    await simulatorFile.mv(`${__dirname}/uploads/${id}.tar`);
-                    res.status(200).send(id);
+                    await simulatorFile.mv(`${__dirname}/uploads/${simulatorFile.name}`);
+                    res.status(200).send();
                 }
                 catch (e) {
                     res.status(500).send(e);

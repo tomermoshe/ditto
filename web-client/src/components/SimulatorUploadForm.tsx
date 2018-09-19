@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field } from 'redux-form';
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
-import { fetchSimulators } from "../actions";
+import { fetchSimulators, createSimulator } from "../actions";
 import { required } from "redux-form-validators";
 import { renderFieldInput, renderFieldTextArea, renderFieldFile } from "../utils/form/renderFields";
 
@@ -14,6 +14,7 @@ interface StateProps {
 
 interface DispatchProps {
     fetchSimulators: () => any;
+    createSimulator: (values) => any;
 
 }
 
@@ -30,13 +31,10 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
     }
     onSubmit(values) {
 
-       // console.log(JSON.stringify(values) + this.fileInput.);
-
-        if (this.fileInput.current && this.fileInput.current.files) {
-            const file = this.fileInput.current.files[0];
-            // file.
-        }
-
+        const file = values.dockerfile as File;
+        values.dockerfile = new File([file.slice(0,-1)] ,`${values.id.imageName}_${values.id.version}.tar`);
+        this.props.createSimulator(values);
+   
     }
     render() {
         const { handleSubmit, simulatorDefinitions } = this.props;
@@ -106,5 +104,5 @@ export default reduxForm<{}>({
 })(
         
 connect<StateProps,
-    DispatchProps>(mapStateToProps, { fetchSimulators })(SimulatorUploadForm)
+    DispatchProps>(mapStateToProps, { fetchSimulators, createSimulator })(SimulatorUploadForm)
 );
