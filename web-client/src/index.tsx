@@ -19,8 +19,8 @@ const store = createStore(rootReducer, applyMiddleware(ReduxThunk, nullUnregisre
 ReactDOM.render(
   <Provider store={store}>
     {/* <EnvironmentForm  /> */}
-    {/* <ScenarioForm /> */}
-    <SimulatorUploadForm />
+    <ScenarioForm />
+    {/* <SimulatorUploadForm /> */}
   </Provider>,
   document.getElementById("root") as HTMLElement
 );

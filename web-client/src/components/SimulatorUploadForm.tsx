@@ -30,10 +30,14 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         this.onSubmit = this.onSubmit.bind(this);
     }
     onSubmit(values) {
+        
+        const valuesCopy = Object.assign({},values);
 
-        const file = values.dockerfile as File;
-        values.dockerfile = new File([file.slice(0,-1)] ,`${values.id.imageName}_${values.id.version}.tar`);
-        this.props.createSimulator(values);
+        const file = valuesCopy.dockerfile as File;
+        valuesCopy.dockerfile = new File([file.slice(0,-1)] ,`${values.id.imageName}_${values.id.version}.tar`);
+        valuesCopy.configSchema = JSON.parse(valuesCopy.configSchema);
+        valuesCopy.commands = JSON.parse(valuesCopy.commands);
+        this.props.createSimulator(valuesCopy);
    
     }
     render() {

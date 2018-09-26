@@ -12,12 +12,12 @@ const SimulatorDefinitionSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    commandSchema: {
+    configSchema: {
         type: Object,
         required: false
     },
     commands: [CommandDefinitionSchema]
     // 4 ports: [String]
-}, { _id: false });
+});
 
 export const SimulatorDefinitionModel = mongoose.model<SimulatorDefinitionDocument>("SimulatorDefinition", SimulatorDefinitionSchema);

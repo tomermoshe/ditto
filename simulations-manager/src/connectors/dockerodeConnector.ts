@@ -43,6 +43,9 @@ class DockerodeExtension extends Dockerode {
         };
         doRemoveExitedContainers();
     }
+
+
+
 }
 
 export const dockerode = new DockerodeExtension({ host: "http://172.17.0.1", port: 4243 });
