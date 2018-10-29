@@ -48,4 +48,4 @@ class DockerodeExtension extends Dockerode {
 
 }
 
-export const dockerode = new DockerodeExtension({ host: "http://172.17.0.1", port: 4243 });
+export const dockerode = new DockerodeExtension({ host: "http://localhost", port: 1234 });
