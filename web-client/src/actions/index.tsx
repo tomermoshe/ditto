@@ -4,7 +4,7 @@ import { SimulatorDefinition } from "../../../simulations-manager/src/simulators
 
 import { Environment } from "../../../simulations-manager/src/environments/Environment";
 
-const ROOT_URL = "http://172.17.0.1/api";
+const ROOT_URL = "http://localhost/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 export type EnvironmentsAction = ReturnType<typeof receiveEnvironments>;
