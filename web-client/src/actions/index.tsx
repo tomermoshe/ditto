@@ -4,7 +4,7 @@ import { SimulatorDefinition } from "../../../simulations-manager/src/simulators
 
 import { Environment } from "../../../simulations-manager/src/environments/Environment";
 
-const ROOT_URL = "http://localhost/api";
+const ROOT_URL = "http://127.0.0.1:80/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
 export type EnvironmentsAction = ReturnType<typeof receiveEnvironments>;
@@ -120,6 +120,7 @@ export function createSimulator(values) {
 
       }
     } catch (e) {
+      // TODO: check why i don't get an error message here.
       dispatch({ type: constants.SIMULATOR_FILE_UPLOAD_FAILED, error: e });
     }
 

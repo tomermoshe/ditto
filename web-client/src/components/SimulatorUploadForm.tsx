@@ -99,7 +99,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
 }
 
 function mapStateToProps(state: any): StateProps {
-    console.log(state);
+    // console.log(state);
     return { simulatorDefinitions: state.simulators }
 }
 

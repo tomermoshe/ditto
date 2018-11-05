@@ -114,7 +114,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 const selector = formValueSelector("scenarioForm");
 
 function mapStateToProps(state: any) {
-    console.log(state);
+    // console.log(state);
     return {
         simulatorDefinitions: state.simulators,
         environments: state.environments,

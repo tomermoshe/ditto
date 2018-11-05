@@ -1,1 +1,4 @@
 data/db
+.DS_Store
+example-simulators/.DS_Store
+example-simulators/hello-world-simulator/sim.tar

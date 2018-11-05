@@ -52,7 +52,7 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
 
     render() {
         const { handleSubmit, pristine, reset, submitting, simulatorDefinitions } = this.props;
-
+        
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
         }
@@ -79,7 +79,7 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
     }
 }
 function mapStateToProps(state: any) {
-    console.log(state);
+    // console.log(state);
 
     return { simulatorDefinitions: state.simulators }
 }

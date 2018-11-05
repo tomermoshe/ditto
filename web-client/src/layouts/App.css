@@ -1,0 +1,63 @@
+.logo {
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo img {
+    width: 50px;
+    margin-right: 13px;
+}
+.logo span{
+    vertical-align: text-bottom;
+    font-size: 20px;
+    color: #1890ff;
+    text-transform: uppercase;
+    display: inline-block;
+    font-weight: 700;
+    white-space: nowrap;  
+}
+
+.sider {
+    background-color: #fff;
+}
+.sider .ant-menu-inline {
+    border:none;
+}
+.header {
+    position: relative;
+    display: flex;
+    justify-content: flex-end;
+    height: 56px;
+    z-index: 9;
+    align-items: center;
+    background-color: #fff;
+    padding-right: 16px;
+}
+
+.header .ant-menu-horizontal {
+    line-height: 56px;
+    border: none;
+
+}
+.header .ant-menu-item:hover {
+      color: #1890ff;
+      background-color: rgba(24, 144, 255, 0.15);
+}
+
+.header .ant-menu-horizontal > .ant-menu-item,
+.header .ant-menu-horizontal > .ant-menu-submenu {
+      border-bottom: none;
+    }
+.header .ant-menu-item .anticon {
+    margin: auto;
+}
+.content {
+    padding: 16px;
+    position: relative;
+}
+.add-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+}

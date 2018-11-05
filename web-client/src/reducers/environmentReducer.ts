@@ -7,7 +7,7 @@ import { Environment } from "../../../simulations-manager/src/environments/Envir
 
 export const environmentReducer = (state: Environment[] = [],
     action: EnvironmentsAction): Environment[] => {
-        console.log(action);
+        // console.log(action);
         
     switch (action.type) {
         case RECIEVE_ENVIRONMENTS:

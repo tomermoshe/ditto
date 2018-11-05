@@ -41,8 +41,8 @@ export class SimulatorRouter {
                         {
                             t: `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`
                         });
-                    const writeStream = fs.createWriteStream(`${IMAGES_DIR}/${simulatorDefinition.id.imageName}_${simulatorDefinition.id.version}.img`);
-                    await new Promise(resolve => readStream.pipe(writeStream).on("finish", resolve));
+                    // const writeStream = fs.createWriteStream(`${IMAGES_DIR}/${simulatorDefinition.id.imageName}_${simulatorDefinition.id.version}.img`);
+                    // await new Promise(resolve => readStream.pipe(writeStream).on("finish", resolve));
                     await newSimulatorDefinition.save();
                     await fs.unlink(simulatorFilePath, (err) => {
                         console.log(`couldn't remove simulator file at ${simulatorFilePath}`);
