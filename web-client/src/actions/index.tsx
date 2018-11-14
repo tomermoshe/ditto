@@ -7,7 +7,7 @@ import { Environment } from "../../../simulations-manager/src/environments/Envir
 const ROOT_URL = "http://127.0.0.1:80/api";
 
 export type SimulatorsAction = ReturnType<typeof receiveSimulators>;
-export type EnvironmentsAction = ReturnType<typeof receiveEnvironments>;
+export type EnvironmentsAction = ReturnType<typeof receiveEnvironments> | Environment;
 
 
 
@@ -37,7 +37,6 @@ export function receiveSimulators(simulators: SimulatorDefinition[]) {
 
 
 export function createEnvironment(values) {
-  console.log(values);
 
   return async dispatch => {
     dispatch({ type: constants.ENVIRONMENT_CREATION_STARTED });
@@ -73,6 +72,12 @@ export function receiveEnvironments(environments: Environment[]) {
   }
 }
 
+export function selectEnvironment(environment : Environment){
+  return {
+    type: constants.ENVIRONMENT_SELECTED,
+    selectedEnvironment : environment
+  }
+}
 
 
 export function createScenario(values) {

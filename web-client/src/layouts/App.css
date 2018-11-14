@@ -61,3 +61,49 @@
     bottom: 40px;
     right: 40px;
 }
+
+
+/* form ul li:nth-child(odd) { 
+    background-color: #eee;
+  }
+  form ul li:nth-child(even) { 
+    background-color: #dfdfdf;
+  }
+
+  */
+.environment-form ul li:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+ }    
+.environment-form ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.environment-form ul li {
+    position: relative;
+    border: 1px dotted black;
+
+
+}
+
+.environment-form .remove-simulator--button{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 1;
+}
+
+.environment-form .add-simulator--button{
+ margin-bottom: 10px;
+}
+.image-description {
+    font-size: 13px;
+}
+.environment-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

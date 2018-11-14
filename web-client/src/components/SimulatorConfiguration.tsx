@@ -2,9 +2,13 @@ import * as React from "react";
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
 import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
-import { renderField, DefaultTheme, context } from "liform-react";
+import { EmbeddedLiform } from "pavelkh-liform-react";
+import AntdTheme from "liform-react-antd-theme";
 import { renderFieldInput, renderFieldSelect } from "../utils/form/renderFields";
 import { required } from "../../node_modules/redux-form-validators";
+import { AInput, ASelect } from "../utils/form/reduxFormAntd";
+import { Select, Button } from "antd";
+const { Option } = Select; 
 
 
 export interface InjectedProps {
@@ -23,7 +27,7 @@ type Props = InjectedProps & ConditionalFieldsProps;
 class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
     renderSimulatorImageNames() {
         const options = this.props.simulatorDefinitions.map((simulator) =>
-            <option key={simulator.id.imageName} value={simulator.id.imageName}>{simulator.id.imageName}</option>
+            <Option key={simulator.id.imageName}>{simulator.id.imageName}</Option>
         );
         return options;
     }
@@ -33,7 +37,7 @@ class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props
         const options = this.props.simulatorDefinitions.filter((simulator => {
             return simulator.id.imageName === selectedSimulatorImage;
         })).map(simulator =>
-            <option key={simulator.id.version} value={simulator.id.version}>{simulator.id.version}</option>
+            <Option key={simulator.id.version}>{simulator.id.version}</Option>
         );
         return options;
     }
@@ -45,30 +49,33 @@ class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props
 
     render() {
         const { error } = this.props;
-        
+
         return (
             <li key={this.props.index}>
-                <button
-                    type="button"
+                <Button
+                    type="danger"
+                    className="remove-simulator--button"
                     title="Remove Simulator"
+                    icon="delete"
                     onClick={() => this.props.fields.remove(this.props.index)}
                 />
 
                 <Field
                     name={`${this.props.simulator}.name`}
-                    component={renderFieldInput}
+                    component={AInput}
                     validate={required()}
                     label="Simulator Name"
                     type="text"
+                    hasFeedback={true}
                 />
 
                 <Field
                     name={`${this.props.simulator}.id.imageName`}
-                    component={renderFieldSelect}
+                    component={ASelect}
                     validate={required()}
                     label="Image Name"
+                    hasFeedback={true}
                 >
-                    <option />
                     {this.renderSimulatorImageNames()}
                 </Field>
 
@@ -76,40 +83,35 @@ class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props
                     this.props.imageName &&
                     <Field
                         name={`${this.props.simulator}.id.version`}
-                        component={renderFieldSelect}
+                        component={ASelect}
                         validate={required()}
                         label="Version"
                     >
-                        <option />
                         {this.renderSimualtorVersions()}
                     </Field>
                 }
                 {this.props.imageName && this.props.version &&
-                
-                    <div className="form-group">
-                        {renderField(this.selectSchema(),
-                            "configuration",
-                            DefaultTheme,
-                            `${this.props.simulator}.`,
-                            context)}
-                        {/* <div>{error && <strong>{error}</strong>}</div>
-                        <button className="btn btn-primary" type="submit">
-                                Submit
-                            </button> */}
-                    </div>
+
+                    <EmbeddedLiform
+                        schema={this.selectSchema()}
+                        theme={AntdTheme}
+                        fieldName="configuration"
+                        prefix={`${this.props.simulator}.`} 
+                    />
+          
                 }
             </li>
-        );
+            );
+        }
     }
-}
-const selector = formValueSelector('environmentCreationForm');
-export default connect(
+    const selector = formValueSelector('environmentCreationForm');
+    export default connect(
     (state, props: any) => {
         return {
-            simulatorDefinitions: props.simulatorDefinitions,
+                    simulatorDefinitions: props.simulatorDefinitions,
             imageName: selector(state, `${props.simulator}.id.imageName`),
             version: selector(state, `${props.simulator}.id.version`)
+            }
+    
         }
-
-    }
 )(SimulatorConfiguration);

@@ -7,7 +7,8 @@ import SimulatorConfiguration from "./SimulatorConfiguration";
 import { required } from "redux-form-validators";
 import { renderFieldInput } from "../utils/form/renderFields";
 import clearNullValues from "../utils/form/clearNullValues";
-
+import { Form, Button } from "antd";
+import { AInput } from "../utils/form/reduxFormAntd";
 export interface Props {
     simulatorDefinitions: SimulatorDefinition[];
     fetchSimulators: () => any;
@@ -17,7 +18,7 @@ export interface Props {
 
 
 
-class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
+class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
     componentDidMount() {
         this.props.fetchSimulators();
@@ -26,9 +27,9 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
     renderSimulatorInstanceIds = ({ fields, meta: { error, submitFailed } }: any) => (
         <ul>
             <li>
-                <button type="button" onClick={() => fields.push({})}>
+                <Button className="add-simulator--button" icon="plus" type="primary" onClick={() => fields.push({})}>
                     Add Simulator
-            </button>
+                </Button>
             </li>
             {submitFailed && error && <span>{error}</span>}
             {
@@ -58,14 +59,14 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
         }
         return (
             <div>
-                <form onSubmit={handleSubmit(this.onSubmit)}>
+                <Form className="environment-form" onSubmit={handleSubmit(this.onSubmit)}>
 
                     <Field
                         name="name"
-                        component={renderFieldInput}
+                        component={AInput}
                         validate={required()}
                         label="Name"
-                        type="text"
+                        hasFeedback={true}
                     />
 
                     <FieldArray name="simulators" component={this.renderSimulatorInstanceIds} />
@@ -73,7 +74,7 @@ class SimulatorSelectorForm extends React.Component<InjectedFormProps<{}, Props>
                         Submit
                     </button>
 
-                </form>
+                </Form>
             </div>
         );
     }
@@ -86,4 +87,4 @@ function mapStateToProps(state: any) {
 
 export default reduxForm<{}>({
     form: "environmentCreationForm"
-})(connect(mapStateToProps, { fetchSimulators, createEnvironment })(SimulatorSelectorForm));
+})(connect(mapStateToProps, { fetchSimulators, createEnvironment })(EnvironmentForm));
