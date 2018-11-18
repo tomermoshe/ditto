@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Menu, Icon ,Layout} from 'antd';
 import { Link} from 'react-router-dom'
-import ScenariosSvg from "../icons/ScenariosSvg";
+import ScenariosSvg from "../../icons/ScenariosSvg";
 const logo = require("./logo.svg") as string;
 
 

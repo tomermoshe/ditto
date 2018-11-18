@@ -1,24 +1,28 @@
 import * as React from "react";
 import { List, Card } from 'antd';
-import { Environment } from "../../../simulations-manager/src/environments/Environment";
-import { SimulatorInstanceId } from "../../../simulations-manager/src/simulators/simulatorInstanceId";
+import { Environment } from "../../../../simulations-manager/src/environments/Environment";
+import { SimulatorInstanceId } from "../../../../simulations-manager/src/simulators/simulatorInstanceId";
 import ReactJson from 'react-json-view';
 import EnvironmentForm from "./EnvironmentForm";
 import { Switch } from 'antd';
-import { selectEnvironment } from "../actions";
+import { selectEnvironment } from "./store/actions";
 import { connect } from "react-redux";
+import { ApplicationState } from "../types";
 
 
-export interface Props {
+export interface OwnProps {
     environment: Environment;
 }
 interface DispatchProps {
     selectEnvironment: (Environment) => any;
 }
 interface StateProps {
-    selectedEnvironment: Environment;
+    selectedEnvironment: Environment | undefined;
 }
-class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps>{
+
+type AllProps = OwnProps & DispatchProps & StateProps;
+
+class EnvironmentCard extends React.Component<AllProps>{
 
     createTitle(simulator) {
         return (
@@ -86,9 +90,9 @@ class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps
         return Object.keys(environment).length === 0;
     }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ApplicationState) => {
     return {
-        selectedEnvironment: state.selectedEnvironment as Environment
+        selectedEnvironment: state.environments.selected
     };
 }
-export default connect<StateProps, DispatchProps, Props>(mapStateToProps, { selectEnvironment })(EnvironmentCard);
+export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, { selectEnvironment })(EnvironmentCard);

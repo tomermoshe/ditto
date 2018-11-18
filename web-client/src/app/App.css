@@ -71,25 +71,23 @@
   }
 
   */
-.environment-form ul li:first-child {
+.form-array ul li:first-child {
     display: flex;
     justify-content: center;
     align-items: center;
     border: none;
  }    
-.environment-form ul {
+.form-array ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
-.environment-form ul li {
+.form-array ul li {
     position: relative;
     border: 1px dotted black;
-
-
 }
 
-.environment-form .remove-simulator--button{
+.remove-item--button{
     position: absolute;
     right: 5px;
     top: 5px;

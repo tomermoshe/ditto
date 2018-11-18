@@ -1,12 +1,11 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
-import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
+import { SimulatorDefinition } from "../../../../simulations-manager/src/simulators/simulatorDefinition";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
-import { renderFieldInput, renderFieldSelect } from "../utils/form/renderFields";
-import { required } from "../../node_modules/redux-form-validators";
-import { AInput, ASelect } from "../utils/form/reduxFormAntd";
+import { required } from "redux-form-validators";
+import { AInput, ASelect } from "../../utils/form/reduxFormAntd";
 import { Select, Button } from "antd";
 const { Option } = Select; 
 
@@ -24,7 +23,7 @@ interface ConditionalFieldsProps {
 type Props = InjectedProps & ConditionalFieldsProps;
 
 
-class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
+class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
     renderSimulatorImageNames() {
         const options = this.props.simulatorDefinitions.map((simulator) =>
             <Option key={simulator.id.imageName}>{simulator.id.imageName}</Option>
@@ -54,7 +53,7 @@ class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props
             <li key={this.props.index}>
                 <Button
                     type="danger"
-                    className="remove-simulator--button"
+                    className="remove-item--button"
                     title="Remove Simulator"
                     icon="delete"
                     onClick={() => this.props.fields.remove(this.props.index)}
@@ -114,4 +113,4 @@ class SimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props
             }
     
         }
-)(SimulatorConfiguration);
+)(EnvironmentSimulatorConfiguration);

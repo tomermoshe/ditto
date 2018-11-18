@@ -39,7 +39,7 @@ const formItemLayout = {
               {...formItemLayout}
               label={label}
               validateStatus={hasError ? "error" : "success"}
-              hasFeedback={hasFeedback && hasError}
+              hasFeedback={hasError}
               help={hasError && meta.error}
             >
               <Component {...input} {...rest} children={children} />

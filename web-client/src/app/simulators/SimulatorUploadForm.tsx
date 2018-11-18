@@ -1,10 +1,14 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field } from 'redux-form';
-import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
-import { fetchSimulators, createSimulator } from "../actions";
+import { SimulatorDefinition } from "../../../../simulations-manager/src/simulators/simulatorDefinition";
+import { fetchSimulators, createSimulator } from "./store/actions";
 import { required } from "redux-form-validators";
-import { renderFieldInput, renderFieldTextArea, renderFieldFile } from "../utils/form/renderFields";
+import { renderFieldInput, renderFieldTextArea, renderFieldFile } from "../../utils/form/renderFields";
+import { SimulatorsState } from "./store/types";
+import { ApplicationState } from "../types";
+import { Form, Button } from "antd";
+import { AInput, ATextarea } from "../../utils/form/reduxFormAntd";
 
 
 
@@ -48,18 +52,18 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         }
         return (
             <div>
-                <form onSubmit={handleSubmit(this.onSubmit)}>
+                <Form onSubmit={handleSubmit(this.onSubmit)}>
 
                     <Field
                         name="id.imageName"
-                        component={renderFieldInput}
+                        component={AInput}
                         validate={required()}
                         label="Image Name"
                         type="text"
                     />
                     <Field
                         name="id.version"
-                        component={renderFieldInput}
+                        component={AInput}
                         validate={required()}
                         label="Version"
                         type="text"
@@ -67,13 +71,15 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
 
                     <Field
                         name="configSchema"
-                        component={renderFieldTextArea}
+                        component={ATextarea}
+                        autosize={true}
                         validate={required()}
                         label="Config Schema"
                     />
                     <Field
                         name="commands"
-                        component={renderFieldTextArea}
+                        component={ATextarea}
+                        autosize={true}
                         validate={required()}
                         label="Commands Definition"
                     />
@@ -87,19 +93,18 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
                         validate={required()}
                     />
 
-                    <button className="btn btn-primary" type="submit">
+                    <Button type="primary" htmlType="submit">
                         Submit
-                    </button>
+                    </Button>
 
-                </form>
+                </Form>
             </div>
         );
     }
 
 }
 
-function mapStateToProps(state: any): StateProps {
-    // console.log(state);
+function mapStateToProps(state: ApplicationState): StateProps {
     return { simulatorDefinitions: state.simulators }
 }
 
