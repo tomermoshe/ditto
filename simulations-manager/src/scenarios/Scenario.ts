@@ -10,6 +10,10 @@ export interface Scenario {
     steps: Array<ScenarioStep>;
 }
 
+interface PScenario<IdType> extends Scenario {
+    _id: IdType;
+}
+export type ScenarioJSON = PScenario<string>;
 
 
 

@@ -11,7 +11,7 @@ import ScenarioStepConfiguration from "./ScenarioStepConfiguration";
 import clearNullValues from "../../utils/form/clearNullValues";
 import { ApplicationState } from "../types";
 import { Button, Form, Select } from "antd";
-import { AInput, ASelect } from "../../utils/form/reduxFormAntd";
+import { AInput, ASelect, tailFormItemLayout } from "../../utils/form/reduxFormAntd";
 
 
 export interface Props {
@@ -27,6 +27,7 @@ export interface Props {
 
 class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
+    
     componentDidMount() {
         this.props.fetchSimulators();
         this.props.fetchEnvironments();
@@ -102,9 +103,9 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 
                     }
 
-
-                    <Button type="primary" htmlType="submit">Submit</Button>
-
+                    <Form.Item {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit">Submit</Button>
+                    </Form.Item>
 
                 </Form>
             </div>

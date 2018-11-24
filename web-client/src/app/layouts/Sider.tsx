@@ -1,51 +1,49 @@
 import * as React from "react";
-import { Menu, Icon ,Layout} from 'antd';
-import { Link} from 'react-router-dom'
+import { Menu, Icon, Layout } from 'antd';
+import { Link } from 'react-router-dom'
 import ScenariosSvg from "../../icons/ScenariosSvg";
 const logo = require("./logo.svg") as string;
+import SiteLogo from "./SiteLogo";
 
+const Sider = () => {
+    return (
 
-const Sider = () => { return (
+        <Layout.Sider width={200} className="sider">
+            <SiteLogo />
+            <Menu
+                mode="inline"
+                defaultSelectedKeys={['environments']}
+                defaultOpenKeys={['environments']}
+            >
+                <Menu.Item key="environments">
 
-    <Layout.Sider width={200} className="sider">
-        <div className="logo">
-            <img src={logo} />
-            <span>Ditto</span>
-        </div>
-        <Menu
-            mode="inline"
-            defaultSelectedKeys={['environments']}
-            defaultOpenKeys={['environments']}
-        >
-            <Menu.Item key="environments"> 
+                    <Link to="/environments">
+                        <Icon type="global" theme="outlined" />
 
-                <Link to="/environments">
-                    <Icon type="global" theme="outlined" />
+                        <span>Environments</span>
 
-                    <span>Environments</span>
+                    </Link>
 
-                </Link> 
+                </Menu.Item>
+                <Menu.Item key="scenarios">
+                    <Link to="/scenarios">
 
-            </Menu.Item>
-            <Menu.Item key="scenarios">
-                <Link to="/scenarios">
+                        <Icon component={ScenariosSvg} />
 
-                    <Icon component={ScenariosSvg} />
+                        <span>Scenarios</span>
+                    </Link>
+                </Menu.Item>
+                <Menu.Item key="simulators">
+                    <Link to="/simulators">
 
-                    <span>Scenarios</span>
-                </Link>
-            </Menu.Item>
-            <Menu.Item key="simulators">
-                <Link to="/simulators">
+                        <Icon type="file-protect" />
+                        <span>Simulators</span>
+                    </Link>
+                </Menu.Item>
+            </Menu>
+        </Layout.Sider>
 
-                    <Icon type="file-protect" />
-                    <span>Simulators</span>
-                </Link>
-            </Menu.Item>
-        </Menu>
-    </Layout.Sider>
-
-)
+    )
 };
 
 export default Sider;

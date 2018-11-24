@@ -1,7 +1,7 @@
 import {ROOT_URL} from "../../constants";
 import axios from "axios";
 import { ScenariosActionTypes } from "./types";
-import { Scenario } from "../../../../../simulations-manager/src/scenarios/Scenario";
+import { ScenarioJSON } from "../../../../../simulations-manager/src/scenarios/Scenario";
 const  ROOT_URL_SCENARIOS = `${ROOT_URL}/scenarios`;
 
 
@@ -12,7 +12,8 @@ export function createScenario(values) {
       dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_STARTED });
       try {
         const response = await axios.post(ROOT_URL_SCENARIOS, values);
-        dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_SUCCEEDED, payload: response.data });
+        dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_SUCCEEDED, scenario: response.data });
+
       } catch (e) {
         dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_FAILED, error: e });
         console.log(e.response);
@@ -26,7 +27,7 @@ export function createScenario(values) {
   export function fetchScenarios() {
     return async dispatch => {
       try {
-        const scenarios: Scenario[] = (await axios.get(ROOT_URL_SCENARIOS)).data;
+        const scenarios: ScenarioJSON[] = (await axios.get(ROOT_URL_SCENARIOS)).data;
         dispatch(receiveScenarios(scenarios));
   
       } catch (error) {
@@ -36,7 +37,7 @@ export function createScenario(values) {
     }
   }
 
-  export function receiveScenarios(scenarios: Scenario[]) {
+  export function receiveScenarios(scenarios: ScenarioJSON[]) {
     return {
       type: ScenariosActionTypes.RECIEVE_SCENARIOS,
       scenarios

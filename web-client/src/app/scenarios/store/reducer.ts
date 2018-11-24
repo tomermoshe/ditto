@@ -6,12 +6,13 @@ const initialState: ScenariosState = {
 }
 
 export const scenarioReducer: Reducer<ScenariosState> =
-    (state: ScenariosState = initialState, { type, scenarios }) => {
-        switch (type) {
+    (state: ScenariosState = initialState, action) => {
+        switch (action.type) {
 
             case ScenariosActionTypes.RECIEVE_SCENARIOS:
-                return { ...state, all: [...scenarios] };
-
+                return { ...state, all: [...action.scenarios] };
+            case ScenariosActionTypes.SCENARIO_CREATION_SUCCEEDED:
+                return {...state, all:[...state.all, action.scenario]}
             default:
                 return state;
         }

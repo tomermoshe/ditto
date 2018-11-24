@@ -1,4 +1,4 @@
-import { Scenario } from "../../../../../simulations-manager/src/scenarios/Scenario";
+import { ScenarioJSON } from "../../../../../simulations-manager/src/scenarios/Scenario";
 
 export const enum ScenariosActionTypes {
   SCENARIO_CREATION_SUCCEEDED = "SCENARIO_CREATION_SUCCEEDED",
@@ -8,5 +8,5 @@ export const enum ScenariosActionTypes {
 }
 
 export interface ScenariosState{
-    readonly all : Scenario[];
+    readonly all : ScenarioJSON[];
 }

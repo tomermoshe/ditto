@@ -17,7 +17,7 @@ export class ScenarioRouter {
                 }
             })
             .get("/scenarios", async (req: Request, res: Response) => {
-                const scenarios = await ScenarioModel.find({}, "-_id");
+                const scenarios = await ScenarioModel.find({});
                 res.status(200).json(scenarios);
             });
     }

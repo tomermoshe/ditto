@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 import { fetchEnvironments } from "./store/actions";
-import { List, Card, Button } from 'antd';
+import { List, Button } from 'antd';
 import { Environment } from "../../../../simulations-manager/src/environments/Environment";
 import EnvironmentCard from "./EnvironmentCard";
 import { ApplicationState } from "../types";

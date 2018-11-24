@@ -9,6 +9,7 @@ import Sider from "./layouts/Sider";
 import Header from "./layouts/Header";
 import Environments from "./environments/Environments";
 import Scenarios  from "./scenarios/Scenarios";
+import StyledContent from "./layouts/StyledContent";
 
 
 const App = () => {
@@ -20,13 +21,14 @@ const App = () => {
             <Sider />
             <Layout>
                 <Header />
-                <Layout.Content className="content">
+                <StyledContent>
                     <Switch>
                         <Route exact={true} path='/environments' component={Environments} />
-                        <Route exact={true} path='/scenarios' component={Scenarios} />
+                        <Route path='/scenarios' component={Scenarios} />
                         <Route exact={true} path='/simulators' component={SimulatorUploadForm} />
+                        
                     </Switch>
-                </Layout.Content>
+                </StyledContent>
 
             </Layout>
         </Layout>

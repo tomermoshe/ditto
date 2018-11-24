@@ -20,12 +20,12 @@ export class SimulatorRouter {
             }).post("/simulators/upload", async (req: Request, res: Response) => {
                 try {
                     const simulatorFile: UploadedFile = <UploadedFile>req.files.file;
-
+                    const uploadId = req.body.uploadId;
                     const temp = simulatorFile.name.split(".");
                     if (temp[temp.length - 1] !== "tar") {
                         throw ("Please provide tar file");
                     }
-                    await simulatorFile.mv(`${UPLOADS_DIR}/${simulatorFile.name}`);
+                    await simulatorFile.mv(`${UPLOADS_DIR}/${uploadId}.tar`);
                     res.status(200).send();
                 }
                 catch (e) {
@@ -33,10 +33,11 @@ export class SimulatorRouter {
                 }
             }).post("/simulators", async (req: Request, res: Response) => {
                 try {
-                    const simulatorDefinition: SimulatorDefinition = req.body as SimulatorDefinition;
+                    const simulatorDefinition: SimulatorDefinition = req.body.simulator as SimulatorDefinition;
+                    const uploadId: string = req.body.uploadId;
                     const newSimulatorDefinition = new SimulatorDefinitionModel(simulatorDefinition);
 
-                    const simulatorFilePath = `${UPLOADS_DIR}/${simulatorDefinition.id.imageName}_${simulatorDefinition.id.version}.tar`;
+                    const simulatorFilePath = `${UPLOADS_DIR}/${uploadId}.tar`;
                     const readStream = await dockerode.buildImage(simulatorFilePath,
                         {
                             t: `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`

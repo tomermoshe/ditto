@@ -4,11 +4,12 @@ import { reduxForm, InjectedFormProps, Field } from 'redux-form';
 import { SimulatorDefinition } from "../../../../simulations-manager/src/simulators/simulatorDefinition";
 import { fetchSimulators, createSimulator } from "./store/actions";
 import { required } from "redux-form-validators";
-import { renderFieldInput, renderFieldTextArea, renderFieldFile } from "../../utils/form/renderFields";
+import { renderFieldInput, renderFieldTextArea } from "../../utils/form/renderFields";
 import { SimulatorsState } from "./store/types";
 import { ApplicationState } from "../types";
 import { Form, Button } from "antd";
-import { AInput, ATextarea } from "../../utils/form/reduxFormAntd";
+import { AInput, ATextarea, tailFormItemLayout, renderFieldFile } from "../../utils/form/reduxFormAntd";
+import uniqid = require("uniqid");
 
 
 
@@ -26,23 +27,26 @@ export type Props = StateProps & DispatchProps;
 
 
 class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
-    fileInput: React.RefObject<HTMLInputElement>;
+    
+    uploadId : string;
 
     constructor(props: InjectedFormProps<{}, Props> & Props) {
         super(props);
-        this.fileInput = React.createRef();
         this.onSubmit = this.onSubmit.bind(this);
+        this.uploadId = uniqid();  
     }
     onSubmit(values) {
-        
-        const valuesCopy = Object.assign({},values);
 
-        const file = valuesCopy.dockerfile as File;
-        valuesCopy.dockerfile = new File([file.slice(0,-1)] ,`${values.id.imageName}_${values.id.version}.tar`);
+        const valuesCopy = {...values};
+
         valuesCopy.configSchema = JSON.parse(valuesCopy.configSchema);
         valuesCopy.commands = JSON.parse(valuesCopy.commands);
-        this.props.createSimulator(valuesCopy);
-   
+        delete valuesCopy.dockerfile;
+        this.props.createSimulator({
+            simulator : valuesCopy,
+            uploadId : this.uploadId
+        });
+
     }
     render() {
         const { handleSubmit, simulatorDefinitions } = this.props;
@@ -50,6 +54,8 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
         }
+        console.log("rendering");
+        
         return (
             <div>
                 <Form onSubmit={handleSubmit(this.onSubmit)}>
@@ -88,15 +94,17 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
                     <Field
                         name="dockerfile"
                         component={renderFieldFile}
+                        uploadId={this.uploadId}
                         accept=".tar"
-                        label="Simulator dockerfile tar"
                         validate={required()}
                     />
 
-                    <Button type="primary" htmlType="submit">
-                        Submit
-                    </Button>
-
+                    
+                    <Form.Item {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit">
+                            Submit
+                        </Button>
+                    </Form.Item>
                 </Form>
             </div>
         );
@@ -111,7 +119,7 @@ function mapStateToProps(state: ApplicationState): StateProps {
 export default reduxForm<{}>({
     form: "simulatorUploadForm",
 })(
-        
-connect<StateProps,
-    DispatchProps>(mapStateToProps, { fetchSimulators, createSimulator })(SimulatorUploadForm)
+
+    connect<StateProps,
+        DispatchProps>(mapStateToProps, { fetchSimulators, createSimulator })(SimulatorUploadForm)
 );
