@@ -4,7 +4,6 @@ import "./App.css"
 import { Switch, Route} from 'react-router-dom'
 
 import SimulatorUploadForm from "./simulators/SimulatorUploadForm";
-import ScenarioForm from "./scenarios/ScenarioForm";
 import Sider from "./layouts/Sider"; 
 import Header from "./layouts/Header";
 import Environments from "./environments/Environments";

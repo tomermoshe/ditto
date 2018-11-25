@@ -6,10 +6,11 @@ import { Scenario, ScenarioJSON } from "../../../../simulations-manager/src/scen
 import { List, Layout } from "antd";
 import styled from "styled-components";
 import { Button } from "antd";
-import ScenarioView from "./Scenario";
+import ScenarioView from "./ScenarioView";
 import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom'
 import ScenarioForm from "./ScenarioForm";
 import { Input } from 'antd';
+import StyledContent from "./../layouts/StyledContent";
 const Search = Input.Search;
 
 
@@ -25,11 +26,12 @@ right: 16px;
 const StyledSider = styled(Layout.Sider)`
 background-color: #FFF;
 overflow:scroll;
-
 `;
 const StyledLink = styled(Link)`
 width : 100%;
 `;
+
+
 
 interface DispatchProps {
     fetchScenarios: () => any;
@@ -88,7 +90,7 @@ class Scenarios extends React.Component<Props, OwnState> {
         return (
             <StyledLayout>
 
-                <StyledSider>
+                <StyledSider width="250px">
                     <Search
                         placeholder="Search Scenarios"
                         onChange={(e) => this.setState({
@@ -115,7 +117,7 @@ class Scenarios extends React.Component<Props, OwnState> {
                             </Button></StyledLink></List.Item>)}
                     />
                 </StyledSider>
-                <Layout.Content>
+                <StyledContent>
                     <Switch>
                         <Route path='/scenarios/new' component={ScenarioForm} />
                         <Route
@@ -125,7 +127,7 @@ class Scenarios extends React.Component<Props, OwnState> {
                                 <ScenarioView findScenarioById={this.scenarioById.bind(this)} {...props} />}
                         />
                     </Switch>
-                </Layout.Content>
+                </StyledContent>
             </StyledLayout>
         );
     }

@@ -78,7 +78,7 @@ class EnvironmentCard extends React.Component<AllProps>{
     private onSwitchEnvironment(environment: Environment): ((checked: boolean) => any) | undefined {
         return (checked) => {
             if (!checked) {
-                this.props.selectEnvironment(null);
+                this.props.selectEnvironment(undefined);
             }
             else {
                 this.props.selectEnvironment(environment);

@@ -1,6 +1,9 @@
 import * as React from "react";
 import { Menu, Icon, Layout } from 'antd';
 import styled from "styled-components";
+import { connect } from "react-redux";
+import { ApplicationState } from "../types";
+import { Environment } from "../../../../simulations-manager/src/environments/Environment";
 
 const StyledHeader = styled(Layout.Header)`
 position: relative;
@@ -29,13 +32,19 @@ padding-right: 16px;
     margin: auto;
 }`;
 
-const Header = () => {
+interface StateProps {
+    selectedEnvironment : Environment | undefined;
+}
 
-
+const Header = ({selectedEnvironment} : StateProps) => {
     return (
 
         <StyledHeader>
             <Menu mode="horizontal" selectable={false}>
+                <Menu.Item key="environment">
+                    <Icon type="global" theme="outlined" />
+                    <span> {selectedEnvironment === undefined ? `<Select Environment>` : selectedEnvironment.name}</span>
+                </Menu.Item>
                 <Menu.Item key="mail">
                     <Icon type="mail" theme="outlined" />
                 </Menu.Item>
@@ -49,4 +58,10 @@ const Header = () => {
     );
 }
 
-export default Header;
+function mapStateToProps(state: ApplicationState) {
+    return {
+        selectedEnvironment: state.environments.selected
+    }
+}
+
+export default connect(mapStateToProps)(Header);

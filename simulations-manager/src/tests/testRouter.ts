@@ -5,7 +5,7 @@ import { TestExecutor } from "../tests/testExecutor";
 import { EnvironmentModel } from "../environments/EnvironmentMongo";
 import { ScenarioModel } from "../scenarios/ScenarioMongo";
 
-interface ScenarioPlayRequest {
+export interface ScenarioPlayRequest {
     scenarioName: string;
     environmentName: string;
 }
