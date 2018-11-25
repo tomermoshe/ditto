@@ -56,8 +56,8 @@ export function playScenario(scenario: ScenarioJSON) {
     else {
       try {
         const response = await axios.post(ROOT_URL_TESTS, {
-          scenarioName: scenario.name,
-          environmentName: environment.name
+          scenarioId: scenario._id,
+          environmentId: environment._id
         });
         dispatch({ type: ScenariosActionTypes.SCENARIO_PLAY_SUCCEEDED, response: response.data });
 

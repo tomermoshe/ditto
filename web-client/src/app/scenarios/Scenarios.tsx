@@ -83,7 +83,7 @@ class Scenarios extends React.Component<Props, OwnState> {
         return this.props.scenarios.filter(scenario => scenario._id === id)[0];
     }
     render() {
-        if (!this.props.scenarios || this.props.scenarios.length === 0) {
+        if (!this.props.scenarios) {
             return <div>Loading...</div>;
         }
 

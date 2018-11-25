@@ -1,4 +1,4 @@
-import { Environment } from "../../../../../simulations-manager/src/environments/Environment";
+import { Environment, EnvironmentJSON } from "../../../../../simulations-manager/src/environments/Environment";
 
 export const enum EnvironmentActionTypes {
     ENVIRONMENT_CREATION_STARTED = "ENVIRONMENT_CREATION_STARTED",
@@ -10,6 +10,6 @@ export const enum EnvironmentActionTypes {
 
 export interface EnvironmentsState{
 
-    readonly all : Environment[];
-    readonly selected : Environment | undefined;
+    readonly all : EnvironmentJSON[];
+    readonly selected : EnvironmentJSON | undefined;
 }

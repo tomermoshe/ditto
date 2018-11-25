@@ -6,8 +6,8 @@ import { EnvironmentModel } from "../environments/EnvironmentMongo";
 import { ScenarioModel } from "../scenarios/ScenarioMongo";
 
 export interface ScenarioPlayRequest {
-    scenarioName: string;
-    environmentName: string;
+    scenarioId: string;
+    environmentId: string;
 }
 
 export class TestRouter {
@@ -16,8 +16,8 @@ export class TestRouter {
             .post("/test/play", async (req: Request, res: Response) => {
                 const playRequest: ScenarioPlayRequest = req.body;
 
-                const scenario: Scenario = <Scenario>(await ScenarioModel.findOne({ name: playRequest.scenarioName }));
-                const environment: Environment = <Environment>(await EnvironmentModel.findOne({ name: playRequest.environmentName }));
+                const scenario: Scenario = <Scenario>(await ScenarioModel.findById(playRequest.scenarioId));
+                const environment: Environment = <Environment>(await EnvironmentModel.findById(playRequest.environmentId));
 
                 const testExecutor: TestExecutor = new TestExecutor({
                     environment: environment,

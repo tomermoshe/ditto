@@ -1,7 +1,7 @@
 import axios from "axios";
 import { ROOT_URL } from "./../../constants";
 import { EnvironmentActionTypes } from "./types";
-import { Environment } from "../../../../../simulations-manager/src/environments/Environment";
+import { Environment, EnvironmentJSON } from "../../../../../simulations-manager/src/environments/Environment";
 
 
 const ROOT_URL_ENVIRONMENTS = `${ROOT_URL}/environments`;
@@ -24,7 +24,7 @@ export function createEnvironment(values) {
   export function fetchEnvironments() {
     return async dispatch => {
       try {
-        const environments: Environment[] = (await axios.get(ROOT_URL_ENVIRONMENTS)).data;
+        const environments: EnvironmentJSON[] = (await axios.get(ROOT_URL_ENVIRONMENTS)).data;
         dispatch(receiveEnvironments(environments));
   
       } catch (error) {
@@ -34,14 +34,14 @@ export function createEnvironment(values) {
     }
   }
 
-  export function receiveEnvironments(environments: Environment[]) {
+  export function receiveEnvironments(environments: EnvironmentJSON[]) {
     return {
       type: EnvironmentActionTypes.RECIEVE_ENVIRONMENTS,
       environments
     }
   }
   
-  export function selectEnvironment(environment : Environment){
+  export function selectEnvironment(environment : EnvironmentJSON){
     return {
       type: EnvironmentActionTypes.ENVIRONMENT_SELECTED,
       selected : environment

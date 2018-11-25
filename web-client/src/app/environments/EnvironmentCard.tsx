@@ -1,6 +1,6 @@
 import * as React from "react";
 import { List, Card } from 'antd';
-import { Environment } from "../../../../simulations-manager/src/environments/Environment";
+import { EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
 import { SimulatorInstanceId } from "../../../../simulations-manager/src/simulators/simulatorInstanceId";
 import ReactJson from 'react-json-view';
 import EnvironmentForm from "./EnvironmentForm";
@@ -11,13 +11,13 @@ import { ApplicationState } from "../types";
 
 
 export interface OwnProps {
-    environment: Environment;
+    environment: EnvironmentJSON;
 }
 interface DispatchProps {
-    selectEnvironment: (Environment) => any;
+    selectEnvironment: (environment: EnvironmentJSON | undefined) => any;
 }
 interface StateProps {
-    selectedEnvironment: Environment | undefined;
+    selectedEnvironment: EnvironmentJSON | undefined;
 }
 
 type AllProps = OwnProps & DispatchProps & StateProps;
@@ -40,7 +40,7 @@ class EnvironmentCard extends React.Component<AllProps>{
             cardContent = <EnvironmentForm />
         }
         else {
-            ({ attributes, cardContent } = this.createEnironmentCard(environment));
+            ({ attributes, cardContent } = this.createEnvironmentCard(environment));
         }
         return (
 
@@ -50,7 +50,7 @@ class EnvironmentCard extends React.Component<AllProps>{
         );
     }
 
-    private createEnironmentCard(environment: Environment) {
+    private createEnvironmentCard(environment: EnvironmentJSON) {
         const cardTitle = (
             <div className="environment-title">
                 {environment.name}
@@ -75,7 +75,7 @@ class EnvironmentCard extends React.Component<AllProps>{
         return { attributes, cardContent };
     }
 
-    private onSwitchEnvironment(environment: Environment): ((checked: boolean) => any) | undefined {
+    private onSwitchEnvironment(environment: EnvironmentJSON): ((checked: boolean) => any) | undefined {
         return (checked) => {
             if (!checked) {
                 this.props.selectEnvironment(undefined);
@@ -86,7 +86,7 @@ class EnvironmentCard extends React.Component<AllProps>{
         };
     }
 
-    private isEmptyEnvironment(environment: Environment) {
+    private isEmptyEnvironment(environment: EnvironmentJSON) {
         return Object.keys(environment).length === 0;
     }
 }

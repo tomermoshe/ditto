@@ -1,11 +1,7 @@
 import { SimulatorExecutor } from "../simulators/simulatorExecutor";
 import { dockerode } from "../connectors/dockerodeConnector";
 import { Network } from "dockerode";
-import rp from "request-promise";
 import promiseRetry from "promise-retry";
-import uniqid from "uniqid";
-import { LocalCommandsExecutor } from "../commands/localCommandsExecutor";
-import { RemoteCommandsExecutor } from "../commands/remoteCommandsExecutor";
 import { Environment } from "./Environment";
 
 export class EnvironmentExecutor {
@@ -34,9 +30,6 @@ export class EnvironmentExecutor {
     }
 
 
-    private getSimulatorExecutionName(simulatorName: string): string {
-        return `${simulatorName}-${this.executionId}`;
-    }
 
 
 
