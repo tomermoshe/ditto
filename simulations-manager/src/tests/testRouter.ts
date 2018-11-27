@@ -23,8 +23,13 @@ export class TestRouter {
                     environment: environment,
                     scenario: scenario
                 });
-                await testExecutor.execute();
-                res.status(200).send(`Scenario ${scenario.name} executed sucessfully`);
+                try {
+                    await testExecutor.execute();
+                    res.status(200).send(`Scenario ${scenario.name} executed sucessfully`);
+                } catch (error) {
+                    res.status(500).send(error);
+                }
+
             });
     }
 }

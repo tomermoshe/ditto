@@ -46,7 +46,9 @@ export class SimulatorExecutor {
                 console.log(`${this.dnsName} is not ready retry number ${number} ${error}`);
                 retry(error);
             }
-        });
+        }, {
+                retries: 5
+            });
     }
 
     public async stop() {

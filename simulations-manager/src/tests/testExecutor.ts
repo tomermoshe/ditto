@@ -16,9 +16,15 @@ export class TestExecutor {
     public async execute() {
         this.environmentExecutor = new EnvironmentExecutor(this.test.environment, this.executionId);
         this.scenarioExecutor = new ScenarioExecutor(this.test.scenario, this.executionId);
+        try {
+            await this.environmentExecutor.executeEnvironment();
+            await this.scenarioExecutor.executeScenario();
+        } catch (error) {
+            console.log(error);
+            throw new Error(error);
+        } finally {
+            await this.environmentExecutor.removeEnvironment();
+        }
 
-        await this.environmentExecutor.executeEnironment();
-        await this.scenarioExecutor.executeScenario();
-        await this.environmentExecutor.removeEnvironment();
     }
 }
