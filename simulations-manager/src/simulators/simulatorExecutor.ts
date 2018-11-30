@@ -18,7 +18,7 @@ export class SimulatorExecutor {
     private configurationObjectToStringArray(configuration: any): string[] {
         const envs: string[] = [];
         for (const key in configuration) {
-            envs.push(`${key}:${configuration[key]}`);
+            envs.push(`${key}=${configuration[key]}`);
         }
         return envs;
     }
@@ -47,7 +47,7 @@ export class SimulatorExecutor {
                 retry(error);
             }
         }, {
-                retries: 5
+                retries: 6
             });
     }
 

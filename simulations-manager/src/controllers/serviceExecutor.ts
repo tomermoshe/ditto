@@ -20,7 +20,11 @@ export class ServiceExecutor {
             },
             {
                 Target: "bridge"
-            }]
+            }],
+            EndpointSpec: {
+                Mode: "dnsrr"
+            }
+
         };
         if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;

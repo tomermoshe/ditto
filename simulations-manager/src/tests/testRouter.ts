@@ -24,8 +24,8 @@ export class TestRouter {
                     scenario: scenario
                 });
                 try {
+                    res.status(200).send(`Scenario ${scenario.name} execution started`);
                     await testExecutor.execute();
-                    res.status(200).send(`Scenario ${scenario.name} executed sucessfully`);
                 } catch (error) {
                     res.status(500).send(error);
                 }
