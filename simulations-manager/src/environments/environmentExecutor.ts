@@ -1,12 +1,9 @@
 import { SimulatorExecutor } from "../simulators/simulatorExecutor";
 import { dockerode } from "../connectors/dockerodeConnector";
 import { Network } from "dockerode";
-import rp from "request-promise";
 import promiseRetry from "promise-retry";
-import uniqid from "uniqid";
-import { LocalCommandsExecutor } from "../commands/localCommandsExecutor";
-import { RemoteCommandsExecutor } from "../commands/remoteCommandsExecutor";
 import { Environment } from "./Environment";
+import EnvironmentExecutionError from "./EnvironmentExecutionError";
 
 export class EnvironmentExecutor {
     private executionId: string;
@@ -18,7 +15,7 @@ export class EnvironmentExecutor {
         this.simulators = new Map();
         this.executionId = executionId;
     }
-    public async executeEnironment() {
+    public async executeEnvironment() {
         console.log(`execution ${this.executionId} started`);
         await this.createNetwork();
         await this.executeSimulators();
@@ -34,9 +31,6 @@ export class EnvironmentExecutor {
     }
 
 
-    private getSimulatorExecutionName(simulatorName: string): string {
-        return `${simulatorName}-${this.executionId}`;
-    }
 
 
 
@@ -84,12 +78,16 @@ export class EnvironmentExecutor {
 
     private async waitForSimulators() {
         console.log("waiting for simulators");
+        try {
+            await (async () => {
+                for (const simulator of this.simulators.values()) {
+                    await simulator.waitFor();
+                }
+            })();
+        } catch (error) {
+            throw new EnvironmentExecutionError(error);
+        }
 
-        await (async () => {
-            for (const simulator of this.simulators.values()) {
-                await simulator.waitFor();
-            }
-        })();
 
     }
 

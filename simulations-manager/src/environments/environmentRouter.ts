@@ -1,5 +1,5 @@
 import { Router, Request, Response } from "express";
-import { Environment } from "../environments/Environment";
+import { Environment, EnvironmentJSON } from "../environments/Environment";
 import { EnvironmentModel } from "./EnvironmentMongo";
 
 
@@ -16,7 +16,7 @@ export class EnvironmentRouter {
                     res.status(500).send(e);
                 }
             }).get("/environments", async (req: Request, res: Response) => {
-                const environments = await EnvironmentModel.find({}, "-_id");
+                const environments: EnvironmentJSON[] = await EnvironmentModel.find({});
                 res.status(200).json(environments);
             });
     }

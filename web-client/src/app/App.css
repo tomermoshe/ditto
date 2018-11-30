@@ -1,0 +1,58 @@
+
+.sider {
+    background-color: #fff;
+}
+.sider .ant-menu-inline {
+    border:none;
+}
+
+
+.add-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+}
+
+
+/* form ul li:nth-child(odd) { 
+    background-color: #eee;
+  }
+  form ul li:nth-child(even) { 
+    background-color: #dfdfdf;
+  }
+
+  */
+.form-array ul li:first-child {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: none;
+ }    
+.form-array ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+.form-array ul li {
+    position: relative;
+    border: 1px dotted black;
+}
+
+.remove-item--button{
+    position: absolute;
+    right: 5px;
+    top: 5px;
+    z-index: 1;
+}
+
+.environment-form .add-simulator--button{
+ margin-bottom: 10px;
+}
+.image-description {
+    font-size: 13px;
+}
+.environment-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

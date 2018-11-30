@@ -18,7 +18,7 @@ export class SimulatorExecutor {
     private configurationObjectToStringArray(configuration: any): string[] {
         const envs: string[] = [];
         for (const key in configuration) {
-            envs.push(`${key}:${configuration[key]}`);
+            envs.push(`${key}=${configuration[key]}`);
         }
         return envs;
     }
@@ -46,7 +46,9 @@ export class SimulatorExecutor {
                 console.log(`${this.dnsName} is not ready retry number ${number} ${error}`);
                 retry(error);
             }
-        });
+        }, {
+                retries: 6
+            });
     }
 
     public async stop() {

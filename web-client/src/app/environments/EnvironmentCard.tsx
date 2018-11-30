@@ -1,24 +1,28 @@
 import * as React from "react";
 import { List, Card } from 'antd';
-import { Environment } from "../../../simulations-manager/src/environments/Environment";
-import { SimulatorInstanceId } from "../../../simulations-manager/src/simulators/simulatorInstanceId";
+import { EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
+import { SimulatorInstanceId } from "../../../../simulations-manager/src/simulators/simulatorInstanceId";
 import ReactJson from 'react-json-view';
 import EnvironmentForm from "./EnvironmentForm";
 import { Switch } from 'antd';
-import { selectEnvironment } from "../actions";
+import { selectEnvironment } from "./store/actions";
 import { connect } from "react-redux";
+import { ApplicationState } from "../types";
 
 
-export interface Props {
-    environment: Environment;
+export interface OwnProps {
+    environment: EnvironmentJSON;
 }
 interface DispatchProps {
-    selectEnvironment: (Environment) => any;
+    selectEnvironment: (environment: EnvironmentJSON | undefined) => any;
 }
 interface StateProps {
-    selectedEnvironment: Environment;
+    selectedEnvironment: EnvironmentJSON | undefined;
 }
-class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps>{
+
+type AllProps = OwnProps & DispatchProps & StateProps;
+
+class EnvironmentCard extends React.Component<AllProps>{
 
     createTitle(simulator) {
         return (
@@ -36,7 +40,7 @@ class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps
             cardContent = <EnvironmentForm />
         }
         else {
-            ({ attributes, cardContent } = this.createEnironmentCard(environment));
+            ({ attributes, cardContent } = this.createEnvironmentCard(environment));
         }
         return (
 
@@ -46,7 +50,7 @@ class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps
         );
     }
 
-    private createEnironmentCard(environment: Environment) {
+    private createEnvironmentCard(environment: EnvironmentJSON) {
         const cardTitle = (
             <div className="environment-title">
                 {environment.name}
@@ -71,10 +75,10 @@ class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps
         return { attributes, cardContent };
     }
 
-    private onSwitchEnvironment(environment: Environment): ((checked: boolean) => any) | undefined {
+    private onSwitchEnvironment(environment: EnvironmentJSON): ((checked: boolean) => any) | undefined {
         return (checked) => {
             if (!checked) {
-                this.props.selectEnvironment(null);
+                this.props.selectEnvironment(undefined);
             }
             else {
                 this.props.selectEnvironment(environment);
@@ -82,13 +86,13 @@ class EnvironmentCard extends React.Component<Props & DispatchProps & StateProps
         };
     }
 
-    private isEmptyEnvironment(environment: Environment) {
+    private isEmptyEnvironment(environment: EnvironmentJSON) {
         return Object.keys(environment).length === 0;
     }
 }
-const mapStateToProps = (state) => {
+const mapStateToProps = (state: ApplicationState) => {
     return {
-        selectedEnvironment: state.selectedEnvironment as Environment
+        selectedEnvironment: state.environments.selected
     };
 }
-export default connect<StateProps, DispatchProps, Props>(mapStateToProps, { selectEnvironment })(EnvironmentCard);
+export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, { selectEnvironment })(EnvironmentCard);

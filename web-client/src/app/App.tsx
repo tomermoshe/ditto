@@ -3,12 +3,12 @@ import { Layout } from 'antd';
 import "./App.css"
 import { Switch, Route} from 'react-router-dom'
 
-import EnvironmentForm from "../components/EnvironmentForm";
-import SimulatorUploadForm from "../components/SimulatorUploadForm";
-import ScenarioForm from "../components/ScenarioForm";
-import Sider from "./Sider"; 
-import Header from "./Header";
-import Environments from "../components/Environments";
+import SimulatorUploadForm from "./simulators/SimulatorUploadForm";
+import Sider from "./layouts/Sider"; 
+import Header from "./layouts/Header";
+import Environments from "./environments/Environments";
+import Scenarios  from "./scenarios/Scenarios";
+import StyledContent from "./layouts/StyledContent";
 
 
 const App = () => {
@@ -20,13 +20,14 @@ const App = () => {
             <Sider />
             <Layout>
                 <Header />
-                <Layout.Content className="content">
+                <StyledContent>
                     <Switch>
                         <Route exact={true} path='/environments' component={Environments} />
-                        <Route exact={true} path='/scenarios' component={ScenarioForm} />
+                        <Route path='/scenarios' component={Scenarios} />
                         <Route exact={true} path='/simulators' component={SimulatorUploadForm} />
+                        
                     </Switch>
-                </Layout.Content>
+                </StyledContent>
 
             </Layout>
         </Layout>

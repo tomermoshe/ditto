@@ -1,13 +1,17 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field, FieldArray, formValueSelector } from 'redux-form';
-import { SimulatorDefinition } from "../../../simulations-manager/src/simulators/simulatorDefinition";
-import { fetchSimulators, fetchEnvironments, createScenario } from "../actions";
+import { SimulatorDefinition } from "../../../../simulations-manager/src/simulators/simulatorDefinition";
+import { fetchSimulators } from "../simulators/store/actions";
+import { fetchEnvironments } from "../environments/store/actions";
+import { createScenario } from "./store/actions";
 import { required } from "redux-form-validators";
-import { renderFieldInput, renderFieldSelect } from "../utils/form/renderFields";
-import { Environment } from "../../../simulations-manager/src/environments/Environment";
+import { Environment } from "../../../../simulations-manager/src/environments/Environment";
 import ScenarioStepConfiguration from "./ScenarioStepConfiguration";
-import clearNullValues from "../utils/form/clearNullValues";
+import clearNullValues from "../../utils/form/clearNullValues";
+import { ApplicationState } from "../types";
+import { Button, Form, Select } from "antd";
+import { AInput, ASelect, tailFormItemLayout } from "../../utils/form/reduxFormAntd";
 
 
 export interface Props {
@@ -23,6 +27,7 @@ export interface Props {
 
 class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
+    
     componentDidMount() {
         this.props.fetchSimulators();
         this.props.fetchEnvironments();
@@ -35,7 +40,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 
     renderEnvironments() {
         const options = this.props.environments.map((environment) =>
-            <option key={environment.name} value={environment.name}>{environment.name}</option>
+            <Select.Option key={environment.name}>{environment.name}</Select.Option>
         );
         return options;
     }
@@ -46,9 +51,9 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         return (
             <ul>
                 <li>
-                    <button type="button" onClick={() => fields.push({})}>
+                    <Button icon="plus" type="primary" onClick={() => fields.push({})}>
                         Add Step
-                </button>
+                    </Button>
                 </li>
                 {submitFailed && error && <span>{error}</span>}
                 {
@@ -76,22 +81,21 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         }
         return (
             <div>
-                <form onSubmit={handleSubmit(this.onSubmit)}>
+                <Form className="form-array" onSubmit={handleSubmit(this.onSubmit)}>
 
                     <Field
                         name="name"
-                        component={renderFieldInput}
+                        component={AInput}
                         validate={required()}
                         label="Name"
                         type="text"
                     />
                     <Field
                         name="environment"
-                        component={renderFieldSelect}
+                        component={ASelect}
                         validate={required()}
                         label="Environment"
                     >
-                        <option />
                         {this.renderEnvironments()}
                     </Field>
                     {environmentName &&
@@ -99,12 +103,11 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 
                     }
 
+                    <Form.Item {...tailFormItemLayout}>
+                        <Button type="primary" htmlType="submit">Submit</Button>
+                    </Form.Item>
 
-                    <button className="btn btn-primary" type="submit">
-                        Submit
-                    </button>
-
-                </form>
+                </Form>
             </div>
         );
     }
@@ -113,11 +116,11 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 
 const selector = formValueSelector("scenarioForm");
 
-function mapStateToProps(state: any) {
+function mapStateToProps(state: ApplicationState) {
     // console.log(state);
     return {
         simulatorDefinitions: state.simulators,
-        environments: state.environments,
+        environments: state.environments.all,
         environmentName: selector(state, "environment")
     }
 }

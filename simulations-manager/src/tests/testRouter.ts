@@ -5,9 +5,9 @@ import { TestExecutor } from "../tests/testExecutor";
 import { EnvironmentModel } from "../environments/EnvironmentMongo";
 import { ScenarioModel } from "../scenarios/ScenarioMongo";
 
-interface ScenarioPlayRequest {
-    scenarioName: string;
-    environmentName: string;
+export interface ScenarioPlayRequest {
+    scenarioId: string;
+    environmentId: string;
 }
 
 export class TestRouter {
@@ -16,15 +16,20 @@ export class TestRouter {
             .post("/test/play", async (req: Request, res: Response) => {
                 const playRequest: ScenarioPlayRequest = req.body;
 
-                const scenario: Scenario = <Scenario>(await ScenarioModel.findOne({ name: playRequest.scenarioName }));
-                const environment: Environment = <Environment>(await EnvironmentModel.findOne({ name: playRequest.environmentName }));
+                const scenario: Scenario = <Scenario>(await ScenarioModel.findById(playRequest.scenarioId));
+                const environment: Environment = <Environment>(await EnvironmentModel.findById(playRequest.environmentId));
 
                 const testExecutor: TestExecutor = new TestExecutor({
                     environment: environment,
                     scenario: scenario
                 });
-                await testExecutor.execute();
-                res.status(200).send(`Scenario ${scenario.name} executed sucessfully`);
+                try {
+                    res.status(200).send(`Scenario ${scenario.name} execution started`);
+                    await testExecutor.execute();
+                } catch (error) {
+                    res.status(500).send(error);
+                }
+
             });
     }
 }
