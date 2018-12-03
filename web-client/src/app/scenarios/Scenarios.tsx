@@ -11,6 +11,7 @@ import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom'
 import ScenarioForm from "./ScenarioForm";
 import { Input } from 'antd';
 import StyledContent from "./../layouts/StyledContent";
+
 const Search = Input.Search;
 
 
@@ -48,6 +49,9 @@ interface OwnState {
 type Props = DispatchProps & StateProps;
 
 class Scenarios extends React.Component<Props, OwnState> {
+
+
+
     constructor(props) {
         super(props);
         this.state = {
@@ -124,7 +128,11 @@ class Scenarios extends React.Component<Props, OwnState> {
                             exact={true}
                             path='/scenarios/:scenarioId'
                             component={props =>
-                                <ScenarioView findScenarioById={this.scenarioById.bind(this)} {...props} />}
+                                <ScenarioView
+                                    findScenarioById={this.scenarioById.bind(this)}
+                                    {...props}
+                                />
+                            }
                         />
                     </Switch>
                 </StyledContent>

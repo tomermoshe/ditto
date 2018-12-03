@@ -4,27 +4,19 @@ import { Environment } from "../environments/Environment";
 import { TestExecutor } from "../tests/testExecutor";
 import { EnvironmentModel } from "../environments/EnvironmentMongo";
 import { ScenarioModel } from "../scenarios/ScenarioMongo";
-
-export interface ScenarioPlayRequest {
-    scenarioId: string;
-    environmentId: string;
-}
+import { TestPlayRequest } from "./testPlayRequest";
+import { createTest } from "./Test";
 
 export class TestRouter {
     static routes(): Router {
         return Router()
             .post("/test/play", async (req: Request, res: Response) => {
-                const playRequest: ScenarioPlayRequest = req.body;
+                const playRequest: TestPlayRequest = req.body;
 
-                const scenario: Scenario = <Scenario>(await ScenarioModel.findById(playRequest.scenarioId));
-                const environment: Environment = <Environment>(await EnvironmentModel.findById(playRequest.environmentId));
-
-                const testExecutor: TestExecutor = new TestExecutor({
-                    environment: environment,
-                    scenario: scenario
-                });
+                const test = await createTest(playRequest);
+                const testExecutor: TestExecutor = new TestExecutor(test);
                 try {
-                    res.status(200).send(`Scenario ${scenario.name} execution started`);
+                    res.status(200).send(`Scenario ${test.scenario.name} execution started`);
                     await testExecutor.execute();
                 } catch (error) {
                     res.status(500).send(error);

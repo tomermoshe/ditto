@@ -3,26 +3,29 @@ import { json, urlencoded } from "body-parser";
 import { TestRouter } from "./tests/testRouter";
 import http from "http";
 import { MongoConnector } from "./connectors/mongoConnector";
-import { dockerode } from "./connectors/dockerodeConnector";
 import { EnvironmentCleaner } from "./controllers/environmentCleaner";
 import { SimulatorRouter } from "./simulators/simulatorsRouter";
 import { EnvironmentRouter } from "./environments/environmentRouter";
 import { ScenarioRouter } from "./scenarios/scenarioRouter";
 import fileUpload from "express-fileupload";
+require("./events/socketIoListener");
+const app = express();
 
-
+export const server = http.createServer(app);
 
 (async () => {
-    const mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/test");
+    const mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/ditto");
     const environmentCleaner = new EnvironmentCleaner();
     environmentCleaner.initialize();
     await mongoConnector.connect();
 
-    const app = express();
+
+
+
 
     app.use(json());
     app.use(fileUpload({
-        createParentPath : true
+        createParentPath: true
     }));
     app.use(urlencoded({
         extended: true
@@ -60,7 +63,7 @@ import fileUpload from "express-fileupload";
     app.use("/api", EnvironmentRouter.routes());
 
     app.use("/api", ScenarioRouter.routes());
-    const server: http.Server = app.listen(3000, () => {
+    app.listen(3000, () => {
         console.log("App started");
 
     });
@@ -71,75 +74,4 @@ import fileUpload from "express-fileupload";
 })();
 
 
-
-
-
-
-
-// setTimeout(function () {
-//     (async () => {
-
-
-
-
-//         var scenario : Scenario = <Scenario>(await scenarioModel.findOne({name:"Test"}));
-//         console.log(scenario);
-//         console.log(scenario.simulators[0].name);
-
-        // var scenario = new scenarioModel({
-        //     name: "Test",
-        //     simulators: [{
-        //         name: "hello-world",
-        //         id: {
-        //             imageName: "hello-world-simulator",
-        //             version: "latest"
-        //         }
-
-        //     }],
-        //     steps: [{
-        //         simulatoטמקrName: "hello-world",
-        //         command: {
-        //             name: "Pasha"
-        //         }
-        //     }]
-        // });
-
-        // scenario.save();
-
-
-
-        // const scenario: Scenario = {
-        //     name: "Test",
-        //     simulators: [{
-        //         name: "hello-world",
-        //         id: {
-        //             imageName: "hello-world-simulator",
-        //             version: "latest"
-        //         }
-
-        //     }],
-        //     steps: [{
-        //         simulatorName: "hello-world",
-        //         command: {
-        //             name: "Pasha"
-        //         }
-        //     }]
-        // };
-        // try {
-        //     for (let i = 0; i < 1; i++) {
-        //         const scenarioExecutor: ScenarioExecutor = new ScenarioExecutor(scenario);
-        //         await scenarioExecutor.executeScenario();
-        //     }
-        // } catch (error) {
-        //     console.log(error);
-        // }
-
-//     }
-//     )();
-
-
-
-
-
-// }, 7000);
 
