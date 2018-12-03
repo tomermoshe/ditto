@@ -6,6 +6,7 @@
     "@types/react-router-dom": "^4.3.1",
     "@types/react-textarea-autosize": "^4.3.3",
     "@types/redux-form": "^7.4.7",
+    "@types/socket.io-client": "^1.4.32",
     "@types/uniqid": "^4.1.2",
     "prettier": "^1.10.2",
     "react-addons-test-utils": "^15.6.2",
@@ -37,6 +38,7 @@
     "redux-form-validators": "^2.7.2",
     "redux-promise": "^0.6.0",
     "redux-thunk": "^2.3.0",
+    "socket.io-client": "^2.2.0",
     "styled-components": "^4.1.1",
     "typesafe-actions": "^2.0.4",
     "uniqid": "^5.0.3"

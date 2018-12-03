@@ -24,6 +24,7 @@
     "promise-retry": "^1.1.1",
     "request": "^2.87.0",
     "request-promise": "^4.2.2",
+    "socket.io": "^2.1.1",
     "uniqid": "^5.0.3"
   },
   "devDependencies": {
@@ -37,6 +38,7 @@
     "@types/mongoose": "^5.0.16",
     "@types/promise-retry": "^1.1.2",
     "@types/request-promise": "^4.1.41",
+    "@types/socket.io": "^2.1.0",
     "@types/uniqid": "^4.1.2",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",

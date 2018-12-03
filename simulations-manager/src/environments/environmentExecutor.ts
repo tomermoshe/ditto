@@ -4,23 +4,30 @@ import { Network } from "dockerode";
 import promiseRetry from "promise-retry";
 import { Environment } from "./Environment";
 import EnvironmentExecutionError from "./EnvironmentExecutionError";
+import { EventEmitter } from "events";
+import EventTypes from "../events/eventsTypes";
 
 export class EnvironmentExecutor {
     private executionId: string;
     private environment: Environment;
     private simulators: Map<String, SimulatorExecutor>;
     private network: Network;
-    constructor(environment: Environment, executionId: string) {
+    private eventEmitter: EventEmitter;
+    constructor(eventEmitter: EventEmitter, environment: Environment, executionId: string) {
         this.environment = environment;
         this.simulators = new Map();
         this.executionId = executionId;
+        this.eventEmitter = eventEmitter;
     }
     public async executeEnvironment() {
         console.log(`execution ${this.executionId} started`);
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STARTED);
         await this.createNetwork();
         await this.executeSimulators();
         await this.attachSimulationsManagerToNetwork();
         await this.waitForSimulators();
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_FINISHED);
+
     }
 
     public async removeEnvironment() {
@@ -67,6 +74,8 @@ export class EnvironmentExecutor {
 
 
     private async executeSimulators() {
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Executing simulators");
+
         console.log("executeSimulators called");
 
         await Promise.all(this.environment.simulators.map(async simulator => {
@@ -77,6 +86,8 @@ export class EnvironmentExecutor {
     }
 
     private async waitForSimulators() {
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Waiting for simulators to be ready");
+
         console.log("waiting for simulators");
         try {
             await (async () => {
@@ -92,6 +103,7 @@ export class EnvironmentExecutor {
     }
 
     private async createNetwork() {
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Creating network");
         this.network = await dockerode.createNetwork({
             Name: this.executionId,
             Driver: "overlay",

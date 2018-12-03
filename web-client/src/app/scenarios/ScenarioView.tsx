@@ -1,11 +1,15 @@
 import * as React from "react";
-import { Scenario, ScenarioStep, ScenarioJSON } from "../../../../simulations-manager/src/scenarios/Scenario";
-import { Steps, Button } from "antd";
+import { Component } from "react";
+import { ScenarioStep, ScenarioJSON } from "../../../../simulations-manager/src/scenarios/Scenario";
+import { Steps, Button, Spin } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import ReactJson from 'react-json-view';
 import styled from "styled-components";
 import { connect } from "react-redux";
-import { playScenario } from "./store/actions";
+import { ApplicationState } from "../types";
+import { Environment, EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
+import * as socketIOClient from "socket.io-client";
+
 
 const StyledH1 = styled.h1`
     display: inline-block;
@@ -26,49 +30,123 @@ interface ScenarioProps {
     findScenarioById: (id: string) => ScenarioJSON;
 }
 
-interface DispatchProps {
-    playScenario: (scenario: ScenarioJSON) => any;
-}
+
 
 interface RouterProps {
     scenarioId: string;
 }
-
-type Props = ScenarioProps & RouteComponentProps<RouterProps> & DispatchProps;
-const ScenarioView = (props: Props) => {
-    const Step = Steps.Step;
-    const { scenarioId } = props.match.params;
-    const scenario: ScenarioJSON = props.findScenarioById(scenarioId);
-    return (
-        <div>
-            <div>
-                <StyledH1>
-                    {scenario.name}
-                </StyledH1>
-
-                <Button
-                    icon="play-circle"
-                    type="primary"
-                    onClick={() => props.playScenario(scenario)}
-                >
-                    Play
-                </Button>
-            </div>
-
-            <Steps direction="vertical" current={0}>
-                {scenario.steps.map((step, index) => {
-                    const description = <ReactJson name="command.body" src={step.command.body} />
-
-                    return (
-                        <Step key={index} description={description} title={`${step.simulatorName} - ${step.command.name}`} />
-                    );
-
-                })}
-            </Steps>
-        </div>
-    )
+interface OwnState {
+    currentStep: number;
+    currentStepStatus: "error" | "finish" | "wait" | "process" | undefined;
+    executingEnvironment: boolean;
+    executionStatus : string;
+}
+interface DispatchProps {
+    selectedEnvironment: EnvironmentJSON | undefined
 }
 
-export default connect(null, { playScenario })(ScenarioView);
+type Props = ScenarioProps & RouteComponentProps<RouterProps> & DispatchProps;
 
 
+
+class ScenarioView extends Component<Props, OwnState> {
+    endpoint = "http://127.0.0.1:8000";
+    socket: SocketIOClient.Socket;
+
+    constructor(props: Props) {
+        super(props);
+        this.socket = socketIOClient(this.endpoint);
+
+        this.state = {
+            currentStep: 0,
+            currentStepStatus: "wait",
+            executingEnvironment: false,
+            executionStatus: ""
+
+        }
+    }
+
+    subscribeEvents(){
+        this.socket.on("STEP_STARTED", currentStep => {
+            this.setState({ 
+                currentStep ,
+                currentStepStatus : "process"
+            });
+        });
+        this.socket.on("STEP_FINISHED", currentStep => {
+            this.setState({ 
+                currentStepStatus : "finish"
+            });
+        });
+        this.socket.on("ENVIRONMENT_EXECUTION_STARTED", () => {
+            this.setState({ executingEnvironment: true });
+        });
+        this.socket.on("ENVIRONMENT_EXECUTION_FINISHED", () => {
+            this.setState({ executingEnvironment: false });
+        });
+        this.socket.on("ENVIRONMENT_EXECUTION_STATUS", (message) => {
+            this.setState({ executionStatus : message });
+        });
+    }
+    componentDidMount() {
+        this.setState({
+            currentStep: 0
+        });
+       this.subscribeEvents();
+    }
+    playScenario(scenario: ScenarioJSON) {
+        if (!this.props.selectedEnvironment) {
+            return;
+        }
+        this.socket.emit("PLAY_TEST", {
+            environmentId: this.props.selectedEnvironment._id,
+            scenarioId: scenario._id
+        });
+    }
+    render() {
+        const Step = Steps.Step;
+        const { scenarioId } = this.props.match.params;
+        const scenario: ScenarioJSON = this.props.findScenarioById(scenarioId);
+        if(!scenario){
+            return <div>Loading...</div>
+        }
+        return (
+            <Spin spinning={this.state.executingEnvironment} tip={this.state.executionStatus}>
+                <div>
+                    <div>
+                        <StyledH1>
+                            {scenario.name}
+                        </StyledH1>
+
+                        <Button
+                            icon="play-circle"
+                            type="primary"
+                            onClick={() => this.playScenario(scenario)}
+                        >
+                            Play
+                        </Button>
+                    </div>
+
+                    <Steps direction="vertical" current={this.state.currentStep} status={this.state.currentStepStatus}>
+                        {scenario.steps.map((step, index) => {
+                            const description = <ReactJson name="command.body" src={step.command.body} />
+
+                            return (
+                                <Step key={index} description={description} title={`${step.simulatorName} - ${step.command.name}`} />
+                            );
+
+                        })}
+                    </Steps>
+                </div>
+            </Spin>
+        )
+    }
+}
+
+const mapDispatchToProps = (state: ApplicationState) => {
+    return {
+        selectedEnvironment: state.environments.selected
+    };
+}
+
+export default connect<DispatchProps, any, ScenarioProps>(mapDispatchToProps, null)(ScenarioView);

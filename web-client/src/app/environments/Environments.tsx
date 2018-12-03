@@ -2,16 +2,16 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { fetchEnvironments } from "./store/actions";
 import { List, Button } from 'antd';
-import { Environment } from "../../../../simulations-manager/src/environments/Environment";
+import { Environment, EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
 import EnvironmentCard from "./EnvironmentCard";
 import { ApplicationState } from "../types";
 
 export interface Props {
     fetchEnvironments: () => any;
-    environments: Environment[];
+    environments: EnvironmentJSON[];
 }
 interface OwnState {
-    environments: (Environment | {})[];
+    environments: (EnvironmentJSON | {})[];
 }
 
 class Environments extends React.Component<Props, OwnState>{
