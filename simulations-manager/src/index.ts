@@ -8,16 +8,19 @@ import { SimulatorRouter } from "./simulators/simulatorsRouter";
 import { EnvironmentRouter } from "./environments/environmentRouter";
 import { ScenarioRouter } from "./scenarios/scenarioRouter";
 import fileUpload from "express-fileupload";
-require("./events/socketIoListener");
+import SocketIoConnector from "./connectors/socketIoConnector";
 const app = express();
 
-export const server = http.createServer(app);
+const server = http.createServer(app);
 
 (async () => {
     const mongoConnector: MongoConnector = new MongoConnector("mongodb://mongodb:27017/ditto");
+    const socketIoConnector = new SocketIoConnector(server);
+    socketIoConnector.connect();
     const environmentCleaner = new EnvironmentCleaner();
     environmentCleaner.initialize();
     await mongoConnector.connect();
+
 
 
 
