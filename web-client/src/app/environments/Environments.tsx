@@ -2,9 +2,10 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { fetchEnvironments } from "./store/actions";
 import { List, Button } from 'antd';
-import { Environment, EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
+import { EnvironmentJSON } from "../../../../simulations-manager/src/environments/Environment";
 import EnvironmentCard from "./EnvironmentCard";
 import { ApplicationState } from "../types";
+import AddNewButton from "../shared/AddNewButton";
 
 export interface Props {
     fetchEnvironments: () => any;
@@ -46,7 +47,16 @@ class Environments extends React.Component<Props, OwnState>{
                     )
                     }
                 />
-                <Button
+                <AddNewButton
+                    onClick={() => this.setState(
+                        {
+                            environments: [...environments, {}]
+                        }
+                    )}
+                >
+                    Add Environment
+                </AddNewButton>
+                {/* <Button
                     className="add-button"
                     type="primary"
                     icon="plus"
@@ -58,7 +68,7 @@ class Environments extends React.Component<Props, OwnState>{
                     )}
                 >
                     Add Environment
-                </Button>
+                </Button> */}
             </div>
 
 

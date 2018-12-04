@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
 import { ScenarioStep, ScenarioJSON } from "../../../../simulations-manager/src/scenarios/Scenario";
-import { Steps, Button, Spin } from "antd";
+import { Steps, Button, Spin , message } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import ReactJson from 'react-json-view';
 import styled from "styled-components";
@@ -84,8 +84,8 @@ class ScenarioView extends Component<Props, OwnState> {
         this.socket.on("ENVIRONMENT_EXECUTION_FINISHED", () => {
             this.setState({ executingEnvironment: false });
         });
-        this.socket.on("ENVIRONMENT_EXECUTION_STATUS", (message) => {
-            this.setState({ executionStatus : message });
+        this.socket.on("ENVIRONMENT_EXECUTION_STATUS", (msg) => {
+            this.setState({ executionStatus : msg });
         });
     }
     componentDidMount() {
@@ -96,6 +96,7 @@ class ScenarioView extends Component<Props, OwnState> {
     }
     playScenario(scenario: ScenarioJSON) {
         if (!this.props.selectedEnvironment) {
+            message.error("Please select environment!");
             return;
         }
         this.socket.emit("PLAY_TEST", {

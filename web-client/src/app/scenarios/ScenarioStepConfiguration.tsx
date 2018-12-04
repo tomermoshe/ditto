@@ -9,7 +9,7 @@ import { CommandDefinition } from "../../../../simulations-manager/src/commands/
 import { ApplicationState } from "../types";
 import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
-import {EmbeddedLiform} from "pavelkh-liform-react";
+import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
 
 export interface InjectedProps {
@@ -36,6 +36,11 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         );
     }
     findSelectedSimulatorDefinition() {
+
+        if (this.props.simulatorName === "Manager") {
+            return this.props.simulatorDefinitions.find((simulator) =>
+                simulator.id.imageName === "Manager") as SimulatorDefinition;
+        }
         const selectedSimulatorInstance = this.props.environment.simulators.
             find(simulator => simulator.name === this.props.simulatorName) as SimulatorInstanceId;
 
@@ -47,10 +52,13 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
 
     renderSimulatorNames() {
         console.log(JSON.stringify(this.props.environment));
-
-        return this.props.environment.simulators.map((simulator) => (
+        const environmentSimulatorOptions = this.props.environment.simulators.map((simulator) => (
             <Select.Option key={simulator.name}>{simulator.name}</Select.Option>
         ));
+        const localCommandsSimulatorOption =
+            <Select.Option key="Manager">Manager</Select.Option>;
+        environmentSimulatorOptions.push(localCommandsSimulatorOption)
+        return environmentSimulatorOptions;
     }
     selectCommandSchema() {
         const commandDefinition = this.selectedSimulatorDefinition.commands.

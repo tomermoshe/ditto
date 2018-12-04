@@ -7,7 +7,7 @@ import AntdTheme from "liform-react-antd-theme";
 import { required } from "redux-form-validators";
 import { AInput, ASelect } from "../../utils/form/reduxFormAntd";
 import { Select, Button } from "antd";
-const { Option } = Select; 
+const { Option } = Select;
 
 
 export interface InjectedProps {
@@ -25,9 +25,11 @@ type Props = InjectedProps & ConditionalFieldsProps;
 
 class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
     renderSimulatorImageNames() {
-        const options = this.props.simulatorDefinitions.map((simulator) =>
-            <Option key={simulator.id.imageName}>{simulator.id.imageName}</Option>
-        );
+        const options = this.props.simulatorDefinitions.
+            filter((simulator) => simulator.id.imageName !== "Manager")
+            .map((simulator) =>
+                <Option key={simulator.id.imageName}>{simulator.id.imageName}</Option>
+            );
         return options;
     }
 
@@ -63,6 +65,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
                     name={`${this.props.simulator}.name`}
                     component={AInput}
                     validate={required()}
+                    normalize={value => value && value.toLowerCase()}
                     label="Simulator Name"
                     type="text"
                     hasFeedback={true}
@@ -95,22 +98,22 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
                         schema={this.selectSchema()}
                         theme={AntdTheme}
                         fieldName="configuration"
-                        prefix={`${this.props.simulator}.`} 
+                        prefix={`${this.props.simulator}.`}
                     />
-          
+
                 }
             </li>
-            );
-        }
+        );
     }
-    const selector = formValueSelector('environmentCreationForm');
-    export default connect(
+}
+const selector = formValueSelector('environmentCreationForm');
+export default connect(
     (state, props: any) => {
         return {
-                    simulatorDefinitions: props.simulatorDefinitions,
+            simulatorDefinitions: props.simulatorDefinitions,
             imageName: selector(state, `${props.simulator}.id.imageName`),
             version: selector(state, `${props.simulator}.id.version`)
-            }
-    
         }
+
+    }
 )(EnvironmentSimulatorConfiguration);

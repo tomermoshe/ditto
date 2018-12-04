@@ -4,6 +4,7 @@ import { UploadedFile } from "express-fileupload";
 import { SimulatorDefinition } from "./simulatorDefinition";
 import { dockerode } from "../connectors/dockerodeConnector";
 import fs from "fs";
+import localSimulatorDefinition from "./localSimulatorDefinition";
 
 const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
@@ -15,7 +16,8 @@ export class SimulatorRouter {
     static routes(): Router {
         return Router()
             .get("/simulators", async (req: Request, res: Response) => {
-                const simulators = await SimulatorDefinitionModel.find({}, "-_id");
+                const simulators: SimulatorDefinition[] = await SimulatorDefinitionModel.find({}, "-_id");
+                simulators.push(localSimulatorDefinition);
                 res.status(200).json(simulators);
             }).post("/simulators/upload", async (req: Request, res: Response) => {
                 try {

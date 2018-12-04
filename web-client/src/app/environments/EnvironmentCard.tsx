@@ -68,7 +68,9 @@ class EnvironmentCard extends React.Component<AllProps>{
                 dataSource={environment.simulators}
                 renderItem={(simulator: SimulatorInstanceId) => (<List.Item>
                     <Card title={this.createTitle(simulator)}>
-                        <ReactJson name="configuration" src={simulator.configuration} />
+                        {simulator.configuration &&
+                            <ReactJson name="configuration" src={simulator.configuration} />
+                        }
                     </Card>
                 </List.Item>)}
             />);

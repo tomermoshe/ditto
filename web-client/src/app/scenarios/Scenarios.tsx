@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux"
 import { ApplicationState } from "../types";
 import { fetchScenarios } from "./store/actions";
-import { Scenario, ScenarioJSON } from "../../../../simulations-manager/src/scenarios/Scenario";
+import { ScenarioJSON } from "../../../../simulations-manager/src/scenarios/Scenario";
 import { List, Layout } from "antd";
 import styled from "styled-components";
 import { Button } from "antd";
@@ -11,6 +11,7 @@ import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom'
 import ScenarioForm from "./ScenarioForm";
 import { Input } from 'antd';
 import StyledContent from "./../layouts/StyledContent";
+import AddNewButton from "../shared/AddNewButton";
 
 const Search = Input.Search;
 
@@ -104,13 +105,11 @@ class Scenarios extends React.Component<Props, OwnState> {
                         enterButton={true}
                         value={this.state.searchInput}
                     />
-                    <StyledLink to="/scenarios/new"><Button
-                        block={true}
-                        type="primary"
-                        icon="plus"
-                    >
-                        Add Scenario
-                    </Button></StyledLink>
+                    <StyledLink to="/scenarios/new">
+                        <AddNewButton>
+                            Add Scenario
+                        </AddNewButton>
+                    </StyledLink>
                     <List
                         dataSource={this.state.visibleScenarios}
                         renderItem={(scenario: ScenarioJSON) =>
