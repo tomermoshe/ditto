@@ -73,7 +73,7 @@ class Scenarios extends React.Component<Props, OwnState> {
     }
 
     filterScenarios(filter: string) {
-        const searchString = filter.trim().toLowerCase();
+        const searchString = filter.trim().toLowerCase().replace(/[^a-z0-9]/gi,"");
         if (searchString.length > 0) {
             const filteredScenarios = this.props.scenarios.filter((scenario: ScenarioJSON) => {
                 return scenario.name.toLowerCase().match(searchString);
