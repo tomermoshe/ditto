@@ -15,6 +15,7 @@ const StyledH1 = styled.h1`
     display: inline-block;
     padding-right: 20px;
     margin: 0px;
+    line-height : 1;
 `;
 
 interface StepProps {
