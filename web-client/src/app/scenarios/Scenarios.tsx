@@ -10,7 +10,6 @@ import ScenarioView from "./ScenarioView";
 import { Switch, Route, Link, RouteComponentProps } from 'react-router-dom'
 import ScenarioForm from "./ScenarioForm";
 import { Input } from 'antd';
-import StyledContent from "./../layouts/StyledContent";
 import AddNewButton from "../shared/AddNewButton";
 
 const Search = Input.Search;
@@ -32,6 +31,12 @@ overflow:scroll;
 const StyledLink = styled(Link)`
 width : 100%;
 `;
+
+const StyledContent = styled(Layout.Content)`
+    padding-left: 48px;
+    position: relative;
+`;
+
 
 
 
