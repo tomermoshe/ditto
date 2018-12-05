@@ -11,9 +11,14 @@ import { BrowserRouter } from 'react-router-dom';
 import App from "./app/App";
 import { rootReducer } from "./app/types";
 import { composeWithDevTools } from "redux-devtools-extension";
+import LocalStorage from "./localStorage";
 
-const store = createStore(rootReducer, composeWithDevTools(applyMiddleware(ReduxThunk, nullUnregisredFields)));
+const localStorage = new LocalStorage();
 
+const store = createStore(rootReducer, localStorage.loadState(), composeWithDevTools(applyMiddleware(ReduxThunk, nullUnregisredFields)));
+store.subscribe(() => {
+  localStorage.saveNeededState(store.getState());
+});
 ReactDOM.render(
   <Provider store={store}>
     <div>
