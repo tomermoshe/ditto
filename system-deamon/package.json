@@ -1,0 +1,16 @@
+{
+  "name": "system-deamon",
+  "version": "0.0.1",
+  "description": "Deamon for the system under test for ditto",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "exec-sh": "^0.3.2",
+    "express": "^4.16.4"
+  }
+}
