@@ -1,6 +1,6 @@
 {
   "name": "ditto-simulations-manager",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -16,6 +16,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
+    "ditto-shared": "^0.0.1",
     "dockerode": "^2.5.7",
     "express": "^4.16.4",
     "express-fileupload": "^0.4.0",
@@ -25,8 +26,7 @@
     "request": "^2.88.0",
     "request-promise": "^4.2.2",
     "socket.io": "^2.2.0",
-    "uniqid": "^5.0.3",
-    "ditto-shared" : "1.0.0"
+    "uniqid": "^5.0.3"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",

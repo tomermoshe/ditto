@@ -1,6 +1,6 @@
 {
   "name": "ditto-shared",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "types and shared files for ditto project",
   "main": "index.js",
   "scripts": {
