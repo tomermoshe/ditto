@@ -2,6 +2,8 @@ import { SimulatorInstanceId } from "./simulatorInstanceId";
 import { ServiceExecutor } from "../controllers/serviceExecutor";
 import promiseRetry from "promise-retry";
 import requestPromise from "request-promise";
+import { SimulatorId } from "./simulatorId";
+import { SimulatorDefinitionModel } from "./SimulatorDefinitionMongo";
 
 export class SimulatorExecutor {
     dnsName: string;
@@ -29,9 +31,14 @@ export class SimulatorExecutor {
             this.instanceId.id.imageName,
             this.instanceId.id.version,
             this.networkId,
-            this.configurationObjectToStringArray(this.instanceId.configuration));
+            this.configurationObjectToStringArray(this.instanceId.configuration),
+            await this.exposedPortsToStringArray());
     }
+    private async exposedPortsToStringArray() {
+        const def = await SimulatorDefinitionModel.findOne({ id  : this.instanceId.id });
+        return def.ports;
 
+    }
     public async waitFor() {
         await promiseRetry(async (retry, number) => {
             try {

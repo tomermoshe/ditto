@@ -1,12 +1,15 @@
 import { dockerode } from "../connectors/dockerodeConnector";
 import { Service } from "dockerode";
+import { ExposedPort } from "../simulators/simulatorDefinition";
 
 export class ServiceExecutor {
     public static async execute(name: string,
         imageName: string,
         version: string,
         networkId: string,
-        envs?: string[]): Promise<string> {
+        envs?: string[],
+        exposedPorts?: ExposedPort[]
+    ): Promise<string> {
 
         const serviceConfig: any = {
             Name: name,
@@ -26,6 +29,9 @@ export class ServiceExecutor {
             }
 
         };
+        if (exposedPorts && exposedPorts.length > 0) {
+            serviceConfig.EndpointSpec.Ports = this.portsToRemoteApiFormat(exposedPorts);
+        }
         if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;
         }
@@ -33,7 +39,17 @@ export class ServiceExecutor {
         console.log(`Simulator started with id ${service.id}`);
         return service.id;
     }
+    private static portsToRemoteApiFormat(ports: ExposedPort[]) {
 
+        return ports.map(port => {
+            return {
+                Protocol: port.type.toString(),
+                PublishedPort: port.port,
+                TargetPort: port.port
+            };
+
+        });
+    }
     public static async stop(id: string) {
         const s: Service = await dockerode.getService(id);
         if (s) {

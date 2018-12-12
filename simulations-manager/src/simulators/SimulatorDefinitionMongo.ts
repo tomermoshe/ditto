@@ -6,6 +6,18 @@ import { CommandDefinitionSchema } from "../commands/CommandDefinitionMongo";
 export type SimulatorDefinitionDocument = mongoose.Document & SimulatorDefinition;
 
 
+const ExposedPortSchema = new mongoose.Schema({
+    type: {
+        type: String,
+        enum: ["tcp", "udp"],
+        required: true
+    },
+    port: {
+        type: Number,
+        required: true
+    }
+});
+
 const SimulatorDefinitionSchema = new mongoose.Schema({
     id: {
         type: SimulatorIdSchema,
@@ -16,8 +28,8 @@ const SimulatorDefinitionSchema = new mongoose.Schema({
         type: Object,
         required: false
     },
-    commands: [CommandDefinitionSchema]
-    // 4 ports: [String]
+    commands: [CommandDefinitionSchema],
+    ports: [ExposedPortSchema]
 });
 
 export const SimulatorDefinitionModel = mongoose.model<SimulatorDefinitionDocument>("SimulatorDefinition", SimulatorDefinitionSchema);

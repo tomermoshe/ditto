@@ -1,11 +1,11 @@
 import { Router, Request, Response } from "express";
 import { SimulatorDefinitionModel } from "../simulators/SimulatorDefinitionMongo";
 import { UploadedFile } from "express-fileupload";
-import { SimulatorDefinition } from "./simulatorDefinition";
+import { SimulatorDefinition, ExposedPort } from "./simulatorDefinition";
 import { dockerode } from "../connectors/dockerodeConnector";
 import fs from "fs";
 import localSimulatorDefinition from "./localSimulatorDefinition";
-
+import { PortType } from "./simulatorDefinition";
 const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
 
@@ -37,18 +37,21 @@ export class SimulatorRouter {
                 try {
                     const simulatorDefinition: SimulatorDefinition = req.body.simulator as SimulatorDefinition;
                     const uploadId: string = req.body.uploadId;
-                    const newSimulatorDefinition = new SimulatorDefinitionModel(simulatorDefinition);
 
                     const simulatorFilePath = `${UPLOADS_DIR}/${uploadId}.tar`;
+                    const tag = `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`;
                     const readStream = await dockerode.buildImage(simulatorFilePath,
                         {
-                            t: `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`
+                            t: tag
                         });
-                    // const writeStream = fs.createWriteStream(`${IMAGES_DIR}/${simulatorDefinition.id.imageName}_${simulatorDefinition.id.version}.img`);
-                    // await new Promise(resolve => readStream.pipe(writeStream).on("finish", resolve));
+
+                    simulatorDefinition.ports = await SimulatorRouter.getExposedPorts(tag);
+                    const newSimulatorDefinition = new SimulatorDefinitionModel(simulatorDefinition);
                     await newSimulatorDefinition.save();
                     await fs.unlink(simulatorFilePath, (err) => {
-                        console.log(`couldn't remove simulator file at ${simulatorFilePath}`);
+                        if (err) {
+                            console.log(`couldn't remove simulator file at ${simulatorFilePath}`);
+                        }
                     });
                     res.status(200).send();
                 } catch (e) {
@@ -56,5 +59,20 @@ export class SimulatorRouter {
                 }
 
             });
+    }
+
+    private static async getExposedPorts(tag: string) {
+        const image = await dockerode.getImage(tag);
+        const imageInfo = await image.inspect();
+        const exposedPorts = imageInfo.ContainerConfig.ExposedPorts;
+        const ports: ExposedPort[] = [];
+        Object.keys(exposedPorts).forEach((port: string) => {
+            const splitted = port.split("/");
+            ports.push({
+                port: +splitted[0],
+                type: splitted[1] as PortType
+            });
+        });
+        return ports;
     }
 }

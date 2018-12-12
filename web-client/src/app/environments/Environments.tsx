@@ -56,19 +56,7 @@ class Environments extends React.Component<Props, OwnState>{
                 >
                     Add Environment
                 </AddNewButton>
-                {/* <Button
-                    className="add-button"
-                    type="primary"
-                    icon="plus"
-                    size="large"
-                    onClick={() => this.setState(
-                        {
-                            environments: [...environments, {}]
-                        }
-                    )}
-                >
-                    Add Environment
-                </Button> */}
+       
             </div>
 
 

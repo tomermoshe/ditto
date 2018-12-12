@@ -1,9 +1,5 @@
 import { Router, Request, Response } from "express";
-import { Scenario } from "../scenarios/Scenario";
-import { Environment } from "../environments/Environment";
 import { TestExecutor } from "../tests/testExecutor";
-import { EnvironmentModel } from "../environments/EnvironmentMongo";
-import { ScenarioModel } from "../scenarios/ScenarioMongo";
 import { TestPlayRequest } from "./testPlayRequest";
 import { createTest } from "./Test";
 
