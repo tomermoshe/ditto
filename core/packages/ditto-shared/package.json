@@ -1,0 +1,11 @@
+{
+  "name": "ditto-shared",
+  "version": "1.0.0",
+  "description": "types and shared files for ditto project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pavel Kharakh",
+  "license": "ISC"
+}
