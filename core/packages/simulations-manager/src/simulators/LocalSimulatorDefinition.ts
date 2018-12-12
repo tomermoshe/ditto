@@ -12,7 +12,7 @@ const localSimulatorDefinition: SimulatorDefinition = {
                 "type": "object",
                 "properties": {
                     "time": {
-                        "type": "integer"
+                        "type": "number"
                     }
                 },
                 "required": [
