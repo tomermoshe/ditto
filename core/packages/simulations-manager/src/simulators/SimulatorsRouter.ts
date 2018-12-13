@@ -6,6 +6,8 @@ import { dockerode } from "../connectors/DockerodeConnector";
 import fs from "fs";
 import localSimulatorDefinition from "./LocalSimulatorDefinition";
 import { PortType } from "ditto-shared";
+import promiseRetry from "promise-retry";
+
 const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
 
@@ -62,17 +64,28 @@ export class SimulatorRouter {
     }
 
     private static async getExposedPorts(tag: string) {
-        const image = await dockerode.getImage(tag);
-        const imageInfo = await image.inspect();
-        const exposedPorts = imageInfo.ContainerConfig.ExposedPorts;
-        const ports: ExposedPort[] = [];
-        Object.keys(exposedPorts).forEach((port: string) => {
-            const splitted = port.split("/");
-            ports.push({
-                port: +splitted[0],
-                type: splitted[1] as PortType
+        return await promiseRetry<ExposedPort[]>(async (retry) => {
+            try {
+                const image = await dockerode.getImage(tag);
+                const imageInfo = await image.inspect();
+                const ports: ExposedPort[] = [];
+                const exposedPorts = imageInfo.ContainerConfig.ExposedPorts;
+                Object.keys(exposedPorts).forEach((port: string) => {
+                    const splitted = port.split("/");
+                    ports.push({
+                        port: +splitted[0],
+                        type: splitted[1] as PortType
+                    });
+                });
+                return ports;
+            } catch (error) {
+                retry(error);
+            }
+
+        }, {
+                retries: 5
             });
-        });
-        return ports;
+
+
     }
 }
