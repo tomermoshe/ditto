@@ -26,7 +26,7 @@ right: 16px;
 `;
 const StyledSider = styled(Layout.Sider)`
 background-color: #FFF;
-overflow:scroll;
+overflow:auto;
 `;
 const StyledLink = styled(Link)`
 width : 100%;
