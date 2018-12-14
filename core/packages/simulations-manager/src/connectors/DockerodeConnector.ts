@@ -48,4 +48,8 @@ class DockerodeExtension extends Dockerode {
 
 }
 
-export const dockerode = new DockerodeExtension({ host: "http://host.docker.internal", port: 1234 });
+export const dockerode = new DockerodeExtension(
+    {
+        host: process.platform === "linux" ? "http://172.17.0.1" : "host.docker.internal",
+        port: 1234
+    });

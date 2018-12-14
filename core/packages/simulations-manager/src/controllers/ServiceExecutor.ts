@@ -23,14 +23,14 @@ export class ServiceExecutor {
             },
             {
                 Target: "bridge"
-            }],
-            EndpointSpec: {
-                Mode: "dnsrr"
-            }
+            }]
 
         };
         if (exposedPorts && exposedPorts.length > 0) {
-            serviceConfig.EndpointSpec.Ports = this.portsToRemoteApiFormat(exposedPorts);
+            serviceConfig.EndpointSpec = {
+                ...serviceConfig.EndpointSpec,
+                Ports: this.portsToRemoteApiFormat(exposedPorts)
+            }
         }
         if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;

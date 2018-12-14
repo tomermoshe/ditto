@@ -70,6 +70,9 @@ export class SimulatorRouter {
                 const imageInfo = await image.inspect();
                 const ports: ExposedPort[] = [];
                 const exposedPorts = imageInfo.ContainerConfig.ExposedPorts;
+                if (!exposedPorts || exposedPorts.length === 0) {
+                    return [];
+                }
                 Object.keys(exposedPorts).forEach((port: string) => {
                     const splitted = port.split("/");
                     ports.push({
