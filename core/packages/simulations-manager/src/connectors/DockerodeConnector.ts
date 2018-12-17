@@ -22,6 +22,19 @@ class DockerodeExtension extends Dockerode {
         });
     }
 
+    async getNetworkByName(name: string) {
+        const opts = {
+            "limit": 1,
+            "filters": `{"name": ["${name}"]}`
+        };
+        const networks = await this.listNetworks(opts);
+        if (networks && networks.length > 0) {
+            return networks[0];
+        } else {
+            throw new Error(`Network ${name} not found`);
+        }
+    }
+
     async removeExitedContainers() {
         // filter by status
         const opts = {

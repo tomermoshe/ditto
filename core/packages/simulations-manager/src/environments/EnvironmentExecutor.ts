@@ -1,39 +1,52 @@
 import { SimulatorExecutor } from "../simulators/SimulatorExecutor";
 import { dockerode } from "../connectors/DockerodeConnector";
-import { Network } from "dockerode";
+import { Network, NetworkInfo, NetworkInspectInfo } from "dockerode";
 import promiseRetry from "promise-retry";
 import { Environment } from "ditto-shared";
 import EnvironmentExecutionError from "./EnvironmentExecutionError";
 import { EventEmitter } from "events";
 import EventTypes from "../events/EventsTypes";
+import { NetworksPool } from "./NetworksPool";
 
 export class EnvironmentExecutor {
     private executionId: string;
     private environment: Environment;
     private simulators: Map<String, SimulatorExecutor>;
-    private network: Network;
+    private network: NetworkInspectInfo;
     private eventEmitter: EventEmitter;
+    private networksPool: NetworksPool;
     constructor(eventEmitter: EventEmitter, environment: Environment, executionId: string) {
         this.environment = environment;
         this.simulators = new Map();
         this.executionId = executionId;
         this.eventEmitter = eventEmitter;
+        this.networksPool = new NetworksPool();
     }
     public async executeEnvironment() {
         console.log(`execution ${this.executionId} started`);
         this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STARTED);
-        await this.createNetwork();
+        await this.acquireNetwork();
+        // await this.createNetwork();
+        // await this.attachSimulationsManagerToNetwork();
         await this.executeSimulators();
-        await this.attachSimulationsManagerToNetwork();
         await this.waitForSimulators();
         this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_FINISHED);
 
     }
-
+    public async acquireNetwork() {
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Acquiring network");
+        const name = this.networksPool.acquire();
+        this.network = await dockerode.getNetworkByName(name);
+    }
+    public async releaseNetwork() {
+        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Releasing network");
+        this.networksPool.release(this.network.Name);
+    }
     public async removeEnvironment() {
-        await this.deattachSimulationsManagerFromNetwork();
+        // await this.deattachSimulationsManagerFromNetwork();
         await this.stopSimulators();
-        await this.removeNetwork();
+
+        this.releaseNetwork();
         console.log(`execution ${this.executionId} stopped`);
     }
 
@@ -41,35 +54,35 @@ export class EnvironmentExecutor {
 
 
 
-    private async attachSimulationsManagerToNetwork() {
-        const id = await dockerode.getContainerIdByName("simulations-manager");
-        await promiseRetry(this.attachSimulatorToNetworkWithRetries(id));
+    // private async attachSimulationsManagerToNetwork() {
+    //     const id = await dockerode.getContainerIdByName("simulations-manager");
+    //     await promiseRetry(this.attachSimulatorToNetworkWithRetries(id));
 
-    }
+    // }
 
-    private attachSimulatorToNetworkWithRetries(id: string): (retry: (error: any) => never, attempt: number) => Promise<void> {
-        return async (retry, number) => {
-            try {
-                await this.network.connect({
-                    Container: id
-                });
-                console.log("simulator manager attached to network");
-            }
-            catch (error) {
-                console.log(error + " " + "retry number " + number);
-                retry(error);
-            }
-        };
-    }
+    // private attachSimulatorToNetworkWithRetries(id: string): (retry: (error: any) => never, attempt: number) => Promise<void> {
+    //     return async (retry, number) => {
+    //         try {
+    //             await this.network.connect({
+    //                 Container: id
+    //             });
+    //             console.log("simulator manager attached to network");
+    //         }
+    //         catch (error) {
+    //             console.log(error + " " + "retry number " + number);
+    //             retry(error);
+    //         }
+    //     };
+    // }
 
-    private async deattachSimulationsManagerFromNetwork() {
-        const id = await dockerode.getContainerIdByName("simulations-manager");
-        await this.network.disconnect({
-            Container: id
-        });
-        console.log("simulator manager deattached from network");
+    // private async deattachSimulationsManagerFromNetwork() {
+    //     const id = await dockerode.getContainerIdByName("simulations-manager");
+    //     await this.network.disconnect({
+    //         Container: id
+    //     });
+    //     console.log("simulator manager deattached from network");
 
-    }
+    // }
 
 
 
@@ -79,7 +92,9 @@ export class EnvironmentExecutor {
         console.log("executeSimulators called");
 
         await Promise.all(this.environment.simulators.map(async simulator => {
-            const simulatorExecutor = new SimulatorExecutor(simulator, this.executionId);
+            const simulatorExecutor = new SimulatorExecutor(simulator,
+                this.network.Id,
+                `${simulator.name}-${this.executionId}`);
             await simulatorExecutor.execute();
             this.simulators.set(simulator.name, simulatorExecutor);
         }));
@@ -102,16 +117,16 @@ export class EnvironmentExecutor {
 
     }
 
-    private async createNetwork() {
-        this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Creating network");
-        this.network = await dockerode.createNetwork({
-            Name: this.executionId,
-            Driver: "overlay",
-            Attachable: true
+    // private async createNetwork() {
+    //     this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, "Creating network");
+    //     this.network = await dockerode.createNetwork({
+    //         Name: this.executionId,
+    //         Driver: "overlay",
+    //         Attachable: true
 
-        });
-        console.log(`network id ${this.network.id} created`);
-    }
+    //     });
+    //     console.log(`network id ${this.network.id} created`);
+    // }
 
     private async stopSimulators() {
         console.log("stopSimulators called");
@@ -120,10 +135,10 @@ export class EnvironmentExecutor {
         }));
     }
 
-    private async removeNetwork() {
-        if (this.network) {
-            this.network.remove();
-            console.log("network removed");
-        }
-    }
+    // private async removeNetwork() {
+    //     if (this.network) {
+    //         this.network.remove();
+    //         console.log("network removed");
+    //     }
+    // }
 }

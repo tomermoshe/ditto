@@ -8,12 +8,12 @@ export class SimulatorExecutor {
     dnsName: string;
     instanceId: SimulatorInstanceId;
     networkId: string;
-    executionId: string;
+    serviceId: string;
 
-    constructor(instanceId: SimulatorInstanceId, networkId: string) {
+    constructor(instanceId: SimulatorInstanceId, networkId: string, dnsName: string ) {
         this.networkId = networkId;
         this.instanceId = instanceId;
-        this.dnsName = `${instanceId.name}-${this.networkId}`;
+        this.dnsName = dnsName;
     }
 
     private configurationObjectToStringArray(configuration: any): string[] {
@@ -26,7 +26,7 @@ export class SimulatorExecutor {
     public async execute() {
 
 
-        this.executionId = await ServiceExecutor.execute(this.dnsName,
+        this.serviceId = await ServiceExecutor.execute(this.dnsName,
             this.instanceId.id.imageName,
             this.instanceId.id.version,
             this.networkId,
@@ -58,6 +58,6 @@ export class SimulatorExecutor {
     }
 
     public async stop() {
-        await ServiceExecutor.stop(this.executionId);
+        await ServiceExecutor.stop(this.serviceId);
     }
 }

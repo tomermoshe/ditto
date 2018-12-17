@@ -1,4 +1,4 @@
-version: '3'
+version: '3.3'
 services: 
   simulations-manager:
     image: "simulations-manager"
@@ -14,6 +14,11 @@ services:
       - mongodb
     deploy:
       replicas: 1
+    networks: 
+    - ditto-1
+    - ditto-2
+    - ditto-3
+    - ditto-main
   mongodb:
     image: mongo:latest
     container_name: "mongodb"
@@ -26,6 +31,8 @@ services:
       - ./data/db:/data/db:cached
     deploy:
       replicas: 1
+    networks:
+      - ditto-main
   socat:
     image: bobrik/socat:latest
     ports: 
@@ -35,4 +42,18 @@ services:
     command: TCP-LISTEN:1234,fork UNIX-CONNECT:/var/run/docker.sock
     deploy:
       replicas: 1
-   
+    networks:
+      - ditto-main
+networks: 
+  ditto-main:
+    driver : overlay
+    attachable : true
+  ditto-1:
+    driver: overlay
+    attachable : true
+  ditto-2:
+    driver: overlay
+    attachable : true
+  ditto-3:
+    driver: overlay
+    attachable : true

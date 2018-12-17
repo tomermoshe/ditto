@@ -30,7 +30,7 @@ export class ServiceExecutor {
             serviceConfig.EndpointSpec = {
                 ...serviceConfig.EndpointSpec,
                 Ports: this.portsToRemoteApiFormat(exposedPorts)
-            }
+            };
         }
         if (envs && envs.length > 0) {
             serviceConfig.TaskTemplate.ContainerSpec.Env = envs;
