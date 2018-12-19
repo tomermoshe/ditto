@@ -9,6 +9,7 @@ import { EnvironmentRouter } from "./environments/EnvironmentRouter";
 import { ScenarioRouter } from "./scenarios/ScenarioRouter";
 import fileUpload from "express-fileupload";
 import SocketIoConnector from "./connectors/SocketIoConnector";
+import "./environments/NetworksPool";
 const app = express();
 
 const server = http.createServer(app);
@@ -20,7 +21,6 @@ const server = http.createServer(app);
     const environmentCleaner = new EnvironmentCleaner();
     environmentCleaner.initialize();
     await mongoConnector.connect();
-
 
 
 

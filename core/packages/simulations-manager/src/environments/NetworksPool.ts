@@ -1,12 +1,30 @@
+import { dockerode } from "../connectors/DockerodeConnector";
+
+
 export class NetworksPool {
     private pool: string[];
-    constructor() {
-        this.pool = ["ditto-1", "ditto-2", "ditto-3"];
+    constructor(networks: string[]) {
+        this.pool = networks;
     }
+
+
     acquire(): string {
-        return this.pool.pop();
+        const network = this.pool.pop();
+        console.log(`acquired network ${network}`);
+        return network;
     }
     release(network: string) {
+        console.log(`released network id ${network}`);
+
         return this.pool.push(network);
     }
 }
+
+export let networksPool: NetworksPool;
+
+dockerode.getNetworksByName("ditto-").then(nets => {
+    networksPool = new NetworksPool(nets.map(network => network.Name));
+}).catch(e => {
+    throw new Error(e);
+});
+
