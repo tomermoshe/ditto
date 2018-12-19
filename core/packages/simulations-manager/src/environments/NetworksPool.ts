@@ -17,7 +17,7 @@ export class NetworksPool {
         console.log(`released network id ${network}`);
 
         return this.pool.push(network);
-    }
+}
 }
 
 export let networksPool: NetworksPool;
