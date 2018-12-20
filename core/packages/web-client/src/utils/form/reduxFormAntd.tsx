@@ -1,6 +1,6 @@
 import { Form, Input, Radio, Select, Checkbox, Button, DatePicker, message, Upload, Icon } from "antd";
 import * as React from "react";
-import { ROOT_URL } from "../../app/constants";
+import { ROOT_API_URL } from "../../app/constants";
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
@@ -65,7 +65,7 @@ export const renderFieldFile: React.StatelessComponent<any> = ({
   } 
   const props = {
     name: 'file', 
-    action: `${ROOT_URL}/simulators/upload`,
+    action: `${ROOT_API_URL}/simulators/upload`,
     accept: accept ,
     data : {uploadId}, 
     onChange(info) {

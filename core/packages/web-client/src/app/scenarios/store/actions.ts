@@ -1,10 +1,10 @@
-import { ROOT_URL } from "../../constants";
+import { ROOT_API_URL } from "../../constants";
 import axios from "axios";
 import { ScenariosActionTypes } from "./types";
 import { ScenarioJSON } from "ditto-shared";
 import { ApplicationState } from "../../types";
-const ROOT_URL_SCENARIOS = `${ROOT_URL}/scenarios`;
-const ROOT_URL_TESTS = `${ROOT_URL}/test/play`;
+const ROOT_URL_SCENARIOS = `${ROOT_API_URL}/scenarios`;
+const ROOT_URL_TESTS = `${ROOT_API_URL}/test/play`;
 
 
 

@@ -1,9 +1,9 @@
-import { ROOT_URL } from "../../constants";
+import { ROOT_API_URL } from "../../constants";
 import { SimulatorDefinition } from "ditto-shared";
 import axios from "axios";
 import { SimulatorActionTypes } from "./types";
 
-const ROOT_URL_SIMULATORS = `${ROOT_URL}/simulators`;
+const ROOT_URL_SIMULATORS = `${ROOT_API_URL}/simulators`;
 
 
 export function fetchSimulators() {

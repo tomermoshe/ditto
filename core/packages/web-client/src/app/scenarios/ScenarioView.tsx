@@ -9,6 +9,7 @@ import { connect } from "react-redux";
 import { ApplicationState } from "../types";
 import { EnvironmentJSON } from "ditto-shared";
 import * as socketIOClient from "socket.io-client";
+import { SERVER_URL } from "../constants";
 
 
 const StyledH1 = styled.h1`
@@ -51,7 +52,7 @@ type Props = ScenarioProps & RouteComponentProps<RouterProps> & DispatchProps;
 
 
 class ScenarioView extends Component<Props, OwnState> {
-    endpoint = "http://127.0.0.1:8000";
+    endpoint = `${SERVER_URL}:8000`;
     socket: SocketIOClient.Socket;
 
     constructor(props: Props) {
