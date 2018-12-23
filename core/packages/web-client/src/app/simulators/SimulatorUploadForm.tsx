@@ -1,13 +1,14 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field, FieldArray } from 'redux-form';
-import { SimulatorDefinition } from "ditto-shared";
+import { SimulatorDefinition, CommandDefinition } from "ditto-shared";
 import { fetchSimulators, createSimulator } from "./store/actions";
 import { required } from "redux-form-validators";
 import { ApplicationState } from "../types";
 import { Form, Button, Radio } from "antd";
 import { AInput, ATextarea, tailFormItemLayout, renderFieldFile, ARadioGroup } from "../../utils/form/reduxFormAntd";
 import uniqid = require("uniqid");
+import * as ajv from "ajv";
 
 
 
@@ -23,15 +24,45 @@ interface DispatchProps {
 
 export type Props = StateProps & DispatchProps;
 
+const commandsDefinitionSchema =
+{
+    type: "array",
+    items: [
+        {
+            type: "object",
+            properties: {
+                commandName: {
+                    type: "string"
+                },
+                commandSchema: {
+                    type: "object"
+                }
+            },
+            required: [
+                "commandName",
+                "commandSchema"
+            ]
+        }
+    ]
+};
+
 
 class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
     uploadId: string;
+    ajv: ajv.Ajv;
+    validateCommandsSchema: ajv.ValidateFunction;
+
 
     constructor(props: InjectedFormProps<{}, Props> & Props) {
         super(props);
         this.onSubmit = this.onSubmit.bind(this);
         this.uploadId = uniqid();
+        this.ajv = new ajv();
+        this.validateCommandsSchema = this.ajv.compile(commandsDefinitionSchema);
+        this.validateSchema = this.validateSchema.bind(this);
+        this.validateCommandsDefinition = this.validateCommandsDefinition.bind(this);
+        this.reduceCommandSchemaValidation = this.reduceCommandSchemaValidation.bind(this);
     }
     onSubmit(values) {
 
@@ -82,6 +113,43 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
 
     //     </ul>
     // );
+
+    validateSchema(schema) {
+        try {
+            const obj = JSON.parse(schema);
+            return this.ajv.validateSchema(obj) ? undefined : JSON.stringify(this.ajv.errors);
+        } catch (error) {
+            return error;
+        }
+    }
+    reduceCommandSchemaValidation(acc, command)  {
+        const error = this.ajv.validateSchema(command.commandSchema) ?
+            undefined : JSON.stringify(this.ajv.errors);
+
+        if (error) {
+            if (!acc) {
+                return error;
+            }
+            else {
+                acc += `${acc}\n${error}`
+            }
+        }
+        return acc;
+    }
+    validateCommandsDefinition(commands) {
+        try {
+            const commandsObj = JSON.parse(commands);
+            const schemaErrors = this.validateCommandsSchema(commandsObj) ? undefined :
+                this.validateCommandsSchema.errors && this.validateCommandsSchema.errors[0].message;
+            if (schemaErrors) {
+                return schemaErrors;
+            }
+            return commandsObj.reduce(this.reduceCommandSchemaValidation, undefined);
+
+        } catch (error) {
+            return "schema is not an object";
+        }
+    }
     render() {
         const { handleSubmit, simulatorDefinitions } = this.props;
 
@@ -113,14 +181,14 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
                         name="configSchema"
                         component={ATextarea}
                         autosize={true}
-                        validate={required()}
+                        validate={[required(), this.validateSchema]}
                         label="Config Schema"
                     />
                     <Field
                         name="commands"
                         component={ATextarea}
                         autosize={true}
-                        validate={required()}
+                        validate={[required(), this.validateCommandsDefinition]}
                         label="Commands Definition"
                     />
                     {/* <FieldArray name="ports" component={this.renderPortsDefinition} /> */}

@@ -19,6 +19,7 @@
     "@types/react": "^16.4.6",
     "@types/react-dom": "^16.0.6",
     "@types/react-redux": "^6.0.7",
+    "ajv": "^6.6.2",
     "antd": "^3.10.3",
     "axios": "^0.18.0",
     "ditto-shared": "^0.0.1",
