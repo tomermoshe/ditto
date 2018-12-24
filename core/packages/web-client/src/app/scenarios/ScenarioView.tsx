@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component } from "react";
-import { ScenarioStep, ScenarioJSON } from "ditto-shared";
+import { ScenarioStep, ScenarioJSON, EnvironmentUtils } from "ditto-shared";
 import { Steps, Button, Spin , message } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import ReactJson from 'react-json-view';
@@ -124,6 +124,7 @@ class ScenarioView extends Component<Props, OwnState> {
                         <Button
                             icon="play-circle"
                             type="primary"
+                            disabled={!EnvironmentUtils.canPlayScenario(this.props.selectedEnvironment,scenario)}
                             onClick={() => this.playScenario(scenario)}
                         >
                             Play
