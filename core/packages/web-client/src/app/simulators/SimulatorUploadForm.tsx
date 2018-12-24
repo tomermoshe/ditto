@@ -119,7 +119,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
             const obj = JSON.parse(schema);
             return this.ajv.validateSchema(obj) ? undefined : JSON.stringify(this.ajv.errors);
         } catch (error) {
-            return error;
+            return "schema is not an object";
         }
     }
     reduceCommandSchemaValidation(acc, command)  {
