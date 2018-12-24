@@ -2,8 +2,10 @@
   "name": "ditto-shared",
   "version": "0.0.1",
   "description": "types and shared files for ditto project",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
+    "postinstall": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Pavel Kharakh",
