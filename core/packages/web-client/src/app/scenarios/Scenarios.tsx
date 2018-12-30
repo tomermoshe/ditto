@@ -143,6 +143,7 @@ class Scenarios extends React.Component<Props, OwnState> {
                 </StyledSider>
                 <StyledContent>
                     <Switch>
+                        <Route path='/scenarios/' component={ScenarioForm} />
                         <Route path='/scenarios/new' component={ScenarioForm} />
                         <Route
                             exact={true}

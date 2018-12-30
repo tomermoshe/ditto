@@ -11,7 +11,7 @@ import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
- 
+
 export interface InjectedProps {
     simulatorDefinitions: SimulatorDefinition[];
     environment: Environment
@@ -72,11 +72,13 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         if (simulatorName) {
             this.selectedSimulatorDefinition = this.findSelectedSimulatorDefinition();
         }
-        if(simulatorName && commandName) {
+        if (simulatorName && commandName) {
             this.selctedCommandSchema = this.findCommandSchema();
         }
         return (
             <li key={this.props.index}>
+                <h4>Step #{this.props.index + 1}</h4>
+
                 <Button
                     type="danger"
                     className="remove-item--button"

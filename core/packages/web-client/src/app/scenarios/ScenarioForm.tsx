@@ -27,7 +27,7 @@ export interface Props {
 
 class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
-    
+
     componentDidMount() {
         this.props.fetchSimulators();
         this.props.fetchEnvironments();
@@ -50,11 +50,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
 
         return (
             <ul>
-                <li>
-                    <Button icon="plus" type="primary" onClick={() => fields.push({})}>
-                        Add Step
-                    </Button>
-                </li>
+
                 {submitFailed && error && <span>{error}</span>}
                 {
                     fields.map((step, index) => (
@@ -68,6 +64,12 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
                         />
                     ))
                 }
+                <li>
+                    <Button icon="plus" type="dashed" onClick={() => fields.push({})}>
+                        Add Step
+                    </Button>
+
+                </li>
 
             </ul>
         );
@@ -82,6 +84,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         return (
             <div>
                 <Form className="form-array" onSubmit={handleSubmit(this.onSubmit)}>
+                <h4>Scenario</h4>
 
                     <Field
                         name="name"

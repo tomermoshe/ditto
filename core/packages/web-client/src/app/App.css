@@ -22,7 +22,7 @@
   }
 
   */
-.form-array ul li:first-child {
+.form-array ul li:last-child {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -35,7 +35,10 @@
 }
 .form-array ul li {
     position: relative;
-    border: 1px dotted black;
+}
+.form-array {
+    width: 80%;
+    margin: auto;
 }
 
 .remove-item--button{
