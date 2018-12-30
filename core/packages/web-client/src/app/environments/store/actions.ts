@@ -1,10 +1,10 @@
 import axios from "axios";
-import { ROOT_URL } from "./../../constants";
+import { ROOT_API_URL } from "./../../constants";
 import { EnvironmentActionTypes } from "./types";
 import { EnvironmentJSON } from "ditto-shared";
 
 
-const ROOT_URL_ENVIRONMENTS = `${ROOT_URL}/environments`;
+const ROOT_URL_ENVIRONMENTS = `${ROOT_API_URL}/environments`;
 
 
 export function createEnvironment(values) {

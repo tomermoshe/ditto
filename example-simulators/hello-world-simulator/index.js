@@ -14,12 +14,17 @@ app.post("/command/SayHello", (req, res) => {
     res.status(200).send();
 });
 
+app.post("/command/Fail", (req, res) => {
+    console.log("Fail called");
+    res.status(500).send("I'm failing");
+});
 
-app.post("/ready", (req,res)=>{
+
+app.get("/ready", (req, res) => {
     console.log(`ready called`);
     res.status(200).send();
 })
-app.listen(3000,()=>{
+app.listen(3000, () => {
     console.log("started listening on port 3000");
-    
+
 });

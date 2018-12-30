@@ -5,6 +5,10 @@ export interface ScenarioStep {
     command: Command;
 }
 
+export interface ScenarioStepStatus extends ScenarioStep {
+    status?: "error" | "finish" | "wait" | "process";
+    message?: string;
+}
 export interface Scenario {
     name: string;
     steps: Array<ScenarioStep>;

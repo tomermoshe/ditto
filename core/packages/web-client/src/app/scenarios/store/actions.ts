@@ -1,10 +1,11 @@
-import { ROOT_URL } from "../../constants";
+import { ROOT_API_URL } from "../../constants";
 import axios from "axios";
 import { ScenariosActionTypes } from "./types";
 import { ScenarioJSON } from "ditto-shared";
 import { ApplicationState } from "../../types";
-const ROOT_URL_SCENARIOS = `${ROOT_URL}/scenarios`;
-const ROOT_URL_TESTS = `${ROOT_URL}/test/play`;
+import Scenarios from "../Scenarios";
+const ROOT_URL_SCENARIOS = `${ROOT_API_URL}/scenarios`;
+const ROOT_URL_TESTS = `${ROOT_API_URL}/test/play`;
 
 
 
@@ -39,6 +40,8 @@ export function fetchScenarios() {
   }
 }
 
+
+
 export function receiveScenarios(scenarios: ScenarioJSON[]) {
   return {
     type: ScenariosActionTypes.RECIEVE_SCENARIOS,
@@ -46,10 +49,32 @@ export function receiveScenarios(scenarios: ScenarioJSON[]) {
   }
 }
 
+export function fetchScenario(scenarioId: string) {
+  return async (dispatch, getState: () => ApplicationState) => {
+    let selectedScenario = getState().scenarios.all.find(scenario => scenario._id === scenarioId);
+    if (!selectedScenario) {
+      try {
+        selectedScenario = (await axios.get(`${ROOT_URL_SCENARIOS}/{${scenarioId}}`)).data;
+      } catch (error) {
+        console.log(error);
+        return;
+      }
+    }
+    dispatch(receiveScenario(selectedScenario as ScenarioJSON));
+  }
+}
+
+export function receiveScenario(scenario: ScenarioJSON) {
+  return {
+    type: ScenariosActionTypes.RECIEVE_SCENARIO,
+    scenario
+  }
+}
+
 export function playScenario(scenario: ScenarioJSON) {
-  return async (dispatch, getState : () => ApplicationState) => {
+  return async (dispatch, getState: () => ApplicationState) => {
     const environment = getState().environments.selected;
-    
+
     if (environment === undefined) {
       dispatch({ type: ScenariosActionTypes.SCENARIO_PLAY_FAILED, reason: "Please select environment" });
     }

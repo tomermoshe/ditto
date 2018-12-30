@@ -11,7 +11,7 @@ import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
- 
+
 export interface InjectedProps {
     simulatorDefinitions: SimulatorDefinition[];
     environment: Environment
@@ -29,6 +29,7 @@ type Props = InjectedProps & ConditionalFieldsProps;
 class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
     selectedSimulatorDefinition: SimulatorDefinition;
+    selctedCommandSchema: any;
 
     renderCommandNames() {
         return this.selectedSimulatorDefinition.commands.map(command =>
@@ -60,7 +61,7 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         environmentSimulatorOptions.push(localCommandsSimulatorOption)
         return environmentSimulatorOptions;
     }
-    selectCommandSchema() {
+    findCommandSchema() {
         const commandDefinition = this.selectedSimulatorDefinition.commands.
             find(command => command.commandName === this.props.commandName) as CommandDefinition;
         return commandDefinition.commandSchema;
@@ -71,8 +72,13 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         if (simulatorName) {
             this.selectedSimulatorDefinition = this.findSelectedSimulatorDefinition();
         }
+        if (simulatorName && commandName) {
+            this.selctedCommandSchema = this.findCommandSchema();
+        }
         return (
             <li key={this.props.index}>
+                <h4>Step #{this.props.index + 1}</h4>
+
                 <Button
                     type="danger"
                     className="remove-item--button"
@@ -99,11 +105,9 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
                         {this.renderCommandNames()}
                     </Field>
                 }
-                {simulatorName && commandName &&
-
-
+                {this.selctedCommandSchema &&
                     <EmbeddedLiform
-                        schema={this.selectCommandSchema()}
+                        schema={this.selctedCommandSchema}
                         theme={AntdTheme}
                         fieldName="body"
                         prefix={`${this.props.step}.command.`}

@@ -1,19 +1,33 @@
 import * as React from "react";
 import { Menu, Icon, Layout } from 'antd';
-import { Link } from 'react-router-dom'
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom'
 import ScenariosSvg from "../../icons/ScenariosSvg";
 const logo = require("./logo.svg") as string;
 import SiteLogo from "./SiteLogo";
 
-const Sider = () => {
+
+const getPageName = (path: string): string[] => {
+    let tmp = path.slice(1);
+    tmp = tmp.split("/")[0];
+    if (!tmp || tmp.length === 0) {
+        return ['scenarios'];
+    } else {
+        return [tmp];
+    }
+}
+
+
+const Sider = (props: RouteComponentProps) => {
+
     return (
 
         <Layout.Sider width={200} className="sider">
             <SiteLogo />
             <Menu
                 mode="inline"
-                defaultSelectedKeys={['environments']}
-                defaultOpenKeys={['environments']}
+                defaultSelectedKeys={['scenarios']}
+                defaultOpenKeys={['scenarios']}
+                selectedKeys={getPageName(props.location.pathname)}
             >
                 <Menu.Item key="environments">
 
@@ -45,5 +59,4 @@ const Sider = () => {
 
     )
 };
-
-export default Sider;
+export default withRouter(Sider);
