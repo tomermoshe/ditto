@@ -28,6 +28,9 @@ class SocketIoConnector {
                 testExecutor.on(EventTypes.STEP_FINISHED, (step: number) => {
                     socket.emit(EventTypes.STEP_FINISHED, step);
                 });
+                testExecutor.on(EventTypes.STEP_FAILED, (step: number, error) => {
+                    socket.emit(EventTypes.STEP_FAILED, step , error);
+                });
                 testExecutor.on(EventTypes.ENVIRONMENT_EXECUTION_STARTED, () => {
                     socket.emit(EventTypes.ENVIRONMENT_EXECUTION_STARTED);
                 });

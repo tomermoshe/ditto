@@ -22,10 +22,15 @@ export class ScenarioExecutor {
     }
     private async executeCommands() {
         await (async () => {
-            for (const [ i, step] of this.scenario.steps.entries()) {
-                this.eventEmitter.emit(EventTypes.STEP_STARTED, i);
-                await this.executeSimulatorCommand(step);
-                this.eventEmitter.emit(EventTypes.STEP_FINISHED, i);
+            for (const [i, step] of this.scenario.steps.entries()) {
+                try {
+                    this.eventEmitter.emit(EventTypes.STEP_STARTED, i);
+                    await this.executeSimulatorCommand(step);
+                    this.eventEmitter.emit(EventTypes.STEP_FINISHED, i);
+                } catch (error) {
+                    this.eventEmitter.emit(EventTypes.STEP_FAILED, i, error);
+                    throw error;
+                }
             }
         })();
         console.log("commands executed");

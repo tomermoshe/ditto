@@ -10,7 +10,7 @@ export class SimulatorExecutor {
     networkId: string;
     serviceId: string;
 
-    constructor(instanceId: SimulatorInstanceId, networkId: string, dnsName: string ) {
+    constructor(instanceId: SimulatorInstanceId, networkId: string, dnsName: string) {
         this.networkId = networkId;
         this.instanceId = instanceId;
         this.dnsName = dnsName;
@@ -34,7 +34,7 @@ export class SimulatorExecutor {
             await this.exposedPortsToStringArray());
     }
     private async exposedPortsToStringArray() {
-        const def = await SimulatorDefinitionModel.findOne({ id  : this.instanceId.id });
+        const def = await SimulatorDefinitionModel.findOne({ id: this.instanceId.id });
         return def.ports;
 
     }
@@ -42,7 +42,7 @@ export class SimulatorExecutor {
         await promiseRetry(async (retry, number) => {
             try {
                 const options: requestPromise.Options = {
-                    method: "POST",
+                    method: "GET",
                     uri: `http://${this.dnsName}:3000/ready`,
                     json: true,
 

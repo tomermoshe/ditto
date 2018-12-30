@@ -29,6 +29,7 @@ type Props = InjectedProps & ConditionalFieldsProps;
 class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
 
     selectedSimulatorDefinition: SimulatorDefinition;
+    selctedCommandSchema: any;
 
     renderCommandNames() {
         return this.selectedSimulatorDefinition.commands.map(command =>
@@ -60,7 +61,7 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         environmentSimulatorOptions.push(localCommandsSimulatorOption)
         return environmentSimulatorOptions;
     }
-    selectCommandSchema() {
+    findCommandSchema() {
         const commandDefinition = this.selectedSimulatorDefinition.commands.
             find(command => command.commandName === this.props.commandName) as CommandDefinition;
         return commandDefinition.commandSchema;
@@ -70,6 +71,9 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
         const { error, simulatorName, commandName } = this.props;
         if (simulatorName) {
             this.selectedSimulatorDefinition = this.findSelectedSimulatorDefinition();
+        }
+        if(simulatorName && commandName) {
+            this.selctedCommandSchema = this.findCommandSchema();
         }
         return (
             <li key={this.props.index}>
@@ -99,11 +103,9 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
                         {this.renderCommandNames()}
                     </Field>
                 }
-                {simulatorName && commandName &&
-
-
+                {this.selctedCommandSchema &&
                     <EmbeddedLiform
-                        schema={this.selectCommandSchema()}
+                        schema={this.selctedCommandSchema}
                         theme={AntdTheme}
                         fieldName="body"
                         prefix={`${this.props.step}.command.`}
