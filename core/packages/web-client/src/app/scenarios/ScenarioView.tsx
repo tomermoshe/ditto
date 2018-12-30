@@ -73,16 +73,6 @@ class ScenarioView extends Component<Props, OwnState> {
 
         }
     }
-    // componentDidUpdate(prevProps: Props) {
-    //     if (prevProps.selectedScenario !== this.props.selectedScenario && this.props.selectedScenario) {
-    //         const stepStatuses: ScenarioStepStatus[] = [...this.props.selectedScenario.steps];
-    //         stepStatuses[0].status = "wait";
-    //         this.setState({
-    //             stepStatuses,
-    //             currentStep: 0,
-    //         });
-    //     }
-    // }
 
     initStepStatuses(){
         if(!this.props.selectedScenario){
