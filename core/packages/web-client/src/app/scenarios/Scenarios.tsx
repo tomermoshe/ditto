@@ -97,9 +97,7 @@ class Scenarios extends React.Component<Props, OwnState> {
             return this.props.scenarios;
         }
     }
-    scenarioById(id: string): ScenarioJSON {
-        return this.props.scenarios.filter(scenario => scenario._id === id)[0];
-    }
+
     render() {
         if (!this.props.scenarios) {
             return <div>Loading...</div>;
@@ -151,7 +149,6 @@ class Scenarios extends React.Component<Props, OwnState> {
                             path='/scenarios/:scenarioId'
                             component={props =>
                                 <ScenarioView
-                                    findScenarioById={this.scenarioById.bind(this)}
                                     {...props}
                                 />
                             }

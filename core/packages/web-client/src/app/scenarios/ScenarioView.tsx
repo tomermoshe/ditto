@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
-import { ScenarioStep, ScenarioJSON, EnvironmentUtils } from "ditto-shared";
-import { Steps, Button, Spin , message } from "antd";
+import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus } from "ditto-shared";
+import { Steps, Button, Spin } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import ReactJson from 'react-json-view';
 import styled from "styled-components";
@@ -10,6 +10,9 @@ import { ApplicationState } from "../types";
 import { EnvironmentJSON } from "ditto-shared";
 import * as socketIOClient from "socket.io-client";
 import { SERVER_URL } from "../constants";
+import ScenarioStepView from "./ScenarioStep";
+import { fetchScenario } from "./store/actions";
+import { selectEnvironment } from "../environments/store/actions";
 
 
 const StyledH1 = styled.h1`
@@ -28,9 +31,6 @@ const ScenarioStep = ({ step }: StepProps) => {
     );
 }
 
-interface ScenarioProps {
-    findScenarioById: (id: string) => ScenarioJSON;
-}
 
 
 
@@ -39,15 +39,19 @@ interface RouterProps {
 }
 interface OwnState {
     currentStep: number;
-    currentStepStatus: "error" | "finish" | "wait" | "process" | undefined;
     executingEnvironment: boolean;
-    executionStatus : string;
+    executionStatus: string;
+    stepStatuses: ScenarioStepStatus[];
+}
+interface StateProps {
+    selectedEnvironment: EnvironmentJSON | undefined,
+    selectedScenario: ScenarioJSON | undefined
 }
 interface DispatchProps {
-    selectedEnvironment: EnvironmentJSON | undefined
+    fetchScenario: (scenarioId: string) => any;
 }
 
-type Props = ScenarioProps & RouteComponentProps<RouterProps> & DispatchProps;
+type Props = RouteComponentProps<RouterProps> & StateProps & DispatchProps;
 
 
 
@@ -58,28 +62,78 @@ class ScenarioView extends Component<Props, OwnState> {
     constructor(props: Props) {
         super(props);
         this.socket = socketIOClient(this.endpoint);
+        this.newStepsWithUpdatedStatus = this.newStepsWithUpdatedStatus.bind(this);
+        this.subscribeEvents();
 
         this.state = {
+            stepStatuses: [],
             currentStep: 0,
-            currentStepStatus: "wait",
             executingEnvironment: false,
             executionStatus: ""
 
         }
     }
+    // componentDidUpdate(prevProps: Props) {
+    //     if (prevProps.selectedScenario !== this.props.selectedScenario && this.props.selectedScenario) {
+    //         const stepStatuses: ScenarioStepStatus[] = [...this.props.selectedScenario.steps];
+    //         stepStatuses[0].status = "wait";
+    //         this.setState({
+    //             stepStatuses,
+    //             currentStep: 0,
+    //         });
+    //     }
+    // }
 
-    subscribeEvents(){
+    initStepStatuses(){
+        if(!this.props.selectedScenario){
+            return;
+        }
+        const stepStatuses: ScenarioStepStatus[] = [...this.props.selectedScenario.steps];
+        stepStatuses[0].status = "wait";
+        this.setState({
+            stepStatuses,
+            currentStep: 0,
+        });
+    }
+    componentDidMount() {
+        const { scenarioId } = this.props.match.params;
+        this.props.fetchScenario(scenarioId);
+    }
+    componentWillUnmount() {
+        this.socket.disconnect();
+    }
+    newStepsWithUpdatedStatus(currentStep: number, status, message?: string): ScenarioStepStatus[] {
+        return [
+            ...this.state.stepStatuses.slice(0, currentStep),
+            {
+                ...this.state.stepStatuses[currentStep],
+                status,
+                message
+            },
+            ...this.state.stepStatuses.slice(currentStep + 1)
+        ];
+    }
+    subscribeEvents() {
+        const fn = this.newStepsWithUpdatedStatus.bind(this);
         this.socket.on("STEP_STARTED", currentStep => {
-            this.setState({ 
-                currentStep ,
-                currentStepStatus : "process"
+            this.setState({
+                currentStep,
+                stepStatuses: fn(currentStep, "process")
             });
         });
         this.socket.on("STEP_FINISHED", currentStep => {
-            this.setState({ 
-                currentStepStatus : "finish"
+            this.setState({
+                stepStatuses: fn(currentStep, "finish")
             });
         });
+        this.socket.on("STEP_FAILED", (currentStep, error) => {
+            this.setState({
+                stepStatuses: fn(currentStep, "error", error.message)
+            });
+            console.log(error);
+
+        });
+
         this.socket.on("ENVIRONMENT_EXECUTION_STARTED", () => {
             this.setState({ executingEnvironment: true });
         });
@@ -87,18 +141,12 @@ class ScenarioView extends Component<Props, OwnState> {
             this.setState({ executingEnvironment: false });
         });
         this.socket.on("ENVIRONMENT_EXECUTION_STATUS", (msg) => {
-            this.setState({ executionStatus : msg });
+            this.setState({ executionStatus: msg });
         });
     }
-    componentDidMount() {
-        this.setState({
-            currentStep: 0
-        });
-       this.subscribeEvents();
-    }
+
     playScenario(scenario: ScenarioJSON) {
         if (!this.props.selectedEnvironment) {
-            message.error("Please select environment!");
             return;
         }
         this.socket.emit("PLAY_TEST", {
@@ -108,35 +156,42 @@ class ScenarioView extends Component<Props, OwnState> {
     }
     render() {
         const Step = Steps.Step;
-        const { scenarioId } = this.props.match.params;
-        const scenario: ScenarioJSON = this.props.findScenarioById(scenarioId);
-        if(!scenario){
+
+        if (!this.props.selectedScenario) {
             return <div>Loading...</div>
         }
+        if(this.props.selectedScenario.steps.length !== this.state.stepStatuses.length){
+            this.initStepStatuses();
+        }
+
         return (
             <Spin spinning={this.state.executingEnvironment} tip={this.state.executionStatus}>
                 <div>
                     <div>
                         <StyledH1>
-                            {scenario.name}
+                            {this.props.selectedScenario.name}
                         </StyledH1>
 
                         <Button
                             icon="play-circle"
                             type="primary"
-                            disabled={!EnvironmentUtils.canPlayScenario(this.props.selectedEnvironment,scenario)}
-                            onClick={() => this.playScenario(scenario)}
+                            disabled={!EnvironmentUtils.canPlayScenario(this.props.selectedEnvironment, this.props.selectedScenario)}
+                            onClick={() => this.playScenario(this.props.selectedScenario as ScenarioJSON)}
                         >
                             Play
                         </Button>
                     </div>
 
-                    <Steps direction="vertical" current={this.state.currentStep} status={this.state.currentStepStatus}>
-                        {scenario.steps.map((step, index) => {
-                            const description = <ReactJson name="command.body" src={step.command.body} />
-
+                    <Steps direction="vertical">
+                        {this.state.stepStatuses.map((step, index) => {
                             return (
-                                <Step key={index} description={description} title={`${step.simulatorName} - ${step.command.name}`} />
+
+                                <Step
+                                    key={index}
+                                    status={step.status}
+                                    description={<ScenarioStepView step={step} />}
+                                    title={`${step.simulatorName} - ${step.command.name}`}
+                                />
                             );
 
                         })}
@@ -147,10 +202,15 @@ class ScenarioView extends Component<Props, OwnState> {
     }
 }
 
-const mapDispatchToProps = (state: ApplicationState) => {
+const mapStateToProps = (state: ApplicationState) => {
     return {
-        selectedEnvironment: state.environments.selected
+        selectedEnvironment: state.environments.selected,
+        selectedScenario: state.scenarios.selected
     };
 }
 
-export default connect<DispatchProps, any, ScenarioProps>(mapDispatchToProps, null)(ScenarioView);
+
+
+
+
+export default connect<StateProps, any>(mapStateToProps, { fetchScenario })(ScenarioView);
