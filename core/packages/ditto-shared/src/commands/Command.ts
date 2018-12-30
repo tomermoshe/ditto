@@ -1,7 +1,7 @@
 
 export  interface Command {
     name: string;
-    body: any;
+    body?: any;
 }
 
 

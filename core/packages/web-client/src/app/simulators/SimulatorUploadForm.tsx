@@ -40,7 +40,6 @@ const commandsDefinitionSchema =
             },
             required: [
                 "commandName",
-                "commandSchema"
             ]
         }
     ]
@@ -123,6 +122,9 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         }
     }
     reduceCommandSchemaValidation(acc, command)  {
+        if(!command.commandSchema){
+            return acc;
+        }
         const error = this.ajv.validateSchema(command.commandSchema) ?
             undefined : JSON.stringify(this.ajv.errors);
 

@@ -7,6 +7,6 @@ export const CommandDefinitionSchema = new mongoose.Schema({
     },
     commandSchema: {
         type: Object,
-        required: true
+        required: false
     }
 }, { _id: false });

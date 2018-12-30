@@ -8,6 +8,6 @@ export const CommandSchema = new mongoose.Schema({
     },
     body: {
         type: Object,
-        required: true
+        required: false
     }
 }, { _id: false });

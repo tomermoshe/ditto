@@ -31,9 +31,9 @@ export const tailFormItemLayout = {
       offset: 6
     }
   }
-};
+}; 
 
-const makeField = Component => ({ input, meta, children, hasFeedback, label, ...rest }) => {
+const makeField : (object : any) => React.SFC<any> = Component => ({ input, meta, children, hasFeedback, label, ...rest }) => {
   const hasError = meta.touched && meta.invalid;
   return (
     <Form.Item
