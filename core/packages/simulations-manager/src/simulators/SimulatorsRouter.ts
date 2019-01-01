@@ -7,6 +7,7 @@ import fs from "fs";
 import localSimulatorDefinition from "./LocalSimulatorDefinition";
 import { PortType } from "ditto-shared";
 import promiseRetry from "promise-retry";
+const mongoEscape = require("mongo-escape");
 
 const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
@@ -18,9 +19,11 @@ export class SimulatorRouter {
     static routes(): Router {
         return Router()
             .get("/simulators", async (req: Request, res: Response) => {
-                const simulators: SimulatorDefinition[] = await SimulatorDefinitionModel.find({}, "-_id");
+                let simulators: SimulatorDefinition[] = await SimulatorDefinitionModel.find({}, "-_id");
                 simulators.push(localSimulatorDefinition);
-                res.status(200).json(simulators);
+                // removing mongoose keys
+                simulators = JSON.parse(JSON.stringify(simulators));
+                res.status(200).json(mongoEscape.unescape(simulators));
             }).post("/simulators/upload", async (req: Request, res: Response) => {
                 try {
                     const simulatorFile: UploadedFile = <UploadedFile>req.files.file;
@@ -37,7 +40,7 @@ export class SimulatorRouter {
                 }
             }).post("/simulators", async (req: Request, res: Response) => {
                 try {
-                    const simulatorDefinition: SimulatorDefinition = req.body.simulator as SimulatorDefinition;
+                    const simulatorDefinition: SimulatorDefinition = mongoEscape.escape(req.body.simulator) as SimulatorDefinition;
                     const uploadId: string = req.body.uploadId;
 
                     const simulatorFilePath = `${UPLOADS_DIR}/${uploadId}.tar`;
