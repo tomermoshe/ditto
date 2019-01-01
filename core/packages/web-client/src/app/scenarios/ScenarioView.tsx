@@ -85,6 +85,11 @@ class ScenarioView extends Component<Props, OwnState> {
             currentStep: 0,
         });
     }
+    componentDidUpdate(prevProps: Props){
+        if(prevProps.selectedScenario !== this.props.selectedScenario){
+            this.initStepStatuses();
+        }
+    }
     componentDidMount() {
         const { scenarioId } = this.props.match.params;
         this.props.fetchScenario(scenarioId);
@@ -150,9 +155,7 @@ class ScenarioView extends Component<Props, OwnState> {
         if (!this.props.selectedScenario) {
             return <div>Loading...</div>
         }
-        if(this.props.selectedScenario.steps.length !== this.state.stepStatuses.length){
-            this.initStepStatuses();
-        }
+
 
         return (
             <Spin spinning={this.state.executingEnvironment} tip={this.state.executionStatus}>
@@ -203,4 +206,4 @@ const mapStateToProps = (state: ApplicationState) => {
 
 
 
-export default connect<StateProps, any>(mapStateToProps, { fetchScenario })(ScenarioView);
+export default connect<StateProps, any, any>(mapStateToProps, { fetchScenario })(ScenarioView);

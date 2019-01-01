@@ -143,15 +143,13 @@ class Scenarios extends React.Component<Props, OwnState> {
                 </StyledSider>
                 <StyledContent>
                     <Switch>
-                        <Route path='/scenarios/' component={ScenarioForm} />
+                        <Route path='/scenarios/' exact={true} component={ScenarioForm} />
                         <Route path='/scenarios/new' component={ScenarioForm} />
                         <Route
                             exact={true}
                             path='/scenarios/:scenarioId'
-                            component={props =>
-                                <ScenarioView
-                                    {...props}
-                                />
+                            render={(props) => (
+                                <ScenarioView key={props.match.params.scenarioId} {...props} />)
                             }
                         />
                     </Switch>
