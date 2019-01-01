@@ -27,11 +27,7 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
     }
     renderSimulatorInstanceIds = ({ fields, meta: { error, submitFailed } }: any) => (
         <ul>
-            <li>
-                <Button className="add-simulator--button" icon="plus" type="primary" onClick={() => fields.push({})}>
-                    Add Simulator
-                </Button>
-            </li>
+  
             {submitFailed && error && <span>{error}</span>}
             {
                 fields.map((simulator, index) => (
@@ -44,7 +40,11 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
                     />
                 ))
             }
-
+          <li>
+                <Button className="add-simulator--button" icon="plus" type="primary" onClick={() => fields.push({})}>
+                    Add Simulator
+                </Button>
+            </li>
         </ul>
     );
 
