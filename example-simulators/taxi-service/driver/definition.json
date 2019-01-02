@@ -1,0 +1,95 @@
+{
+    "id" : {
+        "imageName" : "hello-world-simulator",
+        "version" : "latest"
+    },
+    "configSchema": {
+        "type": "object",
+        "properties": {
+          "taxiServerIp": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "taxiServerIp"
+        ]
+      },
+    "commands" :[
+        {
+            "commandName" : "ChangeLocation",
+            "commandSchema":{
+              "$ref": "#/definitions/ChangeLocation",
+              "definitions": {
+                  "ChangeLocation": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                          "coordinate": {
+                              "$ref": "#/definitions/Coordinate"
+                          }
+                      },
+                      "required": [
+                          "coordinate"
+                      ],
+                      "title": "ChangeLocation"
+                  },
+                  "Coordinate": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                          "lat": {
+                              "type": "number"
+                          },
+                          "lon": {
+                              "type": "number"
+                          }
+                      },
+                      "required": [
+                          "lat",
+                          "lon"
+                      ],
+                      "title": "Coordinate"
+                  }
+              }
+          }
+          
+        },{
+        "commandName" : "ExpectClient",
+        "commandSchema": {
+          "$ref": "#/definitions/ExpectClient",
+          "definitions": {
+              "ExpectClient": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                      "coordinate": {
+                          "$ref": "#/definitions/Coordinate"
+                      }
+                  },
+                  "required": [
+                      "coordinate"
+                  ],
+                  "title": "ExpectClient"
+              },
+              "Coordinate": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "properties": {
+                      "lat": {
+                          "type": "number"
+                      },
+                      "lon": {
+                          "type": "number"
+                      }
+                  },
+                  "required": [
+                      "lat",
+                      "lon"
+                  ],
+                  "title": "Coordinate"
+              }
+          }
+      }
+        }
+    ]
+  }

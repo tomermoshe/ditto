@@ -1,0 +1,58 @@
+{
+    "id" : {
+        "imageName" : "hello-world-simulator",
+        "version" : "latest"
+    },
+    "configSchema": {
+      "type": "object",
+      "properties": {
+        "taxiServerIp": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "taxiServerIp"
+      ]
+    },
+    "commands" :[
+        {
+            "commandName" : "OrderTaxi",
+            "commandSchema": {
+              "$ref": "#/definitions/OrderTaxi",
+              "definitions": {
+                  "OrderTaxi": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                          "coordinate": {
+                              "$ref": "#/definitions/Coordinate"
+                          }
+                      },
+                      "required": [
+                          "coordinate"
+                      ],
+                      "title": "OrderTaxi"
+                  },
+                  "Coordinate": {
+                      "type": "object",
+                      "additionalProperties": false,
+                      "properties": {
+                          "lat": {
+                              "type": "number"
+                          },
+                          "lon": {
+                              "type": "number"
+                          }
+                      },
+                      "required": [
+                          "lat",
+                          "lon"
+                      ],
+                      "title": "Coordinate"
+                  }
+              }
+          }
+        }
+          
+    ]
+  }
