@@ -7,8 +7,10 @@ export class EnvironmentUtils {
             return false;
         }
         const environmentSimulators = environment.simulators.map(simulator => simulator.name);
+        environmentSimulators.push("Manager");
         const scenarioSimulators = scenario.steps.map(step => step.simulatorName);
+        const set : Set<string> = new Set(scenarioSimulators);
         const intersection = environmentSimulators.filter(simulator => -1 !== scenarioSimulators.indexOf(simulator));
-        return environmentSimulators.length === intersection.length;
+        return set.size === intersection.length;
     }
 }
