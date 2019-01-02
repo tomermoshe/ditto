@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
-import { SimulatorDefinition } from "ditto-shared";
+import { SimulatorDefinition ,unique} from "ditto-shared";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
 import { required } from "redux-form-validators";
@@ -25,10 +25,12 @@ type Props = InjectedProps & ConditionalFieldsProps;
 
 class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
     renderSimulatorImageNames() {
-        const options = this.props.simulatorDefinitions.
-            filter((simulator) => simulator.id.imageName !== "Manager")
-            .map((simulator) =>
-                <Option key={simulator.id.imageName}>{simulator.id.imageName}</Option>
+        const options = this.props.simulatorDefinitions
+            .filter((simulator) => simulator.id.imageName !== "Manager")
+            .map(simulator => simulator.id.imageName)
+            .filter(unique)
+            .map((imageName) =>
+                <Option key={imageName}>{imageName}</Option>
             );
         return options;
     }

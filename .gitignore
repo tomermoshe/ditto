@@ -2,3 +2,5 @@ data/db
 .DS_Store
 example-simulators/.DS_Store
 example-simulators/hello-world-simulator/sim.tar
+example-simulators/taxi-service/client/taxi-client.tar
+example-simulators/taxi-service/driver/taxi-driver.tar
