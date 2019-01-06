@@ -54,7 +54,7 @@ export function fetchScenario(scenarioId: string) {
     let selectedScenario = getState().scenarios.all.find(scenario => scenario._id === scenarioId);
     if (!selectedScenario) {
       try {
-        selectedScenario = (await axios.get(`${ROOT_URL_SCENARIOS}/{${scenarioId}}`)).data;
+        selectedScenario = (await axios.get(`${ROOT_URL_SCENARIOS}/${scenarioId}`)).data;
       } catch (error) {
         console.log(error);
         return;
