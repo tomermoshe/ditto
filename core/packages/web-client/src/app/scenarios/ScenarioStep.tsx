@@ -20,7 +20,7 @@ function ScenarioStepView(props: Props) {
     return (
         <Row align="middle">
             <Col span={8}>
-                <ReactJson name="command.body" src={step.command.body} />
+                <ReactJson name="command.body" collapsed={true} src={step.command.body} />
             </Col>
             <Col span={8}>
                 {step.message && <Alert message={step.message} type="error" />}

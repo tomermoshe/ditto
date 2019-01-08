@@ -11,6 +11,11 @@ import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
+import styled from "styled-components";
+
+const StyledLi = styled.li`
+     background: ${props => props.even ? "#f4f2f2" : "#f7f8f9"};
+`;
 
 export interface InjectedProps {
     simulatorDefinitions: SimulatorDefinition[];
@@ -76,7 +81,7 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
             this.selctedCommandSchema = this.findCommandSchema();
         }
         return (
-            <li key={this.props.index}>
+            <StyledLi even={this.props.index % 2 === 0} key={this.props.index}>
                 <h4>Step #{this.props.index + 1}</h4>
 
                 <Button
@@ -113,7 +118,7 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
                         prefix={`${this.props.step}.command.`}
                     />
                 }
-            </li>
+            </StyledLi>
         );
     }
 }
