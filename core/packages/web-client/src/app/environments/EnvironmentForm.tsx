@@ -83,7 +83,7 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
 function mapStateToProps(state: ApplicationState) {
     // console.log(state);
 
-    return { simulatorDefinitions: state.simulators }
+    return { simulatorDefinitions: state.simulators.all }
 }
 
 export default reduxForm<{}>({

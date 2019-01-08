@@ -122,7 +122,7 @@ const selector = formValueSelector("scenarioForm");
 function mapStateToProps(state: ApplicationState) {
     // console.log(state);
     return {
-        simulatorDefinitions: state.simulators,
+        simulatorDefinitions: state.simulators.all,
         environments: state.environments.all,
         environmentName: selector(state, "environment")
     }
