@@ -1,6 +1,6 @@
 import { ROOT_API_URL } from "../../constants";
 import { SimulatorDefinition } from "ditto-shared";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { SimulatorActionTypes } from "./types";
 
 const ROOT_URL_SIMULATORS = `${ROOT_API_URL}/simulators`;
@@ -26,10 +26,14 @@ export function receiveSimulators(simulators: SimulatorDefinition[]) {
   }
 }
 
+export function clearCreationStatus(){
+  return {
+    type:SimulatorActionTypes.CLEAR_CREATION_STATUS
+  }
+}
 
 
 export function createSimulator(values) {
-  console.log(values);
 
   return async dispatch => {
 
@@ -39,10 +43,19 @@ export function createSimulator(values) {
       dispatch({ type: SimulatorActionTypes.SIMULATOR_CREATION_SUCCEEDED });
 
     } catch (error) {
-      dispatch({ type: SimulatorActionTypes.SIMULATOR_CREATION_FAILED });
+      let message: string = "There was an error submitting the form";
+      if (error.response) {
+        message = `${message} ${error.response.data}`;
+      } else if (error.request) {
+        message += " the server didn't responded";
+      } else {
+        // Something happened in setting up the request that triggered an Error
+        console.log('Error', error.message);
+      }
+   
+      dispatch({ type: SimulatorActionTypes.SIMULATOR_CREATION_FAILED, error: message });
 
     }
-  } 
+  }
 
 }
-  

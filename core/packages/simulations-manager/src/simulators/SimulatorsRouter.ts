@@ -13,6 +13,7 @@ const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
 
 
+const MONGO_DUPLICATION_ERROR_CODE = 11000;
 export class SimulatorRouter {
 
 
@@ -45,19 +46,41 @@ export class SimulatorRouter {
 
                     const simulatorFilePath = `${UPLOADS_DIR}/${uploadId}.tar`;
                     const tag = `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`;
-                    const readStream = await dockerode.buildImage(simulatorFilePath,
-                        {
-                            t: tag
-                        });
+                    try {
+                        const readStream = await dockerode.buildImage(simulatorFilePath,
+                            {
+                                t: tag
+                            });
 
-                    simulatorDefinition.ports = await SimulatorRouter.getExposedPorts(tag);
+                        await new Promise((resolve, reject) => {
+                            dockerode.modem.followProgress(readStream,
+                                (err: any, res: any) => err ? reject(err) : resolve(res),
+                                (progress: any) => console.log(progress)
+                            );
+                        });
+                        simulatorDefinition.ports = await SimulatorRouter.getExposedPorts(tag);
+
+                    } catch (error) {
+                        throw "simulator docker image wan't built sucessfully " + JSON.stringify(error);
+                    }
+
+
                     const newSimulatorDefinition = new SimulatorDefinitionModel(simulatorDefinition);
-                    await newSimulatorDefinition.save();
-                    await fs.unlink(simulatorFilePath, (err) => {
-                        if (err) {
-                            console.log(`couldn't remove simulator file at ${simulatorFilePath}`);
+                    try {
+                        await newSimulatorDefinition.save();
+                        await fs.unlink(simulatorFilePath, (err) => {
+                            if (err) {
+                                console.log(`couldn't remove simulator file at ${simulatorFilePath}`);
+                            }
+                        });
+                    } catch (error) {
+                        if (error.code === MONGO_DUPLICATION_ERROR_CODE) {
+                            throw "imageName and version already exists";
+                        } else {
+                            throw "Couldn't save simulator to db " + error.message;
                         }
-                    });
+                    }
+
                     res.status(200).send();
                 } catch (e) {
                     res.status(500).send(e);

@@ -2,23 +2,27 @@ import * as React from "react";
 import { connect } from 'react-redux';
 import { reduxForm, InjectedFormProps, Field, FieldArray } from 'redux-form';
 import { SimulatorDefinition, CommandDefinition } from "ditto-shared";
-import { fetchSimulators, createSimulator } from "./store/actions";
+import { fetchSimulators, createSimulator, clearCreationStatus } from "./store/actions";
 import { required } from "redux-form-validators";
 import { ApplicationState } from "../types";
-import { Form, Button, Radio } from "antd";
+import { Form, Button, Radio, Modal } from "antd";
 import { AInput, ATextarea, tailFormItemLayout, renderFieldFile, ARadioGroup } from "../../utils/form/reduxFormAntd";
 import uniqid = require("uniqid");
 import * as ajv from "ajv";
+import { CreationStatus } from "./store/types";
 
 
 
 interface StateProps {
     simulatorDefinitions: SimulatorDefinition[];
+    creationStatus: CreationStatus | undefined;
 }
 
 interface DispatchProps {
     fetchSimulators: () => any;
+    clearCreationStatus: () => any;
     createSimulator: (values) => any;
+
 
 }
 
@@ -112,6 +116,9 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
 
     //     </ul>
     // );
+    componentWillUnmount() {
+        this.props.clearCreationStatus();
+    }
 
     validateSchema(schema) {
         try {
@@ -121,8 +128,8 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
             return "schema is not an object";
         }
     }
-    reduceCommandSchemaValidation(acc, command)  {
-        if(!command.commandSchema){
+    reduceCommandSchemaValidation(acc, command) {
+        if (!command.commandSchema) {
             return acc;
         }
         const error = this.ajv.validateSchema(command.commandSchema) ?
@@ -152,13 +159,27 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
             return "schema is not an object";
         }
     }
+    renderCreationStatus(): any {
+        const { creationStatus } = this.props;
+        if (!creationStatus) {
+            return;
+        }
+        if (creationStatus.status === "failed") {
+            return Modal.error({
+                title: 'Simulator creation failed',
+                content: creationStatus.message
+            });
+        }
+    }
     render() {
         const { handleSubmit, simulatorDefinitions } = this.props;
 
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
         }
-        console.log("rendering");
+        if (this.props.creationStatus) {
+            this.renderCreationStatus();
+        }
 
         return (
             <div>
@@ -214,10 +235,14 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         );
     }
 
+
 }
 
 function mapStateToProps(state: ApplicationState): StateProps {
-    return { simulatorDefinitions: state.simulators }
+    return {
+        simulatorDefinitions: state.simulators.all,
+        creationStatus: state.simulators.creationStatus
+    }
 }
 
 export default reduxForm<{}>({
@@ -225,5 +250,5 @@ export default reduxForm<{}>({
 })(
 
     connect<StateProps,
-        DispatchProps>(mapStateToProps, { fetchSimulators, createSimulator })(SimulatorUploadForm)
+        DispatchProps>(mapStateToProps, { fetchSimulators, createSimulator, clearCreationStatus })(SimulatorUploadForm)
 );
