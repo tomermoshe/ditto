@@ -3,7 +3,6 @@ import { Component } from "react";
 import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus } from "ditto-shared";
 import { Steps, Button, Spin } from "antd";
 import { RouteComponentProps } from "react-router-dom";
-import ReactJson from 'react-json-view';
 import styled from "styled-components";
 import { connect } from "react-redux";
 import { ApplicationState } from "../types";
@@ -12,7 +11,6 @@ import * as socketIOClient from "socket.io-client";
 import { SERVER_URL } from "../constants";
 import ScenarioStepView from "./ScenarioStep";
 import { fetchScenario } from "./store/actions";
-import { selectEnvironment } from "../environments/store/actions";
 
 
 const StyledH1 = styled.h1`
