@@ -1,4 +1,4 @@
-import express from "express";
+import express, { Request, Response } from "express";
 import { json, urlencoded } from "body-parser";
 import { TestRouter } from "./tests/TestRouter";
 import http from "http";
@@ -58,6 +58,9 @@ const server = http.createServer(app);
         // Pass to next layer of middleware
         next();
     });
+    app.use(function (err: any, req: any, res: any, next: any) {
+
+    });
 
     app.use("/api", TestRouter.routes());
 
@@ -66,6 +69,12 @@ const server = http.createServer(app);
     app.use("/api", EnvironmentRouter.routes());
 
     app.use("/api", ScenarioRouter.routes());
+
+
+    app.use(function (err: any, req: Request, res: Response, next: any) {
+        res.status(err.status || 500).send();
+    });
+
     app.listen(3000, () => {
         console.log("App started");
 

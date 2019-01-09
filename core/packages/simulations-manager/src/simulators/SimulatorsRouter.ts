@@ -7,6 +7,7 @@ import fs from "fs";
 import localSimulatorDefinition from "./LocalSimulatorDefinition";
 import { PortType } from "ditto-shared";
 import promiseRetry from "promise-retry";
+import { handleErrorAsync } from "../express/ExpressUtils";
 const mongoEscape = require("mongo-escape");
 
 const UPLOADS_DIR = `${__dirname}/uploads`;
@@ -19,27 +20,22 @@ export class SimulatorRouter {
 
     static routes(): Router {
         return Router()
-            .get("/simulators", async (req: Request, res: Response) => {
+            .get("/simulators", handleErrorAsync(async (req: Request, res: Response) => {
                 let simulators: SimulatorDefinition[] = await SimulatorDefinitionModel.find({}, "-_id");
                 simulators.push(localSimulatorDefinition);
                 // removing mongoose keys
                 simulators = JSON.parse(JSON.stringify(simulators));
                 res.status(200).json(mongoEscape.unescape(simulators));
-            }).post("/simulators/upload", async (req: Request, res: Response) => {
-                try {
-                    const simulatorFile: UploadedFile = <UploadedFile>req.files.file;
-                    const uploadId = req.body.uploadId;
-                    const temp = simulatorFile.name.split(".");
-                    if (temp[temp.length - 1] !== "tar") {
-                        throw ("Please provide tar file");
-                    }
-                    await simulatorFile.mv(`${UPLOADS_DIR}/${uploadId}.tar`);
-                    res.status(200).send();
+            })).post("/simulators/upload", handleErrorAsync(async (req: Request, res: Response) => {
+                const simulatorFile: UploadedFile = <UploadedFile>req.files.file;
+                const uploadId = req.body.uploadId;
+                const temp = simulatorFile.name.split(".");
+                if (temp[temp.length - 1] !== "tar") {
+                    throw ("Please provide tar file");
                 }
-                catch (e) {
-                    res.status(500).send(e);
-                }
-            }).post("/simulators", async (req: Request, res: Response) => {
+                await simulatorFile.mv(`${UPLOADS_DIR}/${uploadId}.tar`);
+                res.status(200).send();
+            })).post("/simulators", async (req: Request, res: Response) => {
                 try {
                     const simulatorDefinition: SimulatorDefinition = mongoEscape.escape(req.body.simulator) as SimulatorDefinition;
                     const uploadId: string = req.body.uploadId;
