@@ -45,6 +45,7 @@ export class SimulatorExecutor {
                     method: "GET",
                     uri: `http://${this.dnsName}:3000/ready`,
                     json: true,
+                    timeout: 5000
 
                 };
                 await requestPromise(options);
