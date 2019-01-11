@@ -1,6 +1,6 @@
 {
   "name": "ditto-web-client",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "devDependencies": {
     "@types/react-router": "^4.4.1",
     "@types/react-router-dom": "^4.3.1",
@@ -22,7 +22,7 @@
     "ajv": "^6.6.2",
     "antd": "^3.10.3",
     "axios": "^0.18.0",
-    "ditto-shared": "^0.0.1",
+    "ditto-shared": "^0.1.0",
     "enzyme": "^3.3.0",
     "liform-react-antd-theme": "0.0.8",
     "pavelkh-liform-react": "^0.9.0",
