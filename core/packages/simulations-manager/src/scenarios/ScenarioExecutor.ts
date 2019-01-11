@@ -2,7 +2,7 @@ import { Scenario, ScenarioStep } from "ditto-shared";
 import { LocalCommandsExecutor } from "../commands/LocalCommandsExecutor";
 import { RemoteCommandsExecutor } from "../commands/RemoteCommandsExecutor";
 import { EventEmitter } from "events";
-import EventTypes from "../events/EventsTypes";
+import { EventTypes } from "ditto-shared";
 
 export class ScenarioExecutor {
     private executionId: string;

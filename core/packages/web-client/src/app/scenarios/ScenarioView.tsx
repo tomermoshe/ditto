@@ -1,6 +1,6 @@
 import * as React from "react";
 import { Component } from "react";
-import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus } from "ditto-shared";
+import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus ,EventTypes} from "ditto-shared";
 import { Steps, Button, Spin } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
@@ -72,8 +72,8 @@ class ScenarioView extends Component<Props, OwnState> {
         }
     }
 
-    initStepStatuses(){
-        if(!this.props.selectedScenario){
+    initStepStatuses() {
+        if (!this.props.selectedScenario) {
             return;
         }
         const stepStatuses: ScenarioStepStatus[] = [...this.props.selectedScenario.steps];
@@ -83,8 +83,8 @@ class ScenarioView extends Component<Props, OwnState> {
             currentStep: 0,
         });
     }
-    componentDidUpdate(prevProps: Props){
-        if(prevProps.selectedScenario !== this.props.selectedScenario){
+    componentDidUpdate(prevProps: Props) {
+        if (prevProps.selectedScenario !== this.props.selectedScenario) {
             this.initStepStatuses();
         }
     }
@@ -108,18 +108,18 @@ class ScenarioView extends Component<Props, OwnState> {
     }
     subscribeEvents() {
         const fn = this.newStepsWithUpdatedStatus.bind(this);
-        this.socket.on("STEP_STARTED", currentStep => {
+        this.socket.on(EventTypes.STEP_STARTED, currentStep => {
             this.setState({
                 currentStep,
                 stepStatuses: fn(currentStep, "process")
             });
         });
-        this.socket.on("STEP_FINISHED", currentStep => {
+        this.socket.on(EventTypes.STEP_FINISHED, currentStep => {
             this.setState({
                 stepStatuses: fn(currentStep, "finish")
             });
         });
-        this.socket.on("STEP_FAILED", (currentStep, error) => {
+        this.socket.on(EventTypes.STEP_FAILED, (currentStep, error) => {
             this.setState({
                 stepStatuses: fn(currentStep, "error", error.message)
             });
@@ -127,13 +127,16 @@ class ScenarioView extends Component<Props, OwnState> {
 
         });
 
-        this.socket.on("ENVIRONMENT_EXECUTION_STARTED", () => {
+        this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_STARTED, () => {
             this.setState({ executingEnvironment: true });
         });
-        this.socket.on("ENVIRONMENT_EXECUTION_FINISHED", () => {
+        this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_FINISHED, () => {
             this.setState({ executingEnvironment: false });
         });
-        this.socket.on("ENVIRONMENT_EXECUTION_STATUS", (msg) => {
+        this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_FAILED, (msg) => {
+            this.setState({ executingEnvironment: false });
+        });
+        this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_STATUS, (msg) => {
             this.setState({ executionStatus: msg });
         });
     }
@@ -152,6 +155,9 @@ class ScenarioView extends Component<Props, OwnState> {
 
         if (!this.props.selectedScenario) {
             return <div>Loading...</div>
+        }
+        if (this.props.selectedScenario.steps.length !== this.state.stepStatuses.length) {
+            this.initStepStatuses();
         }
 
 

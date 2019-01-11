@@ -1,4 +1,4 @@
-import EventTypes from "../events/EventsTypes";
+import { EventTypes } from "ditto-shared";
 import socketIo from "socket.io";
 import SocketIoEvents from "../events/SocketIoEvents";
 import { TestPlayRequest } from "../tests/TestPlayRequest";
@@ -29,7 +29,7 @@ class SocketIoConnector {
                     socket.emit(EventTypes.STEP_FINISHED, step);
                 });
                 testExecutor.on(EventTypes.STEP_FAILED, (step: number, error) => {
-                    socket.emit(EventTypes.STEP_FAILED, step , error);
+                    socket.emit(EventTypes.STEP_FAILED, step, error);
                 });
                 testExecutor.on(EventTypes.ENVIRONMENT_EXECUTION_STARTED, () => {
                     socket.emit(EventTypes.ENVIRONMENT_EXECUTION_STARTED);
