@@ -11,14 +11,15 @@ const InlineAlert = styled(Alert)`
 
 
 interface Props {
-    step: ScenarioStepStatus
+    step: ScenarioStepStatus,
+    collapsed: boolean
 }
 
 function ScenarioStepView(props: Props) {
     const { step } = props;
     return (
         <div>
-            <ReactJson name="command.body" collapsed={true} src={step.command.body} />
+            <ReactJson name="command.body" collapsed={props.collapsed} src={step.command.body} />
             {step.message && <InlineAlert showIcon={true} message={step.message} type="error" />}
         </div>
     );

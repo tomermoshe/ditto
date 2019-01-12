@@ -8,8 +8,12 @@ const ButtomRightCornerButton = styled(Button)`
     z-index: 150;
 `;
 
+export const MenuButton = styled(Button)`
+    margin-right : 8px;
+`;
 
-const AddNewButton = props => {
+
+export const AddNewButton = props => {
     return (
         <ButtomRightCornerButton
             type="primary"
@@ -23,4 +27,3 @@ const AddNewButton = props => {
 }
 
 
-export default AddNewButton;

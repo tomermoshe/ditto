@@ -5,7 +5,7 @@ import { List } from 'antd';
 import { EnvironmentJSON } from "ditto-shared";
 import EnvironmentCard from "./EnvironmentCard";
 import { ApplicationState } from "../types";
-import AddNewButton from "../shared/AddNewButton";
+import { AddNewButton } from "../shared/Buttons";
 
 export interface Props {
     fetchEnvironments: () => any;
@@ -56,7 +56,7 @@ class Environments extends React.Component<Props, OwnState>{
                 >
                     Add Environment
                 </AddNewButton>
-       
+
             </div>
 
 

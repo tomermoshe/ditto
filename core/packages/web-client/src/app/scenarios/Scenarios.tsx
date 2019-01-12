@@ -10,7 +10,7 @@ import ScenarioView from "./ScenarioView";
 import { Switch, Route, Link } from 'react-router-dom'
 import ScenarioForm from "./ScenarioForm";
 import { Input } from 'antd';
-import AddNewButton from "../shared/AddNewButton";
+import { AddNewButton } from "../shared/Buttons";
 import { EnvironmentUtils } from "ditto-shared";
 const Search = Input.Search;
 

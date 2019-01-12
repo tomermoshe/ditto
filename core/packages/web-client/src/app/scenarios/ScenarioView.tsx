@@ -11,6 +11,7 @@ import * as socketIOClient from "socket.io-client";
 import { SERVER_URL } from "../constants";
 import ScenarioStepView from "./ScenarioStep";
 import { fetchScenario } from "./store/actions";
+import { MenuButton } from "../shared/Buttons";
 
 
 const StyledH1 = styled.h1`
@@ -40,6 +41,7 @@ interface OwnState {
     executingEnvironment: boolean;
     executionStatus: string;
     stepStatuses: ScenarioStepStatus[];
+    stepsCollapsed: boolean;
 }
 interface StateProps {
     selectedEnvironment: EnvironmentJSON | undefined,
@@ -68,6 +70,7 @@ class ScenarioView extends Component<Props, OwnState> {
             currentStep: 0,
             executingEnvironment: false,
             executionStatus: "",
+            stepsCollapsed: true
         }
     }
 
@@ -174,14 +177,20 @@ class ScenarioView extends Component<Props, OwnState> {
                             {this.props.selectedScenario.name}
                         </StyledH1>
 
-                        <Button
+                        <MenuButton
                             icon="play-circle"
                             type="primary"
                             disabled={!EnvironmentUtils.canPlayScenario(this.props.selectedEnvironment, this.props.selectedScenario)}
                             onClick={() => this.playScenario(this.props.selectedScenario as ScenarioJSON)}
                         >
                             Play
-                        </Button>
+                        </MenuButton>
+                        <MenuButton
+                            icon="zoom-in"
+                            onClick={() => this.setState({stepsCollapsed: !this.state.stepsCollapsed})}
+                        >
+                            Collapse
+                        </MenuButton>
                     </div>
 
                     <Steps direction="vertical">
@@ -191,7 +200,7 @@ class ScenarioView extends Component<Props, OwnState> {
                                 <Step
                                     key={index}
                                     status={step.status}
-                                    description={<ScenarioStepView step={step} />}
+                                    description={<ScenarioStepView collapsed={this.state.stepsCollapsed} step={step} />}
                                     title={`${step.simulatorName} - ${step.command.name}`}
                                 />
                             );
