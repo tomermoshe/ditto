@@ -158,6 +158,29 @@ class ScenarioView extends Component<Props, OwnState> {
             scenarioId: scenario._id
         });
     }
+
+    renderCollapseExpandButton() {
+        const collapsed = this.state.stepsCollapsed;
+        if (collapsed) {
+            return (
+                <MenuButton
+                    icon="zoom-in"
+                    onClick={() => this.setState({ stepsCollapsed: !this.state.stepsCollapsed })}
+                >
+                    Expand
+                </MenuButton>
+            );
+        }else{
+            return (
+                <MenuButton
+                    icon="zoom-out"
+                    onClick={() => this.setState({ stepsCollapsed: !this.state.stepsCollapsed })}
+                >
+                    Collapse
+                </MenuButton>
+            );
+        }
+    }
     render() {
         const Step = Steps.Step;
 
@@ -185,12 +208,7 @@ class ScenarioView extends Component<Props, OwnState> {
                         >
                             Play
                         </MenuButton>
-                        <MenuButton
-                            icon="zoom-in"
-                            onClick={() => this.setState({stepsCollapsed: !this.state.stepsCollapsed})}
-                        >
-                            Collapse
-                        </MenuButton>
+                       {this.renderCollapseExpandButton()}
                     </div>
 
                     <Steps direction="vertical">
