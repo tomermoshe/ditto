@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
-import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus ,EventTypes} from "ditto-shared";
-import { Steps, Button, Spin } from "antd";
+import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus, EventTypes } from "ditto-shared";
+import { Steps, Button, Spin, Modal } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import { connect } from "react-redux";
@@ -67,8 +67,7 @@ class ScenarioView extends Component<Props, OwnState> {
             stepStatuses: [],
             currentStep: 0,
             executingEnvironment: false,
-            executionStatus: ""
-
+            executionStatus: "",
         }
     }
 
@@ -134,7 +133,13 @@ class ScenarioView extends Component<Props, OwnState> {
             this.setState({ executingEnvironment: false });
         });
         this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_FAILED, (msg) => {
-            this.setState({ executingEnvironment: false });
+            this.setState({
+                executingEnvironment: false,
+            });
+            Modal.error({
+                title: "Environment execution failed",
+                content: msg
+            });
         });
         this.socket.on(EventTypes.ENVIRONMENT_EXECUTION_STATUS, (msg) => {
             this.setState({ executionStatus: msg });

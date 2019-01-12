@@ -40,6 +40,10 @@ class SocketIoConnector {
                 testExecutor.on(EventTypes.ENVIRONMENT_EXECUTION_STATUS, (message) => {
                     socket.emit(EventTypes.ENVIRONMENT_EXECUTION_STATUS, message);
                 });
+                testExecutor.on(EventTypes.ENVIRONMENT_EXECUTION_FAILED, (message) => {
+                    socket.emit(EventTypes.ENVIRONMENT_EXECUTION_FAILED, message);
+                });
+
                 try {
                     socket.emit(EventTypes.SCENARIO_STARTED);
                     await testExecutor.execute();

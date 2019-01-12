@@ -26,7 +26,8 @@ export class EnvironmentExecutor {
             await this.waitForSimulators();
             this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_FINISHED);
         } catch (error) {
-            this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_FAILED, error);
+            this.eventEmitter.emit(EventTypes.ENVIRONMENT_EXECUTION_FAILED, error.toString());
+            throw error;
         }
     }
     public async acquireNetwork() {
