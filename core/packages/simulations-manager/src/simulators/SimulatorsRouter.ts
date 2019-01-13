@@ -35,7 +35,7 @@ export class SimulatorRouter {
                 }
                 await simulatorFile.mv(`${UPLOADS_DIR}/${uploadId}.tar`);
                 res.status(200).send();
-            })).post("/simulators", async (req: Request, res: Response) => {
+            })).post("/simulators", handleErrorAsync(async (req: Request, res: Response) => {
                 try {
                     const simulatorDefinition: SimulatorDefinition = mongoEscape.escape(req.body.simulator) as SimulatorDefinition;
                     const uploadId: string = req.body.uploadId;
@@ -43,6 +43,9 @@ export class SimulatorRouter {
                     const simulatorFilePath = `${UPLOADS_DIR}/${uploadId}.tar`;
                     const tag = `${simulatorDefinition.id.imageName}:${simulatorDefinition.id.version}`;
                     try {
+                        if (!fs.existsSync(simulatorFilePath)) {
+                            throw new Error("The simulator tar doesn't exist in path " + simulatorFilePath);
+                        }
                         const readStream = await dockerode.buildImage(simulatorFilePath,
                             {
                                 t: tag
@@ -57,7 +60,7 @@ export class SimulatorRouter {
                         simulatorDefinition.ports = await SimulatorRouter.getExposedPorts(tag);
 
                     } catch (error) {
-                        throw "simulator docker image wan't built sucessfully " + JSON.stringify(error);
+                        throw "simulator docker image wan't built sucessfully " + error.toString();
                     }
 
 
@@ -82,7 +85,7 @@ export class SimulatorRouter {
                     res.status(500).send(e);
                 }
 
-            });
+            }));
     }
 
     private static async getExposedPorts(tag: string) {
