@@ -10,6 +10,16 @@ import { ScenarioRouter } from "./scenarios/ScenarioRouter";
 import fileUpload from "express-fileupload";
 import SocketIoConnector from "./connectors/SocketIoConnector";
 import "./environments/NetworksPool";
+
+process
+  .on("unhandledRejection", (reason, p) => {
+    console.error(reason, "Unhandled Rejection at Promise", p);
+  })
+  .on("uncaughtException", err => {
+    console.error(err, "Uncaught Exception thrown");
+    process.exit(1);
+  });
+
 const app = express();
 
 const server = http.createServer(app);
