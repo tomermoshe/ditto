@@ -70,8 +70,9 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
     onSubmit(values) {
 
         const valuesCopy = { ...values };
-
-        valuesCopy.configSchema = JSON.parse(valuesCopy.configSchema);
+        if (valuesCopy.configSchema) {
+            valuesCopy.configSchema = JSON.parse(valuesCopy.configSchema);
+        }
         valuesCopy.commands = JSON.parse(valuesCopy.commands);
         delete valuesCopy.dockerfile;
         this.props.createSimulator({
@@ -121,6 +122,9 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
     }
 
     validateSchema(schema) {
+        if (!schema) {
+            return undefined;
+        }
         try {
             const obj = JSON.parse(schema);
             return this.ajv.validateSchema(obj) ? undefined : JSON.stringify(this.ajv.errors);
@@ -172,7 +176,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         }
     }
     render() {
-        const { handleSubmit, simulatorDefinitions ,creationStatus } = this.props;
+        const { handleSubmit, simulatorDefinitions, creationStatus } = this.props;
 
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
@@ -205,7 +209,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
                         name="configSchema"
                         component={ATextarea}
                         autosize={true}
-                        validate={[required(), this.validateSchema]}
+                        validate={[this.validateSchema]}
                         label="Config Schema"
                     />
                     <Field

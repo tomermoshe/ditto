@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from 'react-redux';
 import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
-import { SimulatorDefinition ,unique} from "ditto-shared";
+import { SimulatorDefinition, unique } from "ditto-shared";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import AntdTheme from "liform-react-antd-theme";
 import { required } from "redux-form-validators";
@@ -95,6 +95,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
                     </Field>
                 }
                 {this.props.imageName && this.props.version &&
+                    this.selectSchema() &&
 
                     <EmbeddedLiform
                         schema={this.selectSchema()}
