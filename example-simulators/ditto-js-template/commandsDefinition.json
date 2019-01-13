@@ -1,0 +1,52 @@
+[
+  {
+    "commandName": "SayHello",
+    "commandSchema": {
+      "$ref": "#/definitions/SayHello",
+      "definitions": {
+        "SayHello": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "greeting": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "greeting",
+            "name"
+          ],
+          "title": "SayHello"
+        }
+      }
+    }
+  },
+  {
+    "commandName": "SayGoodbye",
+    "commandSchema": {
+      "$ref": "#/definitions/SayGoodbye",
+      "definitions": {
+        "SayGoodbye": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "greeting": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "greeting",
+            "name"
+          ],
+          "title": "SayGoodbye"
+        }
+      }
+    }
+  }
+]
