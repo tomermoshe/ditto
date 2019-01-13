@@ -170,7 +170,7 @@ class ScenarioView extends Component<Props, OwnState> {
                     Expand
                 </MenuButton>
             );
-        }else{
+        } else {
             return (
                 <MenuButton
                     icon="zoom-out"
@@ -208,7 +208,7 @@ class ScenarioView extends Component<Props, OwnState> {
                         >
                             Play
                         </MenuButton>
-                       {this.renderCollapseExpandButton()}
+                        {this.renderCollapseExpandButton()}
                     </div>
 
                     <Steps direction="vertical">
