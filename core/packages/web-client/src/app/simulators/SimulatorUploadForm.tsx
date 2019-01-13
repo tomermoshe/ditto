@@ -5,7 +5,7 @@ import { SimulatorDefinition, CommandDefinition } from "ditto-shared";
 import { fetchSimulators, createSimulator, clearCreationStatus } from "./store/actions";
 import { required } from "redux-form-validators";
 import { ApplicationState } from "../types";
-import { Form, Button, Radio, Modal } from "antd";
+import { Form, Button, Radio, Modal, Spin } from "antd";
 import { AInput, ATextarea, tailFormItemLayout, renderFieldFile, ARadioGroup } from "../../utils/form/reduxFormAntd";
 import uniqid = require("uniqid");
 import * as ajv from "ajv";
@@ -172,7 +172,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         }
     }
     render() {
-        const { handleSubmit, simulatorDefinitions } = this.props;
+        const { handleSubmit, simulatorDefinitions ,creationStatus } = this.props;
 
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
@@ -182,7 +182,8 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         }
 
         return (
-            <div>
+            <Spin spinning={!!(creationStatus && creationStatus.status === "inProgress")} tip="Creating Simulator">
+
                 <Form className="form-array" onSubmit={handleSubmit(this.onSubmit)}>
 
                     <Field
@@ -231,7 +232,7 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
                         </Button>
                     </Form.Item>
                 </Form>
-            </div>
+            </Spin>
         );
     }
 

@@ -13,7 +13,7 @@ export const enum SimulatorActionTypes {
 }
 
 export interface CreationStatus {
-    status : "succeded" | "failed";
+    status : "inProgress" | "succeded" | "failed";
     message? : string;
 }
 

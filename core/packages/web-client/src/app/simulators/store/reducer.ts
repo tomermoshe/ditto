@@ -14,6 +14,13 @@ export const simulatorReducer: Reducer<SimulatorsState> = (state: SimulatorsStat
                 ...state,
                 all: action.simulators
             };
+        case SimulatorActionTypes.SIMULATOR_CREATION_STARTED:
+        return {
+            ...state,
+            creationStatus: {
+                status: "inProgress"
+            }
+        };
         case SimulatorActionTypes.SIMULATOR_CREATION_SUCCEEDED:
             return {
                 ...state,
