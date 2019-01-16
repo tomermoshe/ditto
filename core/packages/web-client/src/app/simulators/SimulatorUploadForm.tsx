@@ -125,19 +125,25 @@ class SimulatorUploadForm extends React.Component<InjectedFormProps<{}, Props> &
         if (!schema) {
             return undefined;
         }
+        let schemaObject: Object;
         try {
-            const obj = JSON.parse(schema);
-            return this.ajv.validateSchema(obj) ? undefined : JSON.stringify(this.ajv.errors);
+            if (typeof schema === "string") {
+                schemaObject = JSON.parse(schema);
+            }
+            else{
+                schemaObject = schema;
+            }
+            this.ajv.compile(schemaObject);
+            return undefined;
         } catch (error) {
-            return "schema is not an object";
+            return "cannot compile schema " + error.toString();
         }
     }
     reduceCommandSchemaValidation(acc, command) {
         if (!command.commandSchema) {
             return acc;
         }
-        const error = this.ajv.validateSchema(command.commandSchema) ?
-            undefined : JSON.stringify(this.ajv.errors);
+        const error = this.validateSchema(command.commandSchema);
 
         if (error) {
             if (!acc) {
