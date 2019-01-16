@@ -49,7 +49,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
             simulator.id.imageName === this.props.imageName && simulator.id.version === this.props.version)
         return selectedSimulator && selectedSimulator.configSchema;
     }
-    validateSimulatorName(value) {
+    validateSimulatorName(value: string) {
         const regex = /^[a-zA-Z0-9](?:[-_]*[A-Za-z0-9]+)*$/;
         if (regex.test(value)) {
             return undefined;
