@@ -21,6 +21,10 @@ const StyledH1 = styled.h1`
     line-height : 1;
 `;
 
+const ScenarioHeading = styled.div`
+ margin-bottom: 15px;
+`;
+
 interface StepProps {
     step: ScenarioStep;
 }
@@ -195,7 +199,7 @@ class ScenarioView extends Component<Props, OwnState> {
         return (
             <Spin spinning={this.state.executingEnvironment} tip={this.state.executionStatus}>
                 <div>
-                    <div>
+                    <ScenarioHeading>
                         <StyledH1>
                             {this.props.selectedScenario.name}
                         </StyledH1>
@@ -209,7 +213,7 @@ class ScenarioView extends Component<Props, OwnState> {
                             Play
                         </MenuButton>
                         {this.renderCollapseExpandButton()}
-                    </div>
+                    </ScenarioHeading>
 
                     <Steps direction="vertical">
                         {this.state.stepStatuses.map((step, index) => {

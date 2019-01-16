@@ -5,7 +5,7 @@ import { SimulatorDefinition } from "ditto-shared";
 import { fetchSimulators } from "../simulators/store/actions";
 import { fetchEnvironments } from "../environments/store/actions";
 import { createScenario } from "./store/actions";
-import { required } from "redux-form-validators";
+import { required, length } from "redux-form-validators";
 import { Environment } from "ditto-shared";
 import ScenarioStepConfiguration from "./ScenarioStepConfiguration";
 import clearNullValues from "../../utils/form/clearNullValues";
@@ -84,7 +84,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         return (
             <div>
                 <Form className="form-array" onSubmit={handleSubmit(this.onSubmit)}>
-                <h4>Scenario</h4>
+                    <h4>Scenario</h4>
 
                     <Field
                         name="name"
@@ -102,7 +102,15 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
                         {this.renderEnvironments()}
                     </Field>
                     {environmentName &&
-                        <FieldArray name="steps" component={this.renderScenarioSteps} />
+                        <FieldArray
+                            name="steps"
+                            component={this.renderScenarioSteps}
+                            validate={length(
+                                {
+                                    min: 1,
+                                    msg: "Please add at least one step"
+                                })}
+                        />
 
                     }
 
