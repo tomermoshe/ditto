@@ -10,7 +10,7 @@ import { ApplicationState } from "../types";
 import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
 import { EmbeddedLiform } from "pavelkh-liform-react";
-import AntdTheme from "liform-react-antd-theme";
+import { AntdThemeFieldValidation } from "liform-react-antd-theme";
 import styled from "styled-components";
 
 const StyledLi = styled.li`
@@ -113,7 +113,7 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
                 {this.selctedCommandSchema &&
                     <EmbeddedLiform
                         schema={this.selctedCommandSchema}
-                        theme={AntdTheme}
+                        theme={AntdThemeFieldValidation}
                         fieldName="body"
                         prefix={`${this.props.step}.command.`}
                     />

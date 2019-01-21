@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
 import { SimulatorDefinition, unique } from "ditto-shared";
 import { EmbeddedLiform } from "pavelkh-liform-react";
-import AntdTheme from "liform-react-antd-theme";
+import { AntdThemeFieldValidation } from "liform-react-antd-theme";
 import { required } from "redux-form-validators";
 import { AInput, ASelect } from "../../utils/form/reduxFormAntd";
 import { Select, Button } from "antd";
@@ -107,7 +107,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
 
                     <EmbeddedLiform
                         schema={this.selectSchema()}
-                        theme={AntdTheme}
+                        theme={AntdThemeFieldValidation}
                         fieldName="configuration"
                         prefix={`${this.props.simulator}.`}
                     />
