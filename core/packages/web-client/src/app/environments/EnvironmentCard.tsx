@@ -59,7 +59,7 @@ class EnvironmentCard extends React.Component<AllProps, OwnState>{
         }
         return (
 
-            <Card style={{ height: "400px", overflow: "auto" }} {...attributes}>
+            <Card style={{ height: "600px", overflow: "auto" }} {...attributes}>
                 {cardContent}
             </Card>
         );
@@ -96,7 +96,7 @@ class EnvironmentCard extends React.Component<AllProps, OwnState>{
                 renderItem={(simulator: SimulatorInstanceId) => (<List.Item>
                     <Card title={this.createTitle(simulator)}>
                         {simulator.configuration &&
-                            <ReactJson collapsed={true} name="configuration" src={simulator.configuration} />
+                            <ReactJson collapsed={false} name="configuration" src={simulator.configuration} />
                         }
                     </Card>
                 </List.Item>)}
