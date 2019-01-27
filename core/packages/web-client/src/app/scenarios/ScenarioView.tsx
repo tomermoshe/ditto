@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Component } from "react";
 import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus, EventTypes } from "ditto-shared";
-import { Steps, Button, Spin, Modal } from "antd";
+import { Steps, Spin, Modal } from "antd";
 import { RouteComponentProps } from "react-router-dom";
 import styled from "styled-components";
 import { connect } from "react-redux";

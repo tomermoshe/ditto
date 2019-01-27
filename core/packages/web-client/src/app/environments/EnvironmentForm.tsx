@@ -1,33 +1,43 @@
 import * as React from "react";
-import { connect } from 'react-redux';
-import { reduxForm, InjectedFormProps, FieldArray, Field } from 'redux-form';
-import { SimulatorDefinition } from "ditto-shared";
-import { createEnvironment } from "./store/actions";
-import { fetchSimulators } from "../simulators/store/actions";
+import { InjectedFormProps, FieldArray, Field } from 'redux-form';
+import { SimulatorDefinition, EnvironmentJSON } from "ditto-shared";
 import EnvironmentSimulatorConfiguration from "./EnvironmentSimulatorConfiguration";
 import { required } from "redux-form-validators";
-import clearNullValues from "../../utils/form/clearNullValues";
 import { Form, Button } from "antd";
 import { AInput } from "../../utils/form/reduxFormAntd";
-import { ApplicationState } from "../types";
-export interface Props {
+import { MenuButton } from "../shared/Buttons";
+
+
+
+export interface OwnProps {
+    mode: "create" | "edit";
+    onSubmit: (values) => any;
+    onCancel?: () => any;
+    handleSubmit: any;
+}
+export interface StateProps {
     simulatorDefinitions: SimulatorDefinition[];
+
+}
+export interface DispatchProps {
     fetchSimulators: () => any;
-    createEnvironment: (values) => any;
+    createEnvironment?: (values) => any;
+    updateEnvironment?: (environmentId, values) => any;
+
 }
 
+type Props = OwnProps & StateProps & DispatchProps & InjectedFormProps<any, EnvironmentJSON>;
 
 
 
-class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Props>{
+export class EnvironmentForm extends React.Component<Props>{
 
     componentDidMount() {
         this.props.fetchSimulators();
-        this.onSubmit = this.onSubmit.bind(this);
     }
     renderSimulatorInstanceIds = ({ fields, meta: { error, submitFailed } }: any) => (
         <ul>
-  
+
             {submitFailed && error && <span>{error}</span>}
             {
                 fields.map((simulator, index) => (
@@ -37,10 +47,11 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
                         fields={fields}
                         index={index}
                         key={index}
+                        form={this.props.form}
                     />
                 ))
             }
-          <li>
+            <li>
                 <Button className="add-simulator--button" icon="plus" type="primary" onClick={() => fields.push({})}>
                     Add Simulator
                 </Button>
@@ -48,19 +59,15 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
         </ul>
     );
 
-    onSubmit(values) {
-        this.props.createEnvironment(clearNullValues(values));
-    }
-
     render() {
-        const { handleSubmit, pristine, reset, submitting, simulatorDefinitions } = this.props;
+        const { handleSubmit, simulatorDefinitions } = this.props;
 
         if (!simulatorDefinitions) {
             return <div>Loading...</div>;
         }
         return (
             <div>
-                <Form className="environment-form form-array" onSubmit={handleSubmit(this.onSubmit)}>
+                <Form className="environment-form form-array" onSubmit={handleSubmit(this.props.onSubmit)}>
 
                     <Field
                         name="name"
@@ -71,21 +78,17 @@ class EnvironmentForm extends React.Component<InjectedFormProps<{}, Props> & Pro
                     />
 
                     <FieldArray name="simulators" component={this.renderSimulatorInstanceIds} />
-                    <Button htmlType="submit" type="primary">
-                        Submit
-                    </Button>
+                    <MenuButton htmlType="submit" type="primary">
+                        {this.props.mode === "create" ? "Submit" : "Update"}
+                    </MenuButton>
+                    {this.props.mode === "edit" &&
+                        <MenuButton type="primary" onClick={this.props.onCancel} >
+                            Cancel
+                        </MenuButton>
+                    }
 
                 </Form>
             </div>
         );
     }
 }
-function mapStateToProps(state: ApplicationState) {
-    // console.log(state);
-
-    return { simulatorDefinitions: state.simulators.all }
-}
-
-export default reduxForm<{}>({
-    form: "environmentCreationForm"
-})(connect(mapStateToProps, { fetchSimulators, createEnvironment })(EnvironmentForm));

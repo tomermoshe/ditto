@@ -1,13 +1,15 @@
 import * as React from "react";
-import { List, Card } from 'antd';
+import { List, Card, Button, Row, Col } from 'antd';
 import { EnvironmentJSON } from "ditto-shared";
 import { SimulatorInstanceId } from "ditto-shared";
 import ReactJson from 'react-json-view';
-import EnvironmentForm from "./EnvironmentForm";
-import { Switch } from 'antd';
-import { selectEnvironment } from "./store/actions";
+import CreateEnvironmentForm from "./CreateEnvironmentForm";
+import { selectEnvironment, deleteEnvironment } from "./store/actions";
 import { connect } from "react-redux";
 import { ApplicationState } from "../types";
+import EditEnvironmentForm from "./EditEnvironmentForm";
+import { EnvironmentCardTitle } from "./EnvironmentCardTitle";
+
 
 
 export interface OwnProps {
@@ -15,14 +17,25 @@ export interface OwnProps {
 }
 interface DispatchProps {
     selectEnvironment: (environment: EnvironmentJSON | undefined) => any;
+    deleteEnvironment: (id: string) => any;
 }
 interface StateProps {
     selectedEnvironment: EnvironmentJSON | undefined;
 }
+interface OwnState {
+    isEditing: boolean;
+}
 
 type AllProps = OwnProps & DispatchProps & StateProps;
 
-class EnvironmentCard extends React.Component<AllProps>{
+class EnvironmentCard extends React.Component<AllProps, OwnState>{
+
+    constructor(props) {
+        super(props);
+        this.state = { isEditing: false };
+        this.setEditing = this.setEditing.bind(this);
+        this.onSwitchEnvironment = this.onSwitchEnvironment.bind(this);
+    }
 
     createTitle(simulator) {
         return (
@@ -36,8 +49,10 @@ class EnvironmentCard extends React.Component<AllProps>{
         const { environment } = this.props;
         let attributes = {};
         let cardContent = {};
-        if (this.isEmptyEnvironment(environment)) {
-            cardContent = <EnvironmentForm />
+        if (this.state.isEditing) {
+            cardContent = <EditEnvironmentForm environment={environment} onCancel={() => this.setEditing(false)} />;
+        } else if (this.isEmptyEnvironment(environment)) {
+            cardContent = <CreateEnvironmentForm />
         }
         else {
             ({ attributes, cardContent } = this.createEnvironmentCard(environment));
@@ -49,18 +64,30 @@ class EnvironmentCard extends React.Component<AllProps>{
             </Card>
         );
     }
+    setEditing(bool) {
+        this.setState({ isEditing: bool });
+    }
+    componentDidUpdate(prevProps: AllProps) {
+        if (prevProps.environment !== this.props.environment) {
+            this.setState({ isEditing: false })
+        }
+    }
 
     private createEnvironmentCard(environment: EnvironmentJSON) {
-        const cardTitle = (
-            <div className="environment-title">
-                {environment.name}
-                <Switch
-                    size="small"
-                    onChange={this.onSwitchEnvironment(environment)}
-                    checked={this.props.selectedEnvironment && this.props.selectedEnvironment.name === this.props.environment.name}
+
+        const cardTitle =
+            (
+                <EnvironmentCardTitle
+                    environment={this.props.environment}
+                    onEdit={() => { this.setEditing(true) }}
+                    onDelete={this.props.deleteEnvironment}
+                    onSwitchEnvironment={this.onSwitchEnvironment}
+                    selected={this.props.selectedEnvironment && this.props.selectedEnvironment.name === this.props.environment.name}
+
                 />
-            </div>
-        );
+            );
+
+
         const attributes = { title: cardTitle };
         const cardContent = (
             <List
@@ -97,4 +124,4 @@ const mapStateToProps = (state: ApplicationState) => {
         selectedEnvironment: state.environments.selected
     };
 }
-export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, { selectEnvironment })(EnvironmentCard);
+export default connect<StateProps, DispatchProps, OwnProps>(mapStateToProps, { selectEnvironment, deleteEnvironment })(EnvironmentCard);

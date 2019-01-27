@@ -59,7 +59,6 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
     }
 
     render() {
-        const { error } = this.props;
 
         return (
             <li key={this.props.index}>
@@ -117,9 +116,10 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
         );
     }
 }
-const selector = formValueSelector('environmentCreationForm');
 export default connect(
     (state, props: any) => {
+        const selector = formValueSelector(props.form);
+
         return {
             simulatorDefinitions: props.simulatorDefinitions,
             imageName: selector(state, `${props.simulator}.id.imageName`),
