@@ -7,6 +7,7 @@ import { AntdThemeFieldValidation } from "liform-react-antd-theme";
 import { required } from "redux-form-validators";
 import { AInput, ASelect } from "../../utils/form/reduxFormAntd";
 import { Select, Button } from "antd";
+import { FormLi } from "../shared/FormLi";
 const { Option } = Select;
 
 
@@ -61,7 +62,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
     render() {
 
         return (
-            <li key={this.props.index}>
+            <FormLi even={this.props.index % 2 === 0} key={this.props.index}>
                 <Button
                     type="danger"
                     className="remove-item--button"
@@ -112,7 +113,7 @@ class EnvironmentSimulatorConfiguration extends React.Component<InjectedFormProp
                     />
 
                 }
-            </li>
+            </FormLi>
         );
     }
 }
