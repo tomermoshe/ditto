@@ -1,27 +1,36 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { reduxForm, InjectedFormProps, Field, FieldArray, formValueSelector } from 'redux-form';
-import { SimulatorDefinition } from "ditto-shared";
+import { InjectedFormProps, Field, FieldArray, formValueSelector, reduxForm } from 'redux-form';
+import { SimulatorDefinition, EnvironmentUtils, ScenarioJSON, EnvironmentJSON } from "ditto-shared";
 import { fetchSimulators } from "../simulators/store/actions";
 import { fetchEnvironments } from "../environments/store/actions";
 import { createScenario } from "./store/actions";
 import { required, length } from "redux-form-validators";
 import { Environment } from "ditto-shared";
 import ScenarioStepConfiguration from "./ScenarioStepConfiguration";
-import clearNullValues from "../../utils/form/clearNullValues";
 import { ApplicationState } from "../types";
 import { Button, Form, Select } from "antd";
 import { AInput, ASelect, tailFormItemLayout } from "../../utils/form/reduxFormAntd";
 
 
-export interface Props {
+
+interface StateProps {
     simulatorDefinitions: SimulatorDefinition[];
     environments: Environment[];
     environmentName: string;
+
+}
+interface DispatchProps {
     fetchSimulators: () => any;
     fetchEnvironments: () => any;
     createScenario: (scenario) => any;
 }
+
+interface OwnProps {
+    mode: "edit" | "create";
+    onSubmit: (s: any) => any;
+}
+type Props = StateProps & DispatchProps & OwnProps;
 
 
 
@@ -31,18 +40,23 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
     componentDidMount() {
         this.props.fetchSimulators();
         this.props.fetchEnvironments();
-        this.onSubmit = this.onSubmit.bind(this);
     }
 
-    onSubmit(values) {
-        this.props.createScenario(clearNullValues(values));
-    }
+
 
     renderEnvironments() {
-        const options = this.props.environments.map((environment) =>
-            <Select.Option key={environment.name}>{environment.name}</Select.Option>
+        let environments: Environment[] = this.props.environments;
+        if (this.props.mode === "edit") {
+            const edittableScenario = this.props.initialValues as ScenarioJSON;
+
+            environments = this.props.environments
+                .filter((environment) =>
+                    EnvironmentUtils.canPlayScenario(environment, edittableScenario));
+        }
+        return environments.map((environment) =>
+            <Select.Option key={environment.name} value={environment.name}>{environment.name}</Select.Option>
         );
-        return options;
+
     }
     renderScenarioSteps = ({ fields, meta: { error, submitFailed } }: any) => {
         const { environmentName, simulatorDefinitions, environments } = this.props;
@@ -59,6 +73,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
                             environment={selectedEnvironment}
                             step={step}
                             fields={fields}
+                            form={this.props.form}
                             index={index}
                             key={index}
                         />
@@ -83,7 +98,7 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
         }
         return (
             <div>
-                <Form className="form-array" onSubmit={handleSubmit(this.onSubmit)}>
+                <Form className="form-array" onSubmit={handleSubmit(this.props.onSubmit)}>
                     <h4>Scenario</h4>
 
                     <Field
@@ -119,16 +134,16 @@ class ScenarioForm extends React.Component<InjectedFormProps<{}, Props> & Props>
                     </Form.Item>
 
                 </Form>
-            </div>
+            </div >
         );
     }
 }
 
 
-const selector = formValueSelector("scenarioForm");
 
-function mapStateToProps(state: ApplicationState) {
-    // console.log(state);
+function mapStateToProps(state: ApplicationState, props: any) {
+    const selector = formValueSelector(props.form);
+
     return {
         simulatorDefinitions: state.simulators.all,
         environments: state.environments.all,
@@ -136,6 +151,8 @@ function mapStateToProps(state: ApplicationState) {
     }
 }
 
-export default reduxForm<{}>({
-    form: "scenarioForm"
-})(connect(mapStateToProps, { fetchSimulators, fetchEnvironments, createScenario })(ScenarioForm));
+export default connect(mapStateToProps, { fetchSimulators, fetchEnvironments, createScenario })(
+    reduxForm({
+        form: "scenarioForm"
+    })(ScenarioForm)
+);

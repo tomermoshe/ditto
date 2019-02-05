@@ -1,17 +1,17 @@
 import * as React from "react";
 import { Component } from "react";
 import { ScenarioStep, ScenarioJSON, EnvironmentUtils, ScenarioStepStatus, EventTypes } from "ditto-shared";
-import { Steps, Spin, Modal } from "antd";
-import { RouteComponentProps } from "react-router-dom";
+import { Steps, Spin, Modal, Popconfirm } from "antd";
 import styled from "styled-components";
-import { connect } from "react-redux";
-import { ApplicationState } from "../types";
 import { EnvironmentJSON } from "ditto-shared";
 import * as socketIOClient from "socket.io-client";
 import { SERVER_URL } from "../constants";
 import ScenarioStepView from "./ScenarioStep";
-import { fetchScenario } from "./store/actions";
 import { MenuButton } from "../shared/Buttons";
+import { ApplicationState } from "../types";
+import { connect } from "react-redux";
+import { RouteComponentProps } from "react-router";
+import { fetchScenario, deleteScenario } from "./store/actions";
 
 
 const StyledH1 = styled.h1`
@@ -34,12 +34,6 @@ const ScenarioStep = ({ step }: StepProps) => {
     );
 }
 
-
-
-
-interface RouterProps {
-    scenarioId: string;
-}
 interface OwnState {
     currentStep: number;
     executingEnvironment: boolean;
@@ -47,19 +41,31 @@ interface OwnState {
     stepStatuses: ScenarioStepStatus[];
     stepsCollapsed: boolean;
 }
+
+
+
 interface StateProps {
-    selectedEnvironment: EnvironmentJSON | undefined,
-    selectedScenario: ScenarioJSON | undefined
+    selectedEnvironment: EnvironmentJSON | undefined;
+    selectedScenario: ScenarioJSON | undefined;
+
 }
+
+interface RouterProps {
+    scenarioId: string;
+}
+
 interface DispatchProps {
     fetchScenario: (scenarioId: string) => any;
+    deleteScenario: (scenarioId: string) => any;
+
 }
 
-type Props = RouteComponentProps<RouterProps> & StateProps & DispatchProps;
+
+type Props = StateProps & DispatchProps & RouteComponentProps<RouterProps>;
 
 
 
-class ScenarioView extends Component<Props, OwnState> {
+export class ScenarioShow extends Component<Props, OwnState> {
     endpoint = `${SERVER_URL}:8000`;
     socket: SocketIOClient.Socket;
 
@@ -76,6 +82,9 @@ class ScenarioView extends Component<Props, OwnState> {
             executionStatus: "",
             stepsCollapsed: true
         }
+    }
+    componentDidMount() {
+        this.props.fetchScenario(this.props.match.params.scenarioId);
     }
 
     initStepStatuses() {
@@ -94,10 +103,7 @@ class ScenarioView extends Component<Props, OwnState> {
             this.initStepStatuses();
         }
     }
-    componentDidMount() {
-        const { scenarioId } = this.props.match.params;
-        this.props.fetchScenario(scenarioId);
-    }
+
     componentWillUnmount() {
         this.socket.disconnect();
     }
@@ -191,6 +197,7 @@ class ScenarioView extends Component<Props, OwnState> {
         if (!this.props.selectedScenario) {
             return <div>Loading...</div>
         }
+
         if (this.props.selectedScenario.steps.length !== this.state.stepStatuses.length) {
             this.initStepStatuses();
         }
@@ -213,6 +220,22 @@ class ScenarioView extends Component<Props, OwnState> {
                             Play
                         </MenuButton>
                         {this.renderCollapseExpandButton()}
+
+                        <MenuButton
+                            icon="form"
+                            onClick={() => this.props.history.push(`/scenarios/edit/${(this.props.selectedScenario as ScenarioJSON)._id}`)}
+                        >
+                            Edit
+                        </MenuButton>
+                        <Popconfirm title="Are you sure？" okText="Yes" cancelText="No" onConfirm={() => this.props.deleteScenario((this.props.selectedScenario as ScenarioJSON)._id)}>
+
+                            <MenuButton
+                                icon="delete"
+                                type="danger"
+                            >
+                                Delete
+                            </MenuButton>
+                        </Popconfirm>
                     </ScenarioHeading>
 
                     <Steps direction="vertical">
@@ -246,4 +269,4 @@ const mapStateToProps = (state: ApplicationState) => {
 
 
 
-export default connect<StateProps, any, any>(mapStateToProps, { fetchScenario })(ScenarioView);
+export default connect<StateProps, DispatchProps, RouteComponentProps<RouterProps>>(mapStateToProps, { fetchScenario, deleteScenario })(ScenarioShow);

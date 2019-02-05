@@ -1,6 +1,6 @@
 import * as React from "react";
 import { connect } from 'react-redux';
-import { Field, InjectedFormProps, formValueSelector } from 'redux-form';
+import { Field, InjectedFormProps, formValueSelector, change } from 'redux-form';
 import { SimulatorDefinition } from "ditto-shared";
 import { SimulatorInstanceId } from "ditto-shared";
 import { required } from "redux-form-validators";
@@ -11,7 +11,6 @@ import { Button, Select } from "antd";
 import { ASelect } from "../../utils/form/reduxFormAntd";
 import { EmbeddedLiform } from "pavelkh-liform-react";
 import { AntdThemeFieldValidation } from "liform-react-antd-theme";
-import styled from "styled-components";
 import { FormLi } from "../shared/FormLi";
 
 
@@ -26,7 +25,10 @@ interface ConditionalFieldsProps {
     simulatorName: string;
     commandName: string;
 }
-type Props = InjectedProps & ConditionalFieldsProps;
+interface DispatchProps {
+    change(form: string, field: string, value: any, touch?: boolean, persistentSubmitErrors?: boolean): any;
+}
+type Props = InjectedProps & ConditionalFieldsProps & DispatchProps;
 
 
 class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Props> & Props>{
@@ -67,11 +69,24 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
     findCommandSchema() {
         const commandDefinition = this.selectedSimulatorDefinition.commands.
             find(command => command.commandName === this.props.commandName) as CommandDefinition;
-        return commandDefinition.commandSchema;
+        return commandDefinition && commandDefinition.commandSchema;
+    }
+    componentDidUpdate(oldProps: Props) {
+        // If the step just moved in index we have nothing to initialize
+        if(oldProps.fields.length !== this.props.fields.length){
+            return; 
+        }
+        if(this.wasCommandNameChanged(oldProps)) {
+            this.initializeSimulatorCommnndBody();
+        }
+        if (this.wasSimulatorNameChanged(oldProps)) {
+            this.initializeSimulatorCommand();
+        }
     }
 
+ 
     render() {
-        const { error, simulatorName, commandName } = this.props;
+        const { simulatorName, commandName } = this.props;
         if (simulatorName) {
             this.selectedSimulatorDefinition = this.findSelectedSimulatorDefinition();
         }
@@ -119,10 +134,26 @@ class ScenarioStepConfiguration extends React.Component<InjectedFormProps<{}, Pr
             </FormLi>
         );
     }
+    private wasSimulatorNameChanged(oldProps: Props) {
+        return oldProps.simulatorName !== this.props.simulatorName;
+    }
+    private wasCommandNameChanged(oldProps: Props) {
+        return oldProps.commandName !== this.props.commandName;
+    }
+    private initializeSimulatorCommand() {
+        this.props.change(this.props.form, `${this.props.step}.command.name`, null);
+        this.props.change(this.props.form, `${this.props.step}.command.body`, null);
+    }
+
+    private initializeSimulatorCommnndBody() {
+        this.props.change(this.props.form, `${this.props.step}.command.body`, null);
+    }
+
 }
-const selector = formValueSelector('scenarioForm');
 export default connect(
     (state: ApplicationState, props: any) => {
+        const selector = formValueSelector(props.form);
+
         return {
             simulatorDefinitions: props.simulatorDefinitions,
             environment: props.environment,
@@ -130,5 +161,5 @@ export default connect(
             commandName: selector(state, `${props.step}.command.name`)
         }
 
-    }
-)(ScenarioStepConfiguration);
+    },
+    { change })(ScenarioStepConfiguration);

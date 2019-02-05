@@ -7,11 +7,12 @@ import "./index.css";
 import "antd/dist/antd.css";
 import ReduxThunk from "redux-thunk";
 import nullUnregisredFields from "./middleware/nullUnregisredFields";
-import { BrowserRouter } from 'react-router-dom';
+import { Router } from 'react-router-dom';
 import App from "./app/App";
 import { rootReducer } from "./app/types";
 import { composeWithDevTools } from "redux-devtools-extension";
 import LocalStorage from "./localStorage";
+import history from "./app/shared/history";
 
 const localStorage = new LocalStorage();
 
@@ -22,11 +23,11 @@ store.subscribe(() => {
 ReactDOM.render(
   <Provider store={store}>
     <div>
-      <BrowserRouter>
+      <Router history={history}>
         <App />
-      </BrowserRouter>
+        </Router>
     </div>
 
   </Provider>,
-  document.getElementById("root") as HTMLElement
-);
+      document.getElementById("root") as HTMLElement
+    );

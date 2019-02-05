@@ -6,6 +6,7 @@ import { ApplicationState } from "../../types";
 import Scenarios from "../Scenarios";
 const ROOT_URL_SCENARIOS = `${ROOT_API_URL}/scenarios`;
 const ROOT_URL_TESTS = `${ROOT_API_URL}/test/play`;
+import history from "../../shared/history";
 
 
 
@@ -16,6 +17,7 @@ export function createScenario(values) {
     try {
       const response = await axios.post(ROOT_URL_SCENARIOS, values);
       dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_SUCCEEDED, scenario: response.data });
+      history.push(`/scenarios/${(response.data as ScenarioJSON)._id}`)
 
     } catch (e) {
       dispatch({ type: ScenariosActionTypes.SCENARIO_CREATION_FAILED, error: e });
@@ -55,6 +57,7 @@ export function fetchScenario(scenarioId: string) {
     if (!selectedScenario) {
       try {
         selectedScenario = (await axios.get(`${ROOT_URL_SCENARIOS}/${scenarioId}`)).data;
+
       } catch (error) {
         console.log(error);
         return;
@@ -63,6 +66,35 @@ export function fetchScenario(scenarioId: string) {
     dispatch(receiveScenario(selectedScenario as ScenarioJSON));
   }
 }
+
+
+export function updateScenario(scenarioId, values) {
+  return async dispatch => {
+    dispatch({ type: ScenariosActionTypes.SCENARIO_UPDATE_STARTED });
+    try {
+      const response = await axios.post(`${ROOT_URL_SCENARIOS}/${scenarioId}`, values);
+      dispatch({ type: ScenariosActionTypes.SCENARIO_UPDATE_SUCCEEDED, scenario: response.data });
+      history.push(`/scenarios/${scenarioId}`)
+    } catch (e) {
+      dispatch({ type: ScenariosActionTypes.SCENARIO_UPDATE_FAILED, error: e });
+    }
+  }
+}
+
+export function deleteScenario(scenarioId) {
+  return async dispatch => {
+    dispatch({ type: ScenariosActionTypes.SCENARIO_DELETE_STARTED });
+    try {
+      const response = await axios.delete(`${ROOT_URL_SCENARIOS}/${scenarioId}`);
+      dispatch({ type: ScenariosActionTypes.SCENARIO_DELETE_SUCCEEDED, scenarioId: scenarioId  });
+      history.push(`/scenarios/new`)
+
+    } catch (e) {
+      dispatch({ type: ScenariosActionTypes.SCENARIO_DELETE_FAILED, error: e });
+    }
+  }
+}
+
 
 export function receiveScenario(scenario: ScenarioJSON) {
   return {

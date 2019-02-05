@@ -1,8 +1,7 @@
 import * as React from "react";
 import ReactJson from "react-json-view";
-import { ScenarioStep } from "ditto-shared";
 import styled from "styled-components";
-import { Alert, Row, Col, Steps } from "antd";
+import { Alert } from "antd";
 import { ScenarioStepStatus } from "ditto-shared";
 
 const InlineAlert = styled(Alert)`

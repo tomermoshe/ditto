@@ -6,12 +6,13 @@ import { ScenarioJSON, EnvironmentJSON } from "ditto-shared";
 import { List, Layout } from "antd";
 import styled from "styled-components";
 import { Button } from "antd";
-import ScenarioView from "./ScenarioView";
+import ScenarioShow from "./ScenarioShow";
 import { Switch, Route, Link } from 'react-router-dom'
-import ScenarioForm from "./ScenarioForm";
+import ScenarioCreate from "./ScenarioCreate";
 import { Input } from 'antd';
 import { AddNewButton } from "../shared/Buttons";
 import { EnvironmentUtils } from "ditto-shared";
+import ScenarioEdit from "./ScenarioEdit";
 const Search = Input.Search;
 
 const StyledLayout = styled(Layout)`
@@ -143,14 +144,20 @@ class Scenarios extends React.Component<Props, OwnState> {
                 </StyledSider>
                 <StyledContent>
                     <Switch>
-                        <Route path='/scenarios/' exact={true} component={ScenarioForm} />
-                        <Route path='/scenarios/new' component={ScenarioForm} />
+                        <Route path='/' exact={true} component={ScenarioCreate} />
+                        <Route path='/scenarios/' exact={true} component={ScenarioCreate} />
+                        <Route path='/scenarios/new' component={ScenarioCreate} />
                         <Route
                             exact={true}
                             path='/scenarios/:scenarioId'
                             render={(props) => (
-                                <ScenarioView key={props.match.params.scenarioId} {...props} />)
+                                <ScenarioShow key={props.match.params.scenarioId} {...props} />)
                             }
+                        />
+                        <Route
+                            exact={true}
+                            path='/scenarios/edit/:scenarioId'
+                            component={ScenarioEdit}
                         />
                     </Switch>
                 </StyledContent>
