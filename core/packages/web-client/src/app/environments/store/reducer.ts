@@ -10,7 +10,7 @@ export const environmentReducer: Reducer<EnvironmentsState> = (state: Environmen
 
     switch (action.type) {
         case EnvironmentActionTypes.RECIEVE_ENVIRONMENTS:
-            return { ...state, all: action.environments }
+            return { ...state, all: [...action.environments] }
         case EnvironmentActionTypes.ENVIRONMENT_CREATION_SUCCEEDED:
             return { ...state, all: [...filterEmptyEnvironments(state), action.environment] }
         case EnvironmentActionTypes.ENVIRONMENT_SELECTED:

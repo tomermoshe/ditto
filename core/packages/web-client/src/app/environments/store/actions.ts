@@ -2,6 +2,7 @@ import axios from "axios";
 import { ROOT_API_URL } from "./../../constants";
 import { EnvironmentActionTypes } from "./types";
 import { EnvironmentJSON } from "ditto-shared";
+import { ApplicationState } from "../../types";
 
 
 const ROOT_URL_ENVIRONMENTS = `${ROOT_API_URL}/environments`;
@@ -48,9 +49,14 @@ export function deleteEnvironment(environmentId) {
 
 
 export function fetchEnvironments() {
-  return async dispatch => {
+  return async (dispatch, getState: () => ApplicationState) => {
     try {
-      const environments: EnvironmentJSON[] = (await axios.get(ROOT_URL_ENVIRONMENTS)).data;
+      let environments: EnvironmentJSON[];
+      if (getState().environments.all) {
+        environments = getState().environments.all;
+      } else {
+        environments = (await axios.get(ROOT_URL_ENVIRONMENTS)).data;
+      }
       dispatch(receiveEnvironments(environments));
 
     } catch (error) {

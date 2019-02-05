@@ -12,18 +12,19 @@ export interface Props {
     environments: EnvironmentJSON[];
 }
 interface OwnState {
-    environments: (EnvironmentJSON | {})[];
+    environments: (EnvironmentJSON | {})[] | undefined;
 }
 
 class Environments extends React.Component<Props, OwnState>{
     constructor(props: Props) {
         super(props);
-        this.state = { environments: [] };
+        this.state = { environments: undefined };
     }
 
 
     componentDidUpdate(prevProps) {
-        if (this.props.environments !== prevProps.environments) {
+        if (this.props.environments !== prevProps.environments ||
+            !this.state.environments && this.props.environments) {
             this.setState({ environments: [...this.props.environments] });
         }
     }
@@ -33,7 +34,9 @@ class Environments extends React.Component<Props, OwnState>{
     }
     render() {
         const { environments } = this.state;
-
+        if (!environments) {
+            return <div>Loading...</div>
+        }
         return (
             <div>
 
