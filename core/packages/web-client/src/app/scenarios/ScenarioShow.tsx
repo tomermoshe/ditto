@@ -5,7 +5,6 @@ import { Steps, Spin, Modal, Popconfirm } from "antd";
 import styled from "styled-components";
 import { EnvironmentJSON } from "ditto-shared";
 import * as socketIOClient from "socket.io-client";
-import { SERVER_URL } from "../constants";
 import ScenarioStepView from "./ScenarioStep";
 import { MenuButton } from "../shared/Buttons";
 import { ApplicationState } from "../types";
@@ -66,7 +65,7 @@ type Props = StateProps & DispatchProps & RouteComponentProps<RouterProps>;
 
 
 export class ScenarioShow extends Component<Props, OwnState> {
-    endpoint = `${SERVER_URL}:8000`;
+    endpoint = `http://localhost:8000`;
     socket: SocketIOClient.Socket;
 
     constructor(props: Props) {

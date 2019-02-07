@@ -1,0 +1,87 @@
+version: '3.3'
+services: 
+  simulations-manager:
+    image: "simulations-manager"
+    command: npm run debug
+    volumes: 
+      - ./packages/simulations-manager/dist:/simulations-manager/dist
+    ports:
+      - "9222:9222"
+      - "3000:3000"
+      - "8000:8000"
+    container_name: simulations-manager
+    depends_on: 
+      - mongodb
+    deploy:
+      replicas: 1
+    networks: 
+    - ditto-1
+    - ditto-2
+    - ditto-3
+    - ditto-4
+    - ditto-5
+    - ditto-6
+    - ditto-7
+    - ditto-8
+    - ditto-9
+    - ditto-10
+    - ditto-main
+  mongodb:
+    image: mongo:latest
+    container_name: "mongodb"
+    ports: 
+      - "27017:27017"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./packages/simulations-manager/data/db:/data/db:cached
+    deploy:
+      replicas: 1
+    networks:
+      - ditto-main
+  socat:
+    image: bobrik/socat:latest
+    ports: 
+      - "1234:1234"
+    volumes: 
+      - /var/run/docker.sock:/var/run/docker.sock
+    command: TCP-LISTEN:1234,fork UNIX-CONNECT:/var/run/docker.sock
+    deploy:
+      replicas: 1
+    networks:
+      - ditto-main
+networks: 
+  ditto-main:
+    driver : overlay
+    attachable : true
+  ditto-1:
+    driver: overlay
+    attachable : true
+  ditto-2:
+    driver: overlay
+    attachable : true
+  ditto-3:
+    driver: overlay
+    attachable : true
+  ditto-4:
+    driver: overlay
+    attachable : true
+  ditto-5:
+    driver: overlay
+    attachable : true
+  ditto-6:
+    driver: overlay
+    attachable : true
+  ditto-7:
+    driver: overlay
+    attachable : true
+  ditto-8:
+    driver: overlay
+    attachable : true
+  ditto-9:
+    driver: overlay
+    attachable : true
+  ditto-10:
+    driver: overlay
+    attachable : true
