@@ -1,11 +1,11 @@
 {
   "name": "ditto-shared",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "types and shared files for ditto project",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "prepare" : "npm run build",
+    "prepare": "npm run build",
     "build": "tsc -p .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
