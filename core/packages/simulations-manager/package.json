@@ -1,6 +1,6 @@
 {
   "name": "ditto-simulations-manager",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,7 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.3",
-    "ditto-shared": "^0.1.1",
+    "ditto-shared": "^0.1.2",
     "dockerode": "^2.5.7",
     "express": "^4.16.4",
     "express-fileupload": "^0.4.0",

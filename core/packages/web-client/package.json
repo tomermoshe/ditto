@@ -1,6 +1,6 @@
 {
   "name": "ditto-web-client",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "proxy": "http://localhost:3000",
   "devDependencies": {
     "@types/react-router": "^4.4.1",
@@ -23,7 +23,7 @@
     "ajv": "^6.6.2",
     "antd": "^3.12.4",
     "axios": "^0.18.0",
-    "ditto-shared": "^0.1.1",
+    "ditto-shared": "^0.1.2",
     "enzyme": "^3.3.0",
     "liform-react-antd-theme": "0.0.13",
     "pavelkh-liform-react": "^0.10.2",
