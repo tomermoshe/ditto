@@ -1,10 +1,7 @@
-import mongoose, { MongooseDocumentOptionals, Mongoose, mongo } from "mongoose";
-import { MongosOptions } from "mongodb";
-import { reject } from "bluebird";
+import mongoose, { Mongoose } from "mongoose";
 
 export class MongoConnector {
   uri: string;
-  private readonly TIMEOUT_BETWEEN_CONNECTION_ATTEMPTS = 4000;
 
   private readonly CONNECTION_TIMEOUT = 30000;
 

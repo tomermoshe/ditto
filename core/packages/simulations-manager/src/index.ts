@@ -49,6 +49,10 @@ const server = http.createServer(app);
             name: "Express application"
         });
     });
+    app.get("/healthcheck", (request: express.Request, response: express.Response) => {
+        response.send(200);
+    });
+
     app.use(function (req, res, next) {
 
         // Website you wish to allow to connect
@@ -79,6 +83,7 @@ const server = http.createServer(app);
     app.use("/api", EnvironmentRouter.routes());
 
     app.use("/api", ScenarioRouter.routes());
+
 
 
     app.use(function (err: any, req: Request, res: Response, next: any) {

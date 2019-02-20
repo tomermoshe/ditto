@@ -1,15 +1,21 @@
 version: '3.3'
 services: 
-  simulations-manager:
-    image: "simulations-manager"
-    command: npm run debug
-    volumes: 
-      - ./packages/simulations-manager/dist:/simulations-manager/dist
+  web-client:
+    image: "web-client-prod"
     ports:
-      - "9222:9222"
+      - "80:5000"
+    deploy:
+      replicas: 1
+    networks: 
+      - ditto-main
+
+
+  simulations-manager:
+    image: "simulations-manager-prod"
+    container_name: "simulations-manager"
+    ports:
       - "3000:3000"
       - "8000:8000"
-    container_name: simulations-manager
     depends_on: 
       - mongodb
     deploy:
@@ -35,7 +41,7 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ./packages/simulations-manager/data/db:/data/db:cached
+      - ~/ditto-mongo/data/db:/data/db:cached
     deploy:
       replicas: 1
     networks:

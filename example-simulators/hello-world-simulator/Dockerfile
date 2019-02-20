@@ -8,8 +8,6 @@ WORKDIR /hello-world-simulator
 # where available (npm@5+)
 COPY . . 
 
-EXPOSE 3000/tcp
-
 
 RUN npm install
 

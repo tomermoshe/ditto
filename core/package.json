@@ -5,12 +5,12 @@
     "lerna": "^3.6.0"
   },
   "scripts": {
-    "start-server" : "npm --prefix packages/simulations-manager start",
+    "start-server" : "docker stack deploy -c ./scripts/docker-compose-stack-dev.yml ditto",
     "stop-server" : "npm --prefix packages/simulations-manager stop",
     "start-client" : "npm --prefix packages/web-client start",
     "stop-client" : "npm --prefix packages/web-client stop",
     "start": "npm run start-server && npm run start-client",
-    "stop": "npm run stop-server"
+    "stop": "docker stack rm ditto"
 
   }
 }

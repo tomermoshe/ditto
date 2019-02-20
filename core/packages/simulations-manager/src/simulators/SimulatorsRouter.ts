@@ -13,6 +13,9 @@ const mongoEscape = require("mongo-escape");
 const UPLOADS_DIR = `${__dirname}/uploads`;
 const IMAGES_DIR = `${__dirname}/images`;
 
+if (!fs.existsSync(UPLOADS_DIR)) {
+    fs.mkdirSync(UPLOADS_DIR);
+}
 
 const MONGO_DUPLICATION_ERROR_CODE = 11000;
 export class SimulatorRouter {

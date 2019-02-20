@@ -11,6 +11,7 @@ import { ApplicationState } from "../types";
 import { connect } from "react-redux";
 import { RouteComponentProps } from "react-router";
 import { fetchScenario, deleteScenario } from "./store/actions";
+import { SERVER_URL } from "../constants";
 
 
 const StyledH1 = styled.h1`
@@ -65,7 +66,7 @@ type Props = StateProps & DispatchProps & RouteComponentProps<RouterProps>;
 
 
 export class ScenarioShow extends Component<Props, OwnState> {
-    endpoint = `http://localhost:8000`;
+    endpoint = `${SERVER_URL}:8000`;
     socket: SocketIOClient.Socket;
 
     constructor(props: Props) {

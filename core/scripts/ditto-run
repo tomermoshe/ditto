@@ -1,0 +1,3 @@
+#!/bin/bash
+
+docker stack deploy -c ~/ditto/docker-compose-stack.yml ditto
