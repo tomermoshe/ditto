@@ -41,7 +41,7 @@ services:
       - MONGO_DATA_DIR=/data/db
       - MONGO_LOG_DIR=/dev/null
     volumes:
-      - ~/ditto-mongo/data/db:/data/db:cached
+      - ${INSTALL_FOLDER}/ditto-mongo/data/db:/data/db:cached
     deploy:
       replicas: 1
     networks:

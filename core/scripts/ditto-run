@@ -1,3 +1,3 @@
 #!/bin/bash
 
-docker stack deploy -c ~/ditto/docker-compose-stack.yml ditto
+docker stack deploy -c ${INSTALL_FOLDER}/ditto/docker-compose-stack.yml ditto
